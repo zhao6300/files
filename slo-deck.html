@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>Inference SLO：从延迟指标到 Goodput 优化</title>
+<style>
+  :root{
+    --bg:#f8fafc; --paper:#ffffff; --navy:#19324a; --ink:#27445f; --muted:#708297;
+    --line:#d9e4ec; --mint:#ddf4ed; --teal:#20a38b; --tealdark:#087a68;
+    --sky:#e7f1ff; --blue:#3478c7; --coral:#ffe2d9; --orange:#ed7955;
+    --yellow:#fff4cc; --gold:#d59b22; --lav:#efeaff; --purple:#7257b8;
+    --slate:#edf2f6; --dark:#132a3a;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#e6ecf1;font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);padding:28px 0}
+  .slide{width:1280px;height:720px;margin:0 auto 26px;background:var(--bg);position:relative;overflow:hidden;
+         box-shadow:0 10px 34px rgba(25,50,74,.13);border-radius:4px;padding:56px 60px 44px}
+  .slide.dark{background:var(--dark)}
+  .kicker{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--tealdark);text-transform:uppercase}
+  .dark .kicker{color:var(--mint)}
+  .rule{width:42px;height:4px;background:var(--teal);margin:10px 0 16px;border-radius:2px}
+  h1{font-size:34px;color:var(--navy);line-height:1.25;font-weight:800}
+  .dark h1{color:#fff}
+  .sub{margin-top:12px;font-size:15px;color:var(--muted);max-width:1000px}
+  .dark .sub{color:#c9d8de}
+  .body{margin-top:34px}
+  .row{display:flex;gap:18px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px}
+  .flat{border:none;border-radius:12px;padding:22px}
+  .mint{background:var(--mint)} .sky{background:var(--sky)} .coral{background:var(--coral)}
+  .yellow{background:var(--yellow)} .lav{background:var(--lav)} .slate{background:var(--slate)}
+  .navycard{background:var(--navy);color:#fff;border-radius:12px;padding:24px}
+  .navycard h3{color:#fff}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:5px 11px;border-radius:20px;background:var(--mint);color:var(--tealdark)}
+  h3{font-size:20px;color:var(--navy);font-weight:700;margin-bottom:8px}
+  h4{font-size:15px;color:var(--navy);font-weight:700}
+  p.s{font-size:13px;color:var(--muted);line-height:1.6}
+  p.m{font-size:14px;color:var(--ink);line-height:1.65}
+  .big{font-size:30px;font-weight:800;color:var(--navy)}
+  .note{position:absolute;left:60px;right:60px;bottom:64px;text-align:center;font-size:15px;font-weight:700;color:var(--navy)}
+  .dark .note{color:#fff}
+  .foot{position:absolute;left:60px;right:60px;bottom:26px;display:flex;justify-content:space-between;
+        font-size:10px;letter-spacing:.08em;color:#9aabb8;font-weight:700}
+  .arrow{align-self:center;color:var(--muted);font-size:20px}
+  .pill{display:inline-block;padding:6px 12px;border-radius:8px;font-size:12px;font-weight:700;color:#fff}
+  ul{list-style:none} li{font-size:13.5px;line-height:1.9;color:var(--ink)}
+  li b{color:var(--navy)}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--teal);margin-right:9px;vertical-align:1px}
+  .grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:14px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  .num{font-size:12px;font-weight:800;color:var(--teal)}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  td,th{padding:11px 14px;text-align:left}
+  tbody tr:nth-child(odd){background:var(--paper)}
+  th{font-size:11px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+  .bar{height:16px;border-radius:8px;background:var(--slate);overflow:hidden}
+  .bar>span{display:block;height:100%}
+  .cover{display:grid;grid-template-columns:1fr 360px;height:100%}
+  .blob{position:absolute;border-radius:50%}
+  @media print{
+    body{background:#fff;padding:0}
+    .slide{margin:0;box-shadow:none;border-radius:0;page-break-after:always}
+    @page{size:1280px 720px;margin:0}
+  }
+</style>
+</head>
+<body>
+
+<!-- 01 -->
+<section class="slide">
+  <div style="position:absolute;inset:0 0 0 auto;width:420px;background:var(--mint)"></div>
+  <div style="position:absolute;inset:0 0 0 auto;width:280px;background:var(--sky)"></div>
+  <div class="blob" style="width:210px;height:210px;background:#fff;right:290px;top:90px"></div>
+  <div class="blob" style="width:260px;height:260px;background:var(--coral);right:40px;top:230px"></div>
+  <div class="blob" style="width:190px;height:190px;background:var(--teal);right:400px;top:440px"></div>
+  <div style="position:relative;max-width:700px">
+    <span class="tag">内部技术分享</span>
+    <div style="height:28px"></div>
+    <div style="font-size:46px;font-weight:800;color:var(--navy);line-height:1.1">Inference SLO</div>
+    <div style="font-size:36px;font-weight:800;color:var(--navy);line-height:1.25;margin-top:14px">从延迟指标到<br>Goodput 优化</div>
+    <p class="sub" style="margin-top:26px">用用户体验语言，建立对推理系统优化工作的共同理解</p>
+    <div style="height:1px;background:var(--line);margin:26px 0 18px;width:620px"></div>
+    <p style="font-size:13px;font-weight:700;color:var(--tealdark)">TTFT · TPOT · 队列 · KV Cache · 调度 · PD 架构</p>
+  </div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>01</span></div>
+</section>
+
+<!-- 02 -->
+<section class="slide">
+  <div class="kicker">阅读路径</div><div class="rule"></div>
+  <h1>先建立同一张“推理体验地图”</h1>
+  <p class="sub">不从术语出发，而从用户能感受到的等待与流畅出发。</p>
+  <div class="body grid5">
+    <div class="flat mint"><div class="num">01</div><h4 style="margin:10px 0 10px">为什么需要 SLO</h4><p class="s">从“机器跑得快”到“用户体验可承诺”</p></div>
+    <div class="flat sky"><div class="num" style="color:var(--blue)">02</div><h4 style="margin:10px 0 10px">TTFT 与 TPOT</h4><p class="s">一次回答的两个关键体验时刻</p></div>
+    <div class="flat coral"><div class="num" style="color:var(--orange)">03</div><h4 style="margin:10px 0 10px">延迟从哪里来</h4><p class="s">队列、计算、KV、通信与干扰</p></div>
+    <div class="flat lav"><div class="num" style="color:var(--purple)">04</div><h4 style="margin:10px 0 10px">系统如何控制</h4><p class="s">架构、调度、执行、内存、网络</p></div>
+    <div class="flat yellow"><div class="num" style="color:var(--gold)">05</div><h4 style="margin:10px 0 10px">最终优化目标</h4><p class="s">在约束下最大化 Goodput</p></div>
+  </div>
+  <div class="note">这份分享的结论：所有底层优化，最终都应回到 TTFT / TPOT 以及 Goodput。</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>02</span></div>
+</section>
+
+<!-- 03 -->
+<section class="slide">
+  <div class="kicker">01 / WHY SLO</div><div class="rule"></div>
+  <h1>真正要优化的，不只是“跑得更快”</h1>
+  <p class="sub">在线服务的成功标准，是体验达标前提下能够稳定服务多少用户。</p>
+  <div class="body grid2">
+    <div class="card">
+      <p class="s" style="font-weight:700;margin-bottom:20px">传统性能视角</p>
+      <div style="display:grid;gap:16px">
+        <div><h4 style="font-size:13px;margin-bottom:7px">Tokens/s</h4><div class="bar"><span style="width:84%;background:var(--teal)"></span></div></div>
+        <div><h4 style="font-size:13px;margin-bottom:7px">GPU 利用率</h4><div class="bar"><span style="width:68%;background:var(--blue)"></span></div></div>
+        <div><h4 style="font-size:13px;margin-bottom:7px">平均延迟</h4><div class="bar"><span style="width:55%;background:var(--orange)"></span></div></div>
+      </div>
+      <p class="s" style="margin-top:22px">这些指标很重要，但它们不直接回答：用户是否感觉“及时、连续、不卡顿”？</p>
+    </div>
+    <div class="navycard">
+      <p style="font-size:12px;font-weight:700;color:var(--mint)">SLO 视角</p>
+      <div style="font-size:26px;font-weight:800;margin:14px 0 20px;line-height:1.3">在体验约束下<br>持续服务更多请求</div>
+      <div style="height:1px;background:var(--teal);margin-bottom:18px"></div>
+      <ul style="color:#dce7ec">
+        <li><span class="dot"></span><b style="color:#fff">TTFT</b> — 第一次看到回答的等待</li>
+        <li><span class="dot"></span><b style="color:#fff">TPOT</b> — 后续内容出现的节奏</li>
+        <li><span class="dot"></span><b style="color:#fff">Goodput</b> — 两者都达标的实际服务量</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note" style="color:var(--tealdark)">从 Performance → SLO Attainment → Goodput</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>03</span></div>
+</section>
+
+<!-- 04 -->
+<section class="slide">
+  <div class="kicker">01 / WHY SLO</div><div class="rule"></div>
+  <h1>SLA、SLO、SLI：三个词，一条闭环</h1>
+  <p class="sub">把承诺、目标和实际测量分开，才能让性能讨论可执行。</p>
+  <div class="body grid3">
+    <div class="flat sky"><span class="tag" style="background:#fff;color:var(--blue)">SLA</span><h3 style="margin:16px 0 10px">对外承诺</h3><p class="m">服务在什么范围内应达到怎样的体验</p><div style="height:2px;background:var(--blue);margin:18px 0"></div><p class="s">纸面上的服务等级协议</p></div>
+    <div class="flat mint"><span class="tag" style="background:#fff">SLO</span><h3 style="margin:16px 0 10px">内部目标</h3><p class="m">我们为用户体验设置的可衡量阈值</p><div style="height:2px;background:var(--teal);margin:18px 0"></div><p class="s">例如：TTFT、TPOT 的目标线</p></div>
+    <div class="flat coral"><span class="tag" style="background:#fff;color:var(--orange)">SLI</span><h3 style="margin:16px 0 10px">实际指标</h3><p class="m">系统真实运行时采集到的表现</p><div style="height:2px;background:var(--orange);margin:18px 0"></div><p class="s">例如：p95 TTFT、SLO 达成率</p></div>
+  </div>
+  <div class="note">共同语言的价值：每次优化，都能明确回答“影响的是承诺、目标，还是实际测量？”</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>04</span></div>
+</section>
+
+<!-- 05 -->
+<section class="slide">
+  <div class="kicker">02 / THE TWO MOMENTS</div><div class="rule"></div>
+  <h1>一次 LLM 回答，用户会经历两个“等待时刻”</h1>
+  <p class="sub">先看到第一个 token，再持续看到后续 token。两种体验由不同系统行为决定。</p>
+  <div class="body">
+    <div class="row" style="align-items:center">
+      <div style="text-align:center"><div style="width:20px;height:20px;border-radius:50%;background:var(--navy);margin:0 auto 8px"></div><p class="s">请求到达</p></div>
+      <div class="arrow">→</div>
+      <div class="flat sky" style="flex:1;padding:18px 22px"><p style="font-size:11px;font-weight:800;color:var(--blue)">PREFILL</p><h4 style="margin-top:6px">理解整段 Prompt，生成 KV Cache</h4></div>
+      <div style="text-align:center"><div style="width:34px;height:34px;border-radius:50%;background:var(--teal);margin:0 auto 8px"></div><p class="s" style="color:var(--tealdark);font-weight:700">首 token</p></div>
+      <div class="flat mint" style="flex:1.3;padding:18px 22px"><p style="font-size:11px;font-weight:800;color:var(--tealdark)">DECODE</p><h4 style="margin-top:6px">一个 token 接一个 token 地生成</h4>
+        <div style="margin-top:10px">·&nbsp;&nbsp;·&nbsp;&nbsp;·&nbsp;&nbsp;·&nbsp;&nbsp;·&nbsp;&nbsp;·&nbsp;&nbsp;·</div></div>
+    </div>
+    <div class="grid2" style="margin-top:38px">
+      <div class="card"><span class="tag" style="background:var(--sky);color:var(--blue)">TTFT</span><h4 style="display:inline-block;margin-left:12px">Time To First Token</h4><p class="s" style="margin-top:12px">“我多久能看到系统开始回答？”</p></div>
+      <div class="card"><span class="tag">TPOT</span><h4 style="display:inline-block;margin-left:12px">Time Per Output Token</h4><p class="s" style="margin-top:12px">“内容是否以稳定、流畅的节奏出现？”</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>05</span></div>
+</section>
+
+<!-- 06 -->
+<section class="slide">
+  <div class="kicker">02 / THE TWO MOMENTS</div><div class="rule"></div>
+  <h1>TTFT 与 TPOT：同一条回答里的两种度量</h1>
+  <p class="sub">一个关注“开始得快不快”，一个关注“持续得顺不顺”。</p>
+  <div class="body grid2">
+    <div class="card" style="border-left:6px solid var(--blue)">
+      <div class="big">TTFT</div><p style="font-size:12px;font-weight:700;color:var(--blue);margin-top:8px">时间</p>
+      <h4 style="margin-top:22px">首 token 出现前的完整等待</h4>
+      <p class="s" style="margin-top:12px">从请求到达开始，包含排队、调度、KV 获取、Prefill、传输等步骤。</p>
+    </div>
+    <div class="card" style="border-left:6px solid var(--teal)">
+      <div class="big">TPOT</div><p style="font-size:12px;font-weight:700;color:var(--teal);margin-top:8px">每个 token 的时间</p>
+      <h4 style="margin-top:22px">生成过程的平均步长</h4>
+      <p class="s" style="margin-top:12px">进入 Decode 后，相邻输出 token 之间的平均间隔；越稳定，阅读越流畅。</p>
+    </div>
+  </div>
+  <div class="flat slate" style="position:absolute;left:60px;right:60px;bottom:58px;text-align:center;padding:14px">
+    <p style="font-size:13px;font-weight:700;color:var(--ink)">TTFT = 排队 + 调度 + KV 获取 + Prefill + 传输　｜　TPOT ≈ Decode 总时间 ÷（输出 token 数 − 1）</p>
+  </div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>06</span></div>
+</section>
+
+<!-- 07 -->
+<section class="slide">
+  <div class="kicker">02 / THE TWO MOMENTS</div><div class="rule"></div>
+  <h1>平均值很好看，不代表体验真的达标</h1>
+  <p class="sub">SLO 关注的是：有多少用户被“尾部延迟”拖慢。</p>
+  <div class="body grid2">
+    <div class="card">
+      <p class="s" style="font-weight:700">Latency distribution</p>
+      <div style="display:flex;align-items:flex-end;gap:7px;height:190px;margin-top:20px;border-bottom:1px solid var(--muted);padding-bottom:2px">
+        <span style="flex:1;height:14%;background:var(--teal)"></span><span style="flex:1;height:30%;background:var(--teal)"></span>
+        <span style="flex:1;height:56%;background:var(--teal)"></span><span style="flex:1;height:82%;background:var(--teal)"></span>
+        <span style="flex:1;height:97%;background:var(--teal)"></span><span style="flex:1;height:88%;background:var(--teal)"></span>
+        <span style="flex:1;height:69%;background:var(--teal)"></span><span style="flex:1;height:46%;background:var(--teal)"></span>
+        <span style="flex:1;height:26%;background:var(--teal)"></span><span style="flex:1;height:15%;background:var(--orange)"></span>
+        <span style="flex:1;height:8%;background:var(--orange)"></span><span style="flex:1;height:4%;background:var(--orange)"></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px"><span class="s">p50</span><span class="s">p90</span><span class="s" style="color:var(--orange)">p95</span><span class="s" style="color:var(--orange)">p99</span></div>
+      <p class="s" style="margin-top:12px">少数慢请求，决定了用户对系统的“最坏印象”</p>
+    </div>
+    <div class="navycard">
+      <p style="font-size:12px;font-weight:700;color:var(--mint)">SLO attainment</p>
+      <div style="font-size:26px;font-weight:800;margin:14px 0 20px;line-height:1.35">达标的请求数<br>÷ 总请求数</div>
+      <div style="height:1px;background:var(--teal);margin-bottom:18px"></div>
+      <ul style="color:#dce7ec">
+        <li><span class="dot"></span>观察 p50，知道典型体验</li>
+        <li><span class="dot"></span>观察 p95 / p99，发现尾部风险</li>
+        <li><span class="dot"></span>按上下文长度分桶，避免长请求被掩盖</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">讨论 SLO 时，先问：“我们在看平均值，还是在看真正不达标的人数？”</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>07</span></div>
+</section>
+
+<!-- 08 -->
+<section class="slide">
+  <div class="kicker">02 / THE TWO MOMENTS</div><div class="rule"></div>
+  <h1>Goodput：满足体验约束后的“有效服务量”</h1>
+  <p class="sub">吞吐最高，不一定等于用户体验最好；真正有效的是同时满足两个 SLO 的请求。</p>
+  <div class="body">
+    <div class="navycard" style="text-align:center;padding:30px"><p style="font-size:19px;font-weight:700">Goodput = 在 TTFT 与 TPOT 都达标的前提下，单位时间内成功服务的请求数</p></div>
+    <div class="grid4" style="margin-top:34px">
+      <div class="flat sky"><h4 style="text-align:center">吞吐提升</h4><p class="s" style="text-align:center;margin-top:8px">GPU 更忙</p></div>
+      <div class="flat coral"><h4 style="text-align:center">资源更满</h4><p class="s" style="text-align:center;margin-top:8px">排队 / 干扰增加</p></div>
+      <div class="flat yellow"><h4 style="text-align:center">体验波动</h4><p class="s" style="text-align:center;margin-top:8px">SLO 达成率下降</p></div>
+      <div class="flat mint"><h4 style="text-align:center">有效服务量</h4><p class="s" style="text-align:center;margin-top:8px">Goodput 可能下降</p></div>
+    </div>
+  </div>
+  <div class="note" style="color:var(--tealdark)">核心判断：不是“设备忙不忙”，而是“用户体验达标的请求有多少”。</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>08</span></div>
+</section>
+
+<!-- 09 -->
+<section class="slide">
+  <div class="kicker">03 / WHERE DELAY COMES FROM</div><div class="rule"></div>
+  <h1>TTFT 不是单纯的 Prefill 时间</h1>
+  <p class="sub">在第一个 token 出现前，系统已完成一条完整的服务链路。</p>
+  <div class="body grid5">
+    <div class="flat coral"><span class="tag" style="background:#fff;color:var(--orange)">1</span><h4 style="margin:14px 0 8px">Queue</h4><p class="s">请求在队列中等待</p></div>
+    <div class="flat yellow"><span class="tag" style="background:#fff;color:var(--gold)">2</span><h4 style="margin:14px 0 8px">Schedule</h4><p class="s">挑选何时、与谁一起执行</p></div>
+    <div class="flat sky"><span class="tag" style="background:#fff;color:var(--blue)">3</span><h4 style="margin:14px 0 8px">KV Retrieval</h4><p class="s">复用或恢复既有上下文</p></div>
+    <div class="flat mint"><span class="tag" style="background:#fff">4</span><h4 style="margin:14px 0 8px">Prefill</h4><p class="s">理解输入并构建 KV</p></div>
+    <div class="flat lav"><span class="tag" style="background:#fff;color:var(--purple)">5</span><h4 style="margin:14px 0 8px">Transfer</h4><p class="s">必要的数据搬运与通信</p></div>
+  </div>
+  <div class="flat slate" style="position:absolute;left:100px;right:100px;bottom:96px;text-align:center;padding:14px">
+    <p style="font-size:14px;font-weight:700;color:var(--navy)">优化 TTFT 的第一步：先判断时间到底消耗在“等待”、“计算”，还是“取数据”。</p>
+  </div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>09</span></div>
+</section>
+
+<!-- 10 -->
+<section class="slide">
+  <div class="kicker">03 / WHERE DELAY COMES FROM</div><div class="rule"></div>
+  <h1>TTFT 的最大敌人之一：排队</h1>
+  <p class="sub">当请求抵达速度超过系统服务速度，等待会首先吞噬延迟预算。</p>
+  <div class="body row" style="align-items:stretch">
+    <div style="flex:1.45;display:flex;align-items:center;gap:16px">
+      <div style="text-align:center"><p class="s" style="margin-bottom:10px">请求到达</p><div>● ● ●<br>● ● ●</div></div>
+      <div class="arrow">→</div>
+      <div class="flat coral" style="text-align:center;padding:24px 20px"><p style="font-size:11px;font-weight:800;color:var(--orange)">QUEUE</p><h4 style="margin-top:8px">等待</h4></div>
+      <div class="arrow">→</div>
+      <div class="flat mint" style="text-align:center;padding:24px 20px"><p style="font-size:11px;font-weight:800;color:var(--tealdark)">GPU</p><h4 style="margin-top:8px">执行</h4></div>
+    </div>
+    <div class="card" style="flex:1">
+      <h3>当负载提升</h3>
+      <ul style="margin-top:8px">
+        <li><b style="color:var(--orange)">QPS ↑</b>　请求来的更快</li>
+        <li><b style="color:var(--orange)">Queue ↑</b>　更多请求开始等待</li>
+        <li><b style="color:var(--orange)">TTFT ↑</b>　首 token 变慢</li>
+        <li><b style="color:var(--orange)">Violation ↑</b>　更多请求失去达标资格</li>
+      </ul>
+    </div>
+  </div>
+  <div class="navycard" style="position:absolute;left:60px;bottom:78px;width:520px;text-align:center;padding:16px">
+    <p style="font-size:15px;font-weight:700">关键提醒：TTFT 优化不能只盯着 Prefill kernel。</p>
+  </div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>10</span></div>
+</section>
+
+<!-- 11 -->
+<section class="slide">
+  <div class="kicker">03 / WHERE DELAY COMES FROM</div><div class="rule"></div>
+  <h1>KV Cache：复用很重要，但“命中”不等于更快</h1>
+  <p class="sub">要考虑放在哪里、搬回来要多久，以及请求还剩多少延迟预算。</p>
+  <div class="body grid4">
+    <div class="flat mint" style="text-align:center"><h3>HBM</h3><p class="s" style="color:var(--tealdark);font-weight:700">最近</p><p class="m" style="margin-top:12px">极低延迟</p></div>
+    <div class="flat sky" style="text-align:center"><h3>DRAM</h3><p class="s" style="color:var(--blue);font-weight:700">较远</p><p class="m" style="margin-top:12px">需要搬运</p></div>
+    <div class="flat coral" style="text-align:center"><h3>NVMe</h3><p class="s" style="color:var(--orange);font-weight:700">更远</p><p class="m" style="margin-top:12px">恢复成本可能很高</p></div>
+    <div class="flat yellow" style="text-align:center"><h3>Miss</h3><p class="s" style="color:var(--gold);font-weight:700">无缓存</p><p class="m" style="margin-top:12px">需要重新 Prefill</p></div>
+  </div>
+  <div class="card" style="position:absolute;left:60px;right:60px;bottom:78px;display:flex;gap:26px;align-items:center">
+    <h3 style="color:var(--orange);white-space:nowrap">Cache Hit ≠ TTFT 一定更低</h3>
+    <p class="s">如果从深层存储恢复 KV 的传输时间，超过了节省下来的 Prefill 计算时间，用户仍会感觉“首字很慢”。</p>
+  </div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>11</span></div>
+</section>
+
+<!-- 12 -->
+<section class="slide">
+  <div class="kicker">04 / SUSTAINED GENERATION</div><div class="rule"></div>
+  <h1>TPOT 描述的是“内容出现的节奏”</h1>
+  <p class="sub">生成阶段每多一份等待，用户都会在阅读过程中感到卡顿。</p>
+  <div class="body row" style="align-items:center">
+    <div class="flat mint" style="width:190px;height:190px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center">
+      <h3 style="color:var(--tealdark)">Decode<br>Step</h3></div>
+    <div class="arrow">→</div>
+    <div class="card" style="flex:1;text-align:center"><h4>Attention</h4><p class="s">读取 KV</p></div>
+    <div class="arrow">→</div>
+    <div class="card" style="flex:1;text-align:center"><h4>Linear / MoE</h4><p class="s">计算</p></div>
+    <div class="arrow">→</div>
+    <div class="card" style="flex:1;text-align:center"><h4>Communication</h4><p class="s">协同</p></div>
+    <div class="arrow">→</div>
+    <div class="card" style="flex:1;text-align:center"><h4>Scheduling</h4><p class="s">下一步</p></div>
+  </div>
+  <div class="grid2" style="margin-top:36px">
+    <ul>
+      <li><span class="dot"></span><b>Batch size</b> — 同一轮服务更多请求，也可能拉长单步</li>
+      <li><span class="dot"></span><b>Memory bandwidth</b> — KV 访问是 Decode 的关键成本</li>
+    </ul>
+    <ul>
+      <li><span class="dot"></span><b>Prefill interference</b> — 抢占资源会让每一步变长</li>
+      <li><span class="dot"></span><b>TP / EP 通信</b> — 网络与通信会直接传导到 TPOT</li>
+    </ul>
+  </div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>12</span></div>
+</section>
+
+<!-- 13 -->
+<section class="slide">
+  <div class="kicker">04 / SUSTAINED GENERATION</div><div class="rule"></div>
+  <h1>Prefill 与 Decode 同处时：资源干扰会放大 TPOT</h1>
+  <p class="sub">PD Aggregation 让资源利用更紧凑，也让两个不同节奏的任务相互影响。</p>
+  <div class="body grid2">
+    <div class="navycard">
+      <p style="font-size:12px;font-weight:700;color:var(--mint)">一块 GPU 内部</p>
+      <div class="row" style="margin-top:18px">
+        <div class="flat coral" style="flex:1;text-align:center;padding:26px 16px"><p style="font-size:11px;font-weight:800;color:var(--orange)">PREFILL</p><h4 style="margin-top:10px">计算密集<br>批量处理输入</h4></div>
+        <div class="arrow" style="color:var(--orange)">↔</div>
+        <div class="flat mint" style="flex:1;text-align:center;padding:26px 16px"><p style="font-size:11px;font-weight:800;color:var(--tealdark)">DECODE</p><h4 style="margin-top:10px">单步敏感<br>持续产生输出</h4></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>资源竞争链路</h3>
+      <ul style="margin-top:10px">
+        <li><b>1. Prefill 工作量 ↑</b>　占用更多计算 / 调度机会</li>
+        <li><b>2. Decode 等待 ↑</b>　每个生成步变慢</li>
+        <li><b>3. TPOT ↑</b>　用户感到输出不连续</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note" style="color:var(--tealdark);font-size:14px">Interference intensity：Decode 期间混入多少 Prefill 工作，是理解 TPOT 波动的直观指标。</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>13</span></div>
+</section>
+
+<!-- 14 -->
+<section class="slide">
+  <div class="kicker">04 / SUSTAINED GENERATION</div><div class="rule"></div>
+  <h1>Chunked Prefill：一个典型的 TTFT ↔ TPOT 旋钮</h1>
+  <p class="sub">切得更大或更小，都不是绝对更好，而是在两种体验之间重新分配资源。</p>
+  <div class="body grid2">
+    <div class="card">
+      <span class="tag" style="background:var(--coral);color:var(--orange)">Prefill 更连续</span>
+      <h3 style="margin-top:14px">大 Chunk</h3>
+      <div class="row" style="gap:6px;margin-top:16px"><span style="flex:1;height:26px;background:var(--coral)"></span><span style="flex:1;height:26px;background:var(--coral)"></span><span style="flex:1;height:26px;background:var(--coral)"></span></div>
+      <p style="margin-top:20px;font-size:14px;font-weight:700;color:var(--orange)">TTFT 通常更好　·　TPOT 风险更高</p>
+    </div>
+    <div class="card">
+      <span class="tag">更频繁让出资源</span>
+      <h3 style="margin-top:14px">小 Chunk</h3>
+      <div class="row" style="gap:6px;margin-top:16px"><span style="flex:1;height:26px;background:var(--mint)"></span><span style="flex:1;height:26px;background:var(--mint)"></span><span style="flex:1;height:26px;background:var(--mint)"></span><span style="flex:1;height:26px;background:var(--mint)"></span><span style="flex:1;height:26px;background:var(--mint)"></span><span style="flex:1;height:26px;background:var(--mint)"></span><span style="flex:1;height:26px;background:var(--mint)"></span></div>
+      <p style="margin-top:20px;font-size:14px;font-weight:700;color:var(--tealdark)">TPOT 通常更稳　·　TTFT 风险更高</p>
+    </div>
+  </div>
+  <div class="note">管理原则：根据当前 SLO 压力动态选择 Chunk，而不是固定一个“最优值”。</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>14</span></div>
+</section>
+
+<!-- 15 -->
+<section class="slide">
+  <div class="kicker">05 / SYSTEM CHOICES</div><div class="rule"></div>
+  <h1>PD Aggregation 还是 Disaggregation？答案取决于 SLO</h1>
+  <p class="sub">不是谁“更先进”，而是不同约束下，哪种结构更贴近用户体验目标。</p>
+  <div class="body">
+    <table>
+      <thead><tr><th></th><th style="text-align:center">PD Aggregation<br><span style="font-weight:400;text-transform:none">Prefill / Decode 同资源</span></th><th style="text-align:center">PD Disaggregation<br><span style="font-weight:400;text-transform:none">Prefill / Decode 分离资源</span></th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--muted);font-weight:700">Prefill capacity</td><td style="text-align:center;color:var(--navy)">通常更高</td><td style="text-align:center;color:var(--navy)">需要单独配置能力</td></tr>
+        <tr><td style="color:var(--muted);font-weight:700">TTFT</td><td style="text-align:center;color:var(--navy)">通常较低</td><td style="text-align:center;color:var(--navy)">容易受队列影响</td></tr>
+        <tr><td style="color:var(--muted);font-weight:700">TPOT</td><td style="text-align:center;color:var(--navy)">可能被 Prefill 干扰</td><td style="text-align:center;color:var(--navy)">通常更稳定</td></tr>
+        <tr><td style="color:var(--muted);font-weight:700">可独立扩展</td><td style="text-align:center;color:var(--navy)">较弱</td><td style="text-align:center;color:var(--navy)">较强</td></tr>
+        <tr><td style="color:var(--muted);font-weight:700">主要风险</td><td style="text-align:center;color:var(--navy)">Decode 体验波动</td><td style="text-align:center;color:var(--navy)">Prefill 排队 / KV 转移</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note" style="color:var(--tealdark)">结论：SLO 更紧在哪一侧，架构就更需要为哪一侧留出“呼吸空间”。</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>15</span></div>
+</section>
+
+<!-- 16 -->
+<section class="slide">
+  <div class="kicker">05 / SYSTEM CHOICES</div><div class="rule"></div>
+  <h1>SLO 优化，不是一把扳手，而是五层控制面</h1>
+  <p class="sub">每层都有控制旋钮；组合使用，才可能把体验与资源效率同时拉上来。</p>
+  <div class="body" style="display:grid;gap:14px">
+    <div class="flat mint" style="display:flex;align-items:center;padding:0;overflow:hidden"><div style="width:220px;background:var(--tealdark);color:#fff;padding:16px;text-align:center;font-weight:700;font-size:14px">Architecture</div><p style="padding-left:26px;font-weight:700;color:var(--navy)">PD mode · PD ratio</p></div>
+    <div class="flat sky" style="display:flex;align-items:center;padding:0;overflow:hidden"><div style="width:220px;background:var(--blue);color:#fff;padding:16px;text-align:center;font-weight:700;font-size:14px">Scheduling</div><p style="padding-left:26px;font-weight:700;color:var(--navy)">Queue · Batch · Priority</p></div>
+    <div class="flat coral" style="display:flex;align-items:center;padding:0;overflow:hidden"><div style="width:220px;background:var(--orange);color:#fff;padding:16px;text-align:center;font-weight:700;font-size:14px">Execution</div><p style="padding-left:26px;font-weight:700;color:var(--navy)">Chunk · Kernel · Batch size</p></div>
+    <div class="flat lav" style="display:flex;align-items:center;padding:0;overflow:hidden"><div style="width:220px;background:var(--purple);color:#fff;padding:16px;text-align:center;font-weight:700;font-size:14px">Memory</div><p style="padding-left:26px;font-weight:700;color:var(--navy)">KV · Prefix cache · Offload</p></div>
+    <div class="flat yellow" style="display:flex;align-items:center;padding:0;overflow:hidden"><div style="width:220px;background:var(--gold);color:#fff;padding:16px;text-align:center;font-weight:700;font-size:14px">Communication</div><p style="padding-left:26px;font-weight:700;color:var(--navy)">TP / EP · NCCL · NVLink / PCIe</p></div>
+  </div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>16</span></div>
+</section>
+
+<!-- 17 -->
+<section class="slide">
+  <div class="kicker">05 / SYSTEM CHOICES</div><div class="rule"></div>
+  <h1>调度：谁先服务，决定谁还有机会达标</h1>
+  <p class="sub">只看“先来后到”容易堵住短请求；只看“任务大小”又可能饿死长请求。</p>
+  <div class="body grid4">
+    <div class="flat slate"><h3 style="text-align:center">FCFS</h3><p class="s" style="text-align:center;font-weight:700">先到先服务</p><div style="height:2px;background:var(--muted);margin:16px 0"></div><p class="s" style="text-align:center">简单，但可能出现 Head-of-Line Blocking</p></div>
+    <div class="flat sky"><h3 style="text-align:center">SJF</h3><p class="s" style="text-align:center;font-weight:700;color:var(--blue)">短任务优先</p><div style="height:2px;background:var(--blue);margin:16px 0"></div><p class="s" style="text-align:center">短请求更快，长上下文可能持续被推迟</p></div>
+    <div class="flat yellow"><h3 style="text-align:center">EDF</h3><p class="s" style="text-align:center;font-weight:700;color:var(--gold)">最早截止优先</p><div style="height:2px;background:var(--gold);margin:16px 0"></div><p class="s" style="text-align:center">体现 deadline，但不充分理解执行成本</p></div>
+    <div class="flat mint"><h3 style="text-align:center">Latency Budget</h3><p class="s" style="text-align:center;font-weight:700;color:var(--tealdark)">剩余预算优先</p><div style="height:2px;background:var(--teal);margin:16px 0"></div><p class="s" style="text-align:center">优先处理“最接近失约”的请求</p></div>
+  </div>
+  <div class="navycard" style="position:absolute;left:140px;right:140px;bottom:74px;text-align:center;padding:16px">
+    <p style="font-size:15px;font-weight:700">Latency Budget = SLO − 预测的剩余服务时间</p>
+  </div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>17</span></div>
+</section>
+
+<!-- 18 -->
+<section class="slide">
+  <div class="kicker">05 / SYSTEM CHOICES</div><div class="rule"></div>
+  <h1>Latency Budget：把“还有多少时间”变成共同语言</h1>
+  <p class="sub">同一个 KV 搬运、同一次排队，对不同请求的风险完全不同。</p>
+  <div class="body grid2">
+    <div style="display:grid;gap:18px">
+      <div class="card"><span class="tag">Request A</span><span class="s" style="margin-left:14px">TTFT SLO 5.0s</span>
+        <div class="row" style="margin-top:16px;align-items:center"><p class="m" style="font-weight:700">已花 1.0s</p><p style="font-size:22px;font-weight:800;color:var(--tealdark);margin-left:auto">剩余 4.0s</p></div></div>
+      <div class="card"><span class="tag" style="background:var(--coral);color:var(--orange)">Request B</span><span class="s" style="margin-left:14px">TTFT SLO 5.0s</span>
+        <div class="row" style="margin-top:16px;align-items:center"><p class="m" style="font-weight:700">已花 4.5s</p><p style="font-size:22px;font-weight:800;color:var(--orange);margin-left:auto">剩余 0.5s</p></div></div>
+    </div>
+    <div class="navycard">
+      <p style="font-size:16px;font-weight:700;color:var(--mint);text-align:center">一个 300ms 的 KV transfer</p>
+      <div style="height:1px;background:var(--teal);margin:18px 0"></div>
+      <p style="font-size:14px;margin-bottom:14px"><b>对 Request A</b>　<span style="color:#d5e4e9">还有足够余量，可以接受</span></p>
+      <p style="font-size:14px"><b>对 Request B</b>　<span style="color:#ffd7cc">会显著增加违约风险，应优先处理</span></p>
+    </div>
+  </div>
+  <div class="note">因此调度、KV movement、抢占等操作，应该共同消耗并参考这个预算。</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>18</span></div>
+</section>
+
+<!-- 19 -->
+<section class="slide">
+  <div class="kicker">06 / OUR ENGINEERING MAP</div><div class="rule"></div>
+  <h1>把正在做的工程工作，放回同一条因果链</h1>
+  <p class="sub">PD、Chunk、KV、通信、GPU 利用率不是零散项目；它们都在改变用户体验。</p>
+  <div class="body grid5">
+    <div class="card" style="border-top:6px solid var(--purple);text-align:center"><h4>PD ratio / mode</h4><p class="s" style="margin:10px 0 16px">架构分配</p><span class="pill" style="background:var(--purple)">TTFT / TPOT</span></div>
+    <div class="card" style="border-top:6px solid var(--orange);text-align:center"><h4>Chunk size</h4><p class="s" style="margin:10px 0 16px">执行切分</p><span class="pill" style="background:var(--orange)">TTFT ↔ TPOT</span></div>
+    <div class="card" style="border-top:6px solid var(--blue);text-align:center"><h4>KV cache / offload</h4><p class="s" style="margin:10px 0 16px">内存路径</p><span class="pill" style="background:var(--blue)">TTFT</span></div>
+    <div class="card" style="border-top:6px solid var(--teal);text-align:center"><h4>TP / EP / NCCL</h4><p class="s" style="margin:10px 0 16px">通信路径</p><span class="pill" style="background:var(--tealdark)">TPOT</span></div>
+    <div class="card" style="border-top:6px solid var(--gold);text-align:center"><h4>GPU utilization</h4><p class="s" style="margin:10px 0 16px">资源饱和</p><span class="pill" style="background:var(--gold)">尾部延迟</span></div>
+  </div>
+  <div class="note" style="color:var(--tealdark)">工程问题的统一问法：这个改动会让哪种延迟变短？又会把压力转移到哪里？</div>
+  <div class="foot"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>19</span></div>
+</section>
+
+<!-- 20 -->
+<section class="slide dark">
+  <div class="kicker">TAKEAWAY</div><div class="rule"></div>
+  <h1>从单点性能，走向系统级 Goodput</h1>
+  <p class="sub">推理优化的最终目标：在给定 TTFT / TPOT SLO 下，让更多请求稳定达标。</p>
+  <div class="body row" style="align-items:center;justify-content:center;gap:24px">
+    <div class="flat sky" style="text-align:center;width:210px"><h4>TTFT</h4><p class="s" style="margin-top:8px">首字等待</p></div>
+    <div class="arrow" style="color:var(--teal)">→</div>
+    <div style="width:220px;height:220px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;text-align:center">
+      <h3 style="color:#fff;font-size:19px">SLO<br>ATTAINMENT</h3></div>
+    <div class="arrow" style="color:var(--teal)">←</div>
+    <div class="flat mint" style="text-align:center;width:210px"><h4>TPOT</h4><p class="s" style="margin-top:8px">生成节奏</p></div>
+  </div>
+  <div class="row" style="justify-content:center;gap:40px;margin-top:26px">
+    <div class="flat coral" style="text-align:center;width:250px"><h4>控制旋钮</h4><p class="s" style="margin-top:6px">架构 · 调度 · 执行</p></div>
+    <div class="flat yellow" style="text-align:center;width:250px"><h4>最终目标</h4><p class="s" style="margin-top:6px">Goodput</p></div>
+  </div>
+  <div class="note">不是让某个 kernel 更快，而是让更多用户在等待与生成的全过程中，都获得可承诺的体验。</div>
+  <div class="foot" style="color:#b5c3cd"><span>LLM INFERENCE SLO / INTERNAL EXPLAINER</span><span>基于团队提供的 SLO / PD / KV / 调度研读材料整理</span><span>20</span></div>
+</section>
+
+</body>
+</html>
