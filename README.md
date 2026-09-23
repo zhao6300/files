@@ -2,10 +2,13 @@
 
 面向非专业听众的推理系统 SLO 讲解材料，主题：**从延迟指标到 Goodput 优化**。
 
+> **最新版本：** [`slo-goodput-v2/`](slo-goodput-v2/) —— 34 页完整版，全图形化版面、附逐页预览图与讲稿备注。下面的根目录文件为早期 20 页版本，保留备查。
+
 ## 文件说明
 
 | 文件 | 说明 |
 |---|---|
+| [`slo-goodput-v2/`](slo-goodput-v2/) | **34 页完整版**：PPT、34 张预览图、生成脚本与讲稿备注 |
 | `LLM-Inference-SLO-Goodput.pptx` | 可编辑 PPT，20 页，16:9，浅色风格（英文文件名，便于下载） |
 | `LLM_Inference_SLO_Goodput_技术分享.pptx` | 同一份 PPT 的中文文件名副本 |
 | `slo-deck.html` | 网页版，浏览器直接打开；可用「打印 → 另存为 PDF」导出 |
