@@ -219,20 +219,20 @@ FOOTER = "大模型推理服务：SLO 与 Goodput  ·  技术分享"
 
 def header(slide, kicker, title, sub=None, accent=BLUE):
     if kicker:
-        rect(slide, ML, 0.52, 0.045, 0.2, accent)
-        txt(slide, ML + 0.14, 0.5, 8.0, 0.26, kicker, 11, True, accent, line=1.0)
-    txt(slide, ML, 0.82, CW, 0.52, title, 27, True, INK, line=1.05)
+        rect(slide, ML, 0.54, 0.05, 0.22, accent)
+        txt(slide, ML + 0.14, 0.48, 8.0, 0.3, kicker, 12.5, True, accent, line=1.0)
+    txt(slide, ML, 0.84, CW, 0.58, title, 31, True, INK, line=1.05)
     y = 1.42
     if sub:
-        txt(slide, ML, y, CW - 0.3, 0.3, sub, 13, False, MUTED, line=1.2)
+        txt(slide, ML, y + 0.04, CW - 0.3, 0.34, sub, 15.5, False, MUTED, line=1.2)
         y += 0.42
     hline(slide, ML, y + 0.02, CW)
     return y + 0.3
 
 
 def page_no(slide, n):
-    txt(slide, ML, SH - 0.52, 7.0, 0.24, FOOTER, 8.5, False, FAINT, line=1.0)
-    txt(slide, SW - ML - 1.2, SH - 0.52, 1.2, 0.24, "%02d" % n, 9.5, True, FAINT, "r", line=1.0)
+    txt(slide, ML, SH - 0.5, 7.0, 0.26, FOOTER, 9.5, False, FAINT, line=1.0)
+    txt(slide, SW - ML - 1.2, SH - 0.5, 1.2, 0.26, "%02d" % n, 11, True, FAINT, "r", line=1.0)
 
 
 def takeaway(slide, y, text, accent=BLUE, fill=BLUE_L, h=0.62, size=14.5, icon="核心结论"):
@@ -250,8 +250,8 @@ def section(prs, num, title, desc, n, accent=BLUE, faint=PANEL2):
     rect(s, 0, 0, 0.16, SH, accent)
     txt(s, ML + 0.1, 1.45, 5.0, 2.2, num, 120, True, faint, line=0.9)
     rect(s, ML + 0.22, 3.62, 0.5, 0.045, accent)
-    txt(s, ML + 0.2, 3.9, 9.5, 0.6, title, 34, True, INK, line=1.05)
-    txt(s, ML + 0.2, 4.72, 8.6, 0.8, desc, 14.5, False, MUTED, line=1.45)
+    txt(s, ML + 0.2, 3.86, 9.8, 0.66, title, 38, True, INK, line=1.05)
+    txt(s, ML + 0.2, 4.76, 9.2, 0.9, desc, 17, False, MUTED, line=1.45)
     page_no(s, n)
     return s
 

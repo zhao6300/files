@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""生成《大模型推理服务：SLO 与 Goodput》技术分享 PPT"""
+"""生成《大模型推理服务：SLO 与 Goodput》技术分享 PPT（精简图形版）"""
 import os
 import sys
 from deckkit import new_deck, section, BLUE, TEAL, AMBER, VIO, BLUE_L, TEAL_L, AMBER_L, VIO_L
@@ -15,54 +15,51 @@ def main():
     prs = new_deck()
     n = 0
 
-    def add(fn, *a):
+    def add(fn):
         nonlocal n
         n += 1
-        fn(prs, n, *a)
+        fn(prs, n)
+
+    def sec(num, title, desc, ac, al):
+        nonlocal n
+        n += 1
+        section(prs, num, title, desc, n, ac, al)
 
     add(A.cover)
     add(A.summary)
     add(A.roadmap)
 
-    n += 1
-    section(prs, "01", "为什么需要 SLO", "推理系统到底在优化什么？\n为什么「跑得快」不等于「服务好」。", n, BLUE, BLUE_L)
+    sec("01", "为什么需要 SLO", "推理系统到底在优化什么", BLUE, BLUE_L)
     add(A.why_slo)
     add(A.analogy)
 
-    n += 1
-    section(prs, "02", "SLO 的核心指标", "TTFT、TPOT、达标率、Goodput\n这四个词说清楚，后面就都好谈了。", n, BLUE, BLUE_L)
-    add(A.sla_slo_sli)
+    sec("02", "核心指标", "TTFT · TPOT · 达标率 · Goodput", BLUE, BLUE_L)
     add(A.two_phases)
     add(A.ttft)
     add(A.tpot)
     add(A.tail)
     add(A.goodput)
 
-    n += 1
-    section(prs, "03", "TTFT 由什么决定", "为什么用户等了很久才看到第一个字？\n真正的时间花在了哪里。", n, TEAL, TEAL_L)
+    sec("03", "TTFT 由什么决定", "为什么第一个字等很久", TEAL, TEAL_L)
     add(B.ttft_pipeline)
     add(B.queue_slide)
     add(B.prefill_capacity)
     add(B.kv_ttft)
 
-    n += 1
-    section(prs, "04", "TPOT 由什么决定", "为什么生成过程会一顿一顿？\n谁抢走了本该用来出字的时间。", n, AMBER, AMBER_L)
+    sec("04", "TPOT 由什么决定", "谁抢走了出字的时间", AMBER, AMBER_L)
     add(B.tpot_mech)
     add(B.interference)
     add(B.chunked)
     add(B.pd_compare)
 
-    n += 1
-    section(prs, "05", "我们有哪些控制手段", "架构、调度、执行、显存、通信\n五层旋钮，以及每一层的代价。", n, VIO, VIO_L)
+    sec("05", "五层控制手段", "架构 · 调度 · 执行 · 显存 · 通信", VIO, VIO_L)
     add(C.framework)
     add(C.arch_layer)
     add(C.sched_layer)
     add(C.latency_budget)
-    add(C.kv_layer)
     add(C.exec_layer)
 
-    n += 1
-    section(prs, "06", "从单点优化到系统级优化", "把所有工作收敛到一个目标上：\n在 SLO 约束下最大化 Goodput。", n, BLUE, BLUE_L)
+    sec("06", "系统级优化", "在 SLO 约束下最大化 Goodput", BLUE, BLUE_L)
     add(C.overview)
     add(C.our_work)
     add(C.closing)
