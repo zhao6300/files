@@ -52,4 +52,4 @@ wc.steps(
     ],
     "来源：Hugging Face 技术复盘，2026 年 7 月",
 )
-wc.cover(OUT / "cover.png", [("AI 已经在造 AI 了", False), ("给它打分的", False), ("也是 AI", True)], "递归自我改进")
+wc.cover(OUT / "cover.png", [("26% 的研发", False), ("由 AI 主导", False), ("这个数也是 AI 算的", True)], "AI 造 AI")

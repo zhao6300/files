@@ -73,7 +73,7 @@ def steps(path: Path, title: str, rows: list[tuple], source: str) -> None:
 
 
 def cover(path: Path, lines: list[tuple], kicker: str) -> None:
-    """封面 1800×766（2.35:1）。每行建议 ≤9 个字，最多 3 行，否则裁成 1:1 时会出界。"""
+    """封面 1800×766（2.35:1），最多 3 行。字号会按最长一行自动缩小，裁成 1:1 时不会出界。"""
     W, H = 1800, 766
     fig = plt.figure(figsize=(W / 200, H / 200), dpi=200)
     ax = fig.add_axes([0, 0, 1, 1])
@@ -83,7 +83,14 @@ def cover(path: Path, lines: list[tuple], kicker: str) -> None:
     x0 = (W - H) / 2  # 中间正方形左边界
     ax.add_patch(plt.Rectangle((x0 + 70, H - 190), 14, 14, color=SIGNAL, lw=0))
     ax.text(x0 + 96, H - 183, kicker, fontsize=14, color=GRAY, va="center")
-    for i, (t, hi) in enumerate(lines):
-        ax.text(x0 + 70, H - 290 - i * 104, t, fontsize=29, fontweight="bold", color=SIGNAL if hi else INK, va="center")
+    # 字号按最长一行自动缩小，保证裁成 1:1 时左右各留 70px（R15：两次封面出界）
+    size, room = 29.0, H - 140
+    texts = [ax.text(x0 + 70, H - 290 - i * 104, t, fontsize=size, fontweight="bold", color=SIGNAL if hi else INK, va="center")
+             for i, (t, hi) in enumerate(lines)]
+    renderer = fig.canvas.get_renderer()
+    widest = max(tx.get_window_extent(renderer).width for tx in texts)
+    if widest > room:
+        for tx in texts:
+            tx.set_fontsize(size * room / widest)
     fig.savefig(path, facecolor="white")
     plt.close(fig)

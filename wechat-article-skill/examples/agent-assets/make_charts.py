@@ -42,4 +42,4 @@ wc.steps(
     ],
     "来源：Anthropic 对齐评估，2026 年 9 月 9 日",
 )
-wc.cover(OUT / "cover.png", [("AI 没想逃", False), ("它只是太想", False), ("把活干完", True)], "AI agent 越界")
+wc.cover(OUT / "cover.png", [("一道找作者的小题", False), ("让 OpenAI 暂停了", False), ("最强模型", True)], "AI agent 越界")

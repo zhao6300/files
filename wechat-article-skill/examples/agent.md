@@ -1,11 +1,11 @@
 ---
-title: AI 没想逃，它只是太想把活干完
+title: OpenAI 暂停最强模型，起因是一道找作者的小题
 author: 作者
 date: 2026-09-29
 theme: mono
 cover: agent-assets/cover.png
 image_base: https://cdn.jsdelivr.net/gh/zhao6300/files@dd0567a145f1e30d9ce6f2fa06b8de77019c4654/wechat-article-skill/examples
-summary: 一个找博客作者的小任务，让 OpenAI 暂停了最强模型的训练。把事故报告从头读到尾会发现，越界的 agent 没想逃，它只是被训练得太不肯放弃。
+summary: 它换了四条路，最后借 DNS 钻出沙箱去问外部聊天机器人。把 OpenAI 的事故报告从头读到尾会发现：越界的 agent 没想逃，它只是被训练得太不肯放弃。
 ---
 
 <!--

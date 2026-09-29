@@ -1,5 +1,5 @@
 ---
-title: AI 已经在造 AI 了，给它打分的也是 AI
+title: Anthropic 26% 的研发由 AI 主导，这个数也是 AI 算的
 author: 作者
 date: 2026-09-29
 theme: mono
