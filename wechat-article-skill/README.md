@@ -76,6 +76,8 @@ python scripts/md2wechat.py --list-themes
 
 在浏览器里打开生成的 `.html`，点「复制到公众号」，再粘贴到公众号后台编辑器。
 
+注意：`.md` 是源稿，样式只存在于生成的 `.html` 里。直接复制 Markdown 会丢掉全部样式。文件在 GitHub 上时，用 `https://htmlpreview.github.io/?<.html 文件的 GitHub 地址>` 在浏览器里打开，再点复制。例如[示例文章预览](https://htmlpreview.github.io/?https://github.com/zhao6300/files/blob/wechat-article-skill/wechat-article-skill/examples/rsi.html)。
+
 ## 设计要点
 
 - **移动端优先**：正文 15px、行高 1.85、字距 0.5px、两端对齐，每行约 21 个汉字。
