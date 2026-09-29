@@ -11,6 +11,8 @@ md2wechat — 把 Markdown 转成可直接粘贴进微信公众号编辑器的 H
   * 外链自动转脚注（公众号正文不允许外链；mp.weixin.qq.com 链接保留）。
   * 中英文之间自动加空格（盘古之白），中文语境直引号转弯引号。
   * --check 可读性检查：段落过长、小标题过长、连续大段无视觉锚点等。
+  * 文风检查：套话、AI 腔、模糊信源（“有研究表明”）、空标题、感叹号过多（--no-style 或 front matter lint: layout 关闭）。
+  * <!-- 注释 --> 不进入正文，可用来写论点卡和写作备注。
 
 用法
   python md2wechat.py article.md                 # 输出 article.html（带手机预览 + 一键复制）
@@ -963,6 +965,61 @@ def parse_front_matter(src: str) -> tuple[dict, str, int]:
     return meta, src, 1
 
 
+def strip_comments(body: str) -> str:
+    """删掉 <!-- 注释 -->（论点卡、写作备注），保留换行，行号不变。"""
+    return re.sub(r"<!--.*?-->", lambda m: "\n" * m.group(0).count("\n"), body, flags=re.S)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 文风检查：套话 / AI 腔 / 模糊信源 / 感叹号（只查表面，观点质量靠 content-craft.md 自评）
+# ──────────────────────────────────────────────────────────────────────────────
+STYLE_RULES: list[tuple[str, str, str]] = [
+    # (类别, 正则, 建议)
+    ("空洞开头", r"随着.{1,16}的(?:发展|进步|普及|到来)|在当今(?:社会|时代|世界)?|众所周知|在这个.{1,12}的时代", "直接写事实或场景"),
+    ("套话总结", r"总而言之|综上所述|总的来说|总之", "删掉，直接写结论"),
+    ("虚假强调", r"值得(?:注意|一提|关注)的是|需要(?:指出|强调|注意)的是|不可否认|毋庸置疑|不言而喻", "删掉；重要的话不需要预告"),
+    ("模糊对冲", r"(?:某种|一定)程度上|可以说|从某种意义上", "给出具体条件，或删掉"),
+    ("空洞形容", r"(?:非常|极其|极为|十分)(?:重要|关键|显著|巨大)|意义(?:深远|重大)|至关重要", "换成数字或例子"),
+    ("行话黑话", r"赋能|抓手|闭环|打通|底层逻辑|颗粒度|组合拳", "换成具体的动作或对象"),
+    ("AI 腔", r"让我们(?:一起)?|不仅(?:仅)?是.{1,20}(?:更|而且)是|这不仅.{1,20}更|一场.{1,10}的(?:革命|变革)|开启.{1,8}新篇章|深刻(?:改变|影响)|无疑", "改成直接陈述"),
+    ("排比凑数", r"首先.{0,200}其次|其次.{0,200}再次", "改成列表，或只保留真正并列的项"),
+    ("模糊信源", r"有(?:研究|调查|数据|报告|统计)(?:表明|显示|发现|指出)|据统计|据悉|据了解|(?:有|一些|很多)?专家(?:认为|表示|指出)|业内人士|有关人士|有人(?:说|认为)", "写出具体的机构、人名、时间"),
+]
+STYLE_RES = [(cat, re.compile(p), tip) for cat, p, tip in STYLE_RULES]
+EMPTY_HEADINGS = {"背景", "总结", "结语", "前言", "引言", "概述", "小结", "介绍", "简介", "结论"}
+MAX_EXCLAIM = 2
+
+
+def lint_style(body: str, offset: int, r: Renderer) -> None:
+    fence = None
+    hits: list[str] = []
+    exclaim: list[int] = []
+    for i, line in enumerate(body.split("\n")):
+        s = line.strip()
+        m = re.match(r"^(```+|~~~+)", s)
+        if m:
+            fence = None if fence and s.startswith(fence) else (fence or m.group(1))
+            continue
+        if fence or not s or s.startswith(":::"):
+            continue
+        ln = offset + i
+        text = re.sub(r"`[^`]*`|\]\([^)]*\)", "", s)
+        h = re.match(r"^#{2,3}\s+(.*)$", text)
+        if h and h.group(1).strip(" *#") in EMPTY_HEADINGS:
+            hits.append(f"  L{ln:<4} [空标题] “{h.group(1).strip()}”没有信息量，写成短语或观点句")
+        found: dict[str, list[str]] = {}
+        for cat, rx, tip in STYLE_RES:
+            for mm in rx.finditer(text):
+                found.setdefault(f"{cat}|{tip}", []).append(mm.group(0) if len(mm.group(0)) <= 12 else mm.group(0)[:10] + "…")
+        for key, words in found.items():
+            cat, tip = key.split("|")
+            hits.append(f"  L{ln:<4} [{cat}] “{'”“'.join(dict.fromkeys(words))}”→ {tip}")
+        exclaim.extend([ln] * len(re.findall(r"[！!](?![\[(])", text)))
+    if len(exclaim) > MAX_EXCLAIM:
+        hits.append(f"  L{exclaim[0]:<4} [感叹号] 全文 {len(exclaim)} 处（L{', L'.join(map(str, dict.fromkeys(exclaim)))}），建议 ≤{MAX_EXCLAIM}，让事实本身有力量")
+    r.warnings.extend(hits)
+
+
 def count_h2(body: str) -> int:
     n, fence = 0, None
     for line in body.split("\n"):
@@ -978,6 +1035,7 @@ def count_h2(body: str) -> int:
 
 def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict]:
     meta, body, offset = parse_front_matter(src.replace("\r\n", "\n"))
+    body = strip_comments(body)
     name = theme_name or meta.get("theme") or DEFAULT_THEME
     if name not in THEMES:
         raise SystemExit(f"未知主题 {name!r}，可选：{', '.join(THEMES)}")
@@ -1111,6 +1169,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("-t", "--theme", choices=list(THEMES), help="主题（覆盖 front matter）")
     ap.add_argument("--fragment", action="store_true", help="只输出可粘贴的 HTML 片段，不含预览外壳")
     ap.add_argument("--check", action="store_true", help="只做可读性检查，不写文件")
+    ap.add_argument("--no-style", action="store_true", help="跳过文风检查（套话 / 模糊信源 / 感叹号），只查排版")
     ap.add_argument("--json", action="store_true", help="以 JSON 输出统计与警告")
     ap.add_argument("--list-themes", action="store_true", help="列出主题")
     a = ap.parse_args(argv)
@@ -1126,6 +1185,9 @@ def main(argv: list[str] | None = None) -> int:
     src = Path(a.input).read_text(encoding="utf-8")
     frag, r, meta = render(src, a.theme)
     lint_meta(meta, r)
+    if str(meta.get("lint", "true")).lower() != "layout" and not a.no_style:
+        _, body, offset = parse_front_matter(src.replace("\r\n", "\n"))
+        lint_style(strip_comments(body), offset, r)
     theme = a.theme or meta.get("theme") or DEFAULT_THEME
     minutes = max(1, round(r.chars / READ_SPEED))
 
