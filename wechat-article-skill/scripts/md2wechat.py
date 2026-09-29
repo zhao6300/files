@@ -1214,47 +1214,71 @@ def _wx_error(res: dict) -> str:
     return f"公众号接口返回 {code}：{res.get('errmsg')}" + (f"。{hint}" if hint else "")
 
 
+_TOKEN: dict = {}
+
+
+def _wx_token() -> str:
+    if "t" not in _TOKEN:
+        appid, secret = os.environ.get("WECHAT_APPID"), os.environ.get("WECHAT_APPSECRET")
+        if not (appid and secret):
+            raise SystemExit("需要环境变量 WECHAT_APPID 和 WECHAT_APPSECRET（公众号后台 → 设置与开发 → 基本配置）")
+        res = _wx_json(f"{WECHAT_API}/cgi-bin/stable_token",
+                       json.dumps({"grant_type": "client_credential", "appid": appid, "secret": secret}).encode(),
+                       {"Content-Type": "application/json"})
+        if "access_token" not in res:
+            raise SystemExit(_wx_error(res))
+        _TOKEN["t"] = res["access_token"]
+    return _TOKEN["t"]
+
+
+def _read_image(md_path: Path, src: str) -> tuple[bytes, str, str]:
+    if re.match(r"^(https?:)?//", src):
+        with urllib.request.urlopen(src if src.startswith("http") else "https:" + src, timeout=60) as resp:
+            data = resp.read()
+    else:
+        f = (md_path.parent / src).resolve()
+        if not f.exists():
+            raise SystemExit(f"找不到图片 {src}（按 {md_path.parent} 解析）")
+        data = f.read_bytes()
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        ext, mime = "png", "image/png"
+    elif data[:3] == b"\xff\xd8\xff":
+        ext, mime = "jpg", "image/jpeg"
+    else:
+        raise SystemExit(f"{src}：公众号接口只收 jpg / png")
+    if len(data) > MAX_UPLOAD:
+        raise SystemExit(f"{src}：{len(data) // 1024}KB，超过接口 1MB 上限，先压缩")
+    return data, ext, mime
+
+
+def _wx_upload(endpoint: str, data: bytes, ext: str, mime: str) -> dict:
+    boundary = uuid.uuid4().hex
+    name = hashlib.sha256(data).hexdigest()[:12]
+    body = (f"--{boundary}\r\nContent-Disposition: form-data; name=\"media\"; filename=\"{name}.{ext}\"\r\n"
+            f"Content-Type: {mime}\r\n\r\n").encode() + data + f"\r\n--{boundary}--\r\n".encode()
+    sep = "&" if "?" in endpoint else "?"
+    res = _wx_json(f"{WECHAT_API}{endpoint}{sep}access_token={_wx_token()}", body,
+                   {"Content-Type": f"multipart/form-data; boundary={boundary}"})
+    if res.get("errcode"):
+        raise SystemExit(_wx_error(res))
+    return res
+
+
+def _cache(md_path: Path) -> tuple[Path, dict]:
+    f = md_path.with_suffix(".wechat-images.json")   # 按文件内容哈希缓存，改稿重跑不会重复上传
+    return f, (json.loads(f.read_text(encoding="utf-8")) if f.exists() else {})
+
+
 def wechat_upload_images(md_path: Path, srcs: list[str], image_base: str = "") -> dict:
-    appid, secret = os.environ.get("WECHAT_APPID"), os.environ.get("WECHAT_APPSECRET")
-    if not (appid and secret):
-        raise SystemExit("--wechat-upload 需要环境变量 WECHAT_APPID 和 WECHAT_APPSECRET（公众号后台 → 设置与开发 → 基本配置）")
-    cache_file = md_path.with_suffix(".wechat-images.json")   # 按文件内容哈希缓存，改稿重跑不会重复上传
-    cache = json.loads(cache_file.read_text(encoding="utf-8")) if cache_file.exists() else {}
-    token = None
+    cache_file, cache = _cache(md_path)
     out: dict = {}
     for src in dict.fromkeys(srcs):
         if "mmbiz.qpic.cn" in src:
             continue
-        if re.match(r"^(https?:)?//", src):
-            with urllib.request.urlopen(src if src.startswith("http") else "https:" + src, timeout=60) as resp:
-                data = resp.read()
-        else:
-            f = (md_path.parent / src).resolve()
-            if not f.exists():
-                raise SystemExit(f"找不到图片 {src}（按 {md_path.parent} 解析）")
-            data = f.read_bytes()
-        if data[:8] == b"\x89PNG\r\n\x1a\n":
-            ext, mime = "png", "image/png"
-        elif data[:3] == b"\xff\xd8\xff":
-            ext, mime = "jpg", "image/jpeg"
-        else:
-            raise SystemExit(f"{src}：公众号接口只收 jpg / png")
-        if len(data) > MAX_UPLOAD:
-            raise SystemExit(f"{src}：{len(data) // 1024}KB，超过接口 1MB 上限，先压缩")
+        data, ext, mime = _read_image(md_path, src)
         key = hashlib.sha256(data).hexdigest()
         if key not in cache:
-            if token is None:
-                res = _wx_json(f"{WECHAT_API}/cgi-bin/stable_token",
-                               json.dumps({"grant_type": "client_credential", "appid": appid, "secret": secret}).encode(),
-                               {"Content-Type": "application/json"})
-                if "access_token" not in res:
-                    raise SystemExit(_wx_error(res))
-                token = res["access_token"]
-            boundary = uuid.uuid4().hex
-            body = (f"--{boundary}\r\nContent-Disposition: form-data; name=\"media\"; filename=\"{key[:12]}.{ext}\"\r\n"
-                    f"Content-Type: {mime}\r\n\r\n").encode() + data + f"\r\n--{boundary}--\r\n".encode()
-            res = _wx_json(f"{WECHAT_API}/cgi-bin/media/uploadimg?access_token={token}", body,
-                           {"Content-Type": f"multipart/form-data; boundary={boundary}"})
+            res = _wx_upload("/cgi-bin/media/uploadimg", data, ext, mime)
             if not res.get("url"):
                 raise SystemExit(_wx_error(res))
             cache[key] = re.sub(r"^http://", "https://", res["url"])
@@ -1262,6 +1286,40 @@ def wechat_upload_images(md_path: Path, srcs: list[str], image_base: str = "") -
         out[src] = cache[key]
     cache_file.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
     return out
+
+
+def wechat_create_draft(md_path: Path, meta: dict, content: str) -> str:
+    """在公众号草稿箱里新建一篇（官方“新建草稿”接口）。封面走永久素材，拿到 thumb_media_id。"""
+    cover = (meta.get("cover") or "").strip()
+    if not cover:
+        raise SystemExit("--wechat-draft 需要封面：front matter 写 cover: <封面图路径>（2.35:1，jpg / png，1MB 以内）")
+    cache_file, cache = _cache(md_path)
+    data, ext, mime = _read_image(md_path, cover)
+    key = "cover:" + hashlib.sha256(data).hexdigest()
+    if key not in cache:
+        res = _wx_upload("/cgi-bin/material/add_material?type=image", data, ext, mime)
+        if not res.get("media_id"):
+            raise SystemExit(_wx_error(res))
+        cache[key] = res["media_id"]
+        print(f"↑ 封面 {cover} → media_id {cache[key]}", file=sys.stderr)
+        cache_file.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
+    article = {
+        "title": meta.get("title", "未命名文章"),
+        "author": meta.get("author", ""),
+        "digest": meta.get("summary", ""),
+        "content": content,
+        "content_source_url": meta.get("source_url", ""),
+        "thumb_media_id": cache[key],
+        "need_open_comment": 1,
+        "only_fans_can_comment": 0,
+    }
+    # 中文直接按 UTF-8 发送；\uXXXX 转义在部分接口上会出现乱码
+    body = json.dumps({"articles": [article]}, ensure_ascii=False).encode("utf-8")
+    res = _wx_json(f"{WECHAT_API}/cgi-bin/draft/add?access_token={_wx_token()}", body,
+                   {"Content-Type": "application/json; charset=utf-8"})
+    if not res.get("media_id"):
+        raise SystemExit(_wx_error(res))
+    return res["media_id"]
 
 
 PREVIEW_TMPL = """<!doctype html>
@@ -1300,11 +1358,16 @@ document.querySelectorAll('.bar button[data-theme]').forEach(b=>b.classList.togg
 async function copyArticle(){
   const src=document.querySelector('.wx-article.on'); const el=src.cloneNode(true); let local=0;
   // 图片换成公网地址（公众号只会转存 http/https 图片）；本地图片带不过去，只能提示手动上传
-  el.querySelectorAll('img').forEach((img,i)=>{ const u=img.getAttribute('data-copy-src')||src.querySelectorAll('img')[i].src; img.setAttribute('src',u); img.removeAttribute('data-copy-src'); if(!/mmbiz\.qpic\.cn/.test(u)) local++; });
+  // 不在公众号图床上的图，发表时一定转存失败，还会被自动选成封面。换成醒目的占位文字，粘贴后在占位处插入本地图片
+  el.querySelectorAll('img').forEach((img,i)=>{ const u=img.getAttribute('data-copy-src')||src.querySelectorAll('img')[i].src; img.removeAttribute('data-copy-src');
+    if(/mmbiz\.qpic\.cn/.test(u)){ img.setAttribute('src',u); return; }
+    local++; const box=img.closest('section')||img; const p=document.createElement('p');
+    p.setAttribute('style','margin:28px 0;padding:14px 16px;border:1px dashed #F2542D;border-radius:8px;font-size:14px;line-height:1.7em;color:#F2542D;text-align:center');
+    p.textContent='【在这里插入图 '+local+'：'+decodeURIComponent(u.split('/').pop())+'，插入后删掉这行】'; box.replaceWith(p); });
   el.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(el); const html=el.innerHTML;
   try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([el.innerText],{type:'text/plain'})})]);}
   catch(e){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();}
-  el.remove(); const t=document.getElementById('toast'); t.textContent = local ? `已复制。${local} 张图片不在公众号图床上，发表时会提示转存失败：请在编辑器里逐张替换上传（见页面底部清单），或用 --wechat-upload 生成` : '已复制，去公众号编辑器粘贴即可'; t.classList.add('show');setTimeout(()=>t.classList.remove('show'), local ? 6000 : 1600);
+  el.remove(); const t=document.getElementById('toast'); t.textContent = local ? `已复制。${local} 张图换成了占位文字：粘贴后在占位处插入本地图片（页面底部可下载），封面也请本地上传` : '已复制，去公众号编辑器粘贴即可'; t.classList.add('show');setTimeout(()=>t.classList.remove('show'), local ? 6000 : 1600);
 }
 pick('__DEFAULT__');
 </script>
@@ -1332,8 +1395,8 @@ def build_preview(src: str, default_theme: str, meta: dict, r: Renderer, image_m
     if todo:
         link = lambda u: (r.image_base.rstrip("/") + "/" + u.lstrip("./")) if r.image_base and not re.match(r"^(https?:)?//", u) else u
         items = "".join(f'<li><a href="{html.escape(link(u))}" target="_blank" download>{html.escape(u.rsplit("/", 1)[-1])}</a></li>' for u in todo)
-        warn += ('<div class="warn">发表前要处理的图片：这些图不在公众号图床上，粘贴后能显示，但点“发表”时会提示“图片转存失败”。'
-                 '在编辑器里点中每张图 →“替换”→ 上传下面对应的文件；或者用 <code>--wechat-upload</code> 重新生成。<b>封面也要检查</b>：编辑器会自动拿第一张图当封面，正文里的图删掉了，封面还留着外链，也要本地上传一张。'
+        warn += ('<div class="warn">这些图不在公众号图床上。点“复制到公众号”时，它们会换成占位文字（外链图发表时一定转存失败，还会被自动选成封面）。'
+                 '粘贴后在每个占位处插入对应的本地图片，删掉占位行，再在“封面”处本地上传封面。想一步到位，用 <code>--wechat-draft</code> 直接存进草稿箱。'
                  f'<ol style="margin:6px 0 0;padding-left:20px">{items}</ol></div>')
     return (
         PREVIEW_TMPL.replace("__TITLE__", smart_quotes(html.escape(meta.get("title", "未命名文章"), quote=False)))
@@ -1355,6 +1418,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--fragment", action="store_true", help="只输出可粘贴的 HTML 片段，不含预览外壳")
     ap.add_argument("--check", action="store_true", help="只做可读性检查，不写文件")
     ap.add_argument("--image-base", help="图片相对路径的公网前缀（覆盖 front matter 的 image_base）")
+    ap.add_argument("--wechat-draft", action="store_true", help="上传图片和封面，直接在公众号草稿箱里新建这篇（包含 --wechat-upload；需要 front matter 的 cover）")
     ap.add_argument("--wechat-upload", action="store_true", help="把文中图片上传到公众号图床（需环境变量 WECHAT_APPID / WECHAT_APPSECRET，并把本机 IP 加入公众号 IP 白名单）")
     ap.add_argument("--no-style", action="store_true", help="跳过文风检查（套话 / 模糊信源 / 感叹号），只查排版")
     ap.add_argument("--json", action="store_true", help="以 JSON 输出统计与警告")
@@ -1375,7 +1439,7 @@ def main(argv: list[str] | None = None) -> int:
             if src.startswith("---") else f"---\nimage_base: {a.image_base}\n---\n{src}"
     frag, r, meta = render(src, a.theme)
     image_map: dict = {}
-    if a.wechat_upload and r.all_images:
+    if (a.wechat_upload or a.wechat_draft) and r.all_images:
         image_map = wechat_upload_images(Path(a.input), r.all_images, r.image_base)
         frag, r, meta = render(src, a.theme, image_map=image_map)
     lint_meta(meta, r)
@@ -1401,6 +1465,9 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.check:
         return 0
+    if a.wechat_draft:
+        media_id = wechat_create_draft(Path(a.input), meta, frag)
+        print(f"✓ 已存入公众号草稿箱（media_id {media_id}）：去后台“内容管理 → 草稿箱”预览、发表", file=sys.stderr)
     out = Path(a.output) if a.output else Path(a.input).with_suffix(".html")
     content = frag if a.fragment else build_preview(src, theme, meta, r, image_map)
     out.write_text(content, encoding="utf-8")
