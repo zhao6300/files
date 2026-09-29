@@ -255,6 +255,11 @@ def smart_quotes(text: str) -> str:
 
 
 def style(**kw) -> str:
+    # 行高一律写成 em（公众号编辑器自带的写法）。不带单位的“1.85”会被公众号的排版检查
+    # 判成“行高小于字体大小”；em 在元素上算成 px 再继承，子元素字号更小时也不会重叠。
+    lh = kw.get("line_height")
+    if lh is not None and re.fullmatch(r"\d+(?:\.\d+)?", str(lh)) and float(lh) > 0:
+        kw["line_height"] = f"{lh}em"
     return ";".join(f"{k.replace('_', '-')}:{v}" for k, v in kw.items() if v is not None)
 
 
@@ -396,7 +401,7 @@ class Renderer:
         else:
             self.footnotes.append((label, url))
             n = len(self.footnotes)
-        sup = f'<sup style="{style(font_size="10px", color=t["signal"], line_height="0", margin_left="1px")}">[{n}]</sup>'
+        sup = f'<sup style="{style(font_size="10px", color=t["signal"], line_height="1", margin_left="1px")}">[{n}]</sup>'
         if label == url:  # 裸链接只保留脚注编号
             return sup
         # 书名号、引号放到下划线外面：包在 span 里时，浏览器不在“《”前换行，整段书名被挤到下一行，上一行两端对齐后字距拉得很开
@@ -684,7 +689,7 @@ class Renderer:
         self.anchor()
         t = self.t
         if t["hr_style"] == "line":
-            return f'<p style="{style(margin="40px 0", line_height="0", font_size="0", border_top="1px solid " + t["rule"])}">&nbsp;</p>'
+            return f'<hr style="{style(margin="40px 0", height="0", border="0", border_top="1px solid " + t["rule"])}"/>'
         return (
             f'<p style="{style(margin="40px 0", font_size="12px", line_height="1", letter_spacing="6px", color=t["accent"], text_align="center", opacity="0.75")}">{html.escape(t["hr"])}</p>'
         )
@@ -767,7 +772,7 @@ class Renderer:
             box = style(display="inline-block", width=w, text_indent="0", vertical_align="middle", line_height="1")
             if ordered:
                 marker = (
-                    f'<span style="{style(display="inline-block", width=w, text_indent="0", font_family=t["ol_font"], font_size="13px" if t["ol_font"] == MONO else None, font_weight="bold", color=t["ol_color"])}">'
+                    f'<span style="{style(display="inline-block", width=w, text_indent="0", font_family=t["ol_font"], font_size="13px" if t["ol_font"] == MONO else None, line_height="1", font_weight="bold", color=t["ol_color"])}">'
                     f'{t["ol_fmt"].format(n=counters[level])}</span>'
                 )
             elif level == 0:
@@ -866,7 +871,7 @@ class Renderer:
                 author = ""
                 if arg:
                     author = f'<p style="{style(margin="14px 0 0", font_size="13px", line_height="1.5", letter_spacing="1px", color=t["muted"], text_align="left")}">— {self.inline(arg)}</p>'
-                bar = f'<p style="{style(margin="0 0 16px", line_height="0", font_size="0")}"><span style="{style(display="inline-block", width="22px", height="2px", background_color=t["accent"])}"></span></p>'
+                bar = f'<hr style="{style(width="22px", margin="0 0 16px", height="0", border="0", border_top="2px solid " + t["accent"])}"/>'
                 return f'<section style="{style(margin="44px 4px")}">{bar}{body}{author}</section>'
             if t["quote"] == "display":
                 body = inner(font_size="20px", font_weight="bold", color=t["heading"], margin="0 0 6px", line_height="1.55", letter_spacing="0", text_align="left")
@@ -882,7 +887,7 @@ class Renderer:
                 author = f'<p style="{style(margin="12px 0 0", font_size="13px", line_height="1.5", letter_spacing="1px", color=t["muted"], text_align="center")}">—— {self.inline(arg)}</p>'
             return (
                 f'<section style="{style(margin="44px 12px", text_align="center")}">'
-                f'<p style="{style(margin="0 0 4px", font_family=SERIF, font_size="44px", line_height="1", height="30px", color=t["accent"], text_align="center", opacity="0.85")}">&ldquo;</p>'
+                f'<p style="{style(margin="0 0 -10px", font_family=SERIF, font_size="44px", line_height="1", color=t["accent"], text_align="center", opacity="0.85")}">&ldquo;</p>'
                 f"{body}{author}</section>"
             )
 
@@ -1124,6 +1129,25 @@ def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict
     return f'<section style="{root}">{inner}</section>', r, meta
 
 
+def lint_output(frag: str, r: Renderer) -> None:
+    """自检生成的 HTML：行高不能小于字号，否则公众号粘贴时报“行高异常 / 文字重叠”。"""
+    bad = 0
+    for st in re.findall(r'style="([^"]*)"', frag):
+        lh = re.search(r"(?:^|;)line-height:([\d.]+)(em|px)?", st)
+        if not lh:
+            continue
+        fs = re.search(r"(?:^|;)font-size:([\d.]+)px", st)
+        v, unit = float(lh.group(1)), lh.group(2)
+        size = float(fs.group(1)) if fs else None
+        if size == 0:
+            continue
+        px = v if unit == "px" else (v * size if size else None)
+        if v == 0 or unit is None or (px is not None and size and px < size):
+            bad += 1
+    if bad:
+        r.warnings.append(f"  HTML  {bad} 处行高小于字号或未写单位，粘贴进公众号会报“行高异常”（脚本问题，请修 md2wechat.py）")
+
+
 def lint_meta(meta: dict, r: Renderer) -> None:
     title = meta.get("title", "")
     # 栏目前缀（“晚点对话丨”“APPSO 独家｜”）不计入主体长度，但整体仍不宜超过 40 字
@@ -1235,6 +1259,7 @@ def main(argv: list[str] | None = None) -> int:
     src = Path(a.input).read_text(encoding="utf-8")
     frag, r, meta = render(src, a.theme)
     lint_meta(meta, r)
+    lint_output(frag, r)
     if str(meta.get("lint", "true")).lower() != "layout" and not a.no_style:
         _, body, offset = parse_front_matter(src.replace("\r\n", "\n"))
         lint_style(strip_comments(body), offset, r)
