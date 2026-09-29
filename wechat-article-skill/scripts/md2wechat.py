@@ -26,10 +26,14 @@ md2wechat — 把 Markdown 转成可直接粘贴进微信公众号编辑器的 H
 from __future__ import annotations
 
 import argparse
+import hashlib
 import html
 import json
+import os
 import re
 import sys
+import urllib.request
+import uuid
 from pathlib import Path
 
 FONT = "-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Arial,sans-serif"
@@ -288,6 +292,8 @@ class Renderer:
         self.image_base = (meta.get("image_base") or "").strip()
         self.preview = False
         self.local_images: list[str] = []
+        self.all_images: list[str] = []
+        self.image_map: dict[str, str] = {}   # 原始 src → 公众号图床地址（--wechat-upload）
         self.h2_index = 0
         self.warnings: list[str] = []
         self.chars = 0
@@ -719,8 +725,11 @@ class Renderer:
                 f'<p style="{style(margin="10px 0 0", font_size="12px", line_height="1.6", letter_spacing="1px", color=t["muted"], text_align="center")}">{self.inline(caption)}</p>'
             )
         radius = "8px" if t["radius"] == "12px" else "4px"
+        self.all_images.append(src)
         remote = src
-        if not re.match(r"^(https?:)?//", src) and not src.startswith("data:"):
+        if src in self.image_map:
+            remote = self.image_map[src]
+        elif not re.match(r"^(https?:)?//", src) and not src.startswith("data:"):
             if self.image_base:
                 remote = self.image_base.rstrip("/") + "/" + src.lstrip("./")
             else:
@@ -1100,7 +1109,8 @@ def lint_style(body: str, offset: int, r: Renderer) -> None:
 
 
 
-def render(src: str, theme_name: str | None = None, preview: bool = False) -> tuple[str, Renderer, dict]:
+def render(src: str, theme_name: str | None = None, preview: bool = False,
+           image_map: dict | None = None) -> tuple[str, Renderer, dict]:
     meta, body, offset = parse_front_matter(src.replace("\r\n", "\n"))
     body = strip_comments(body)
     name = theme_name or meta.get("theme") or DEFAULT_THEME
@@ -1111,6 +1121,7 @@ def render(src: str, theme_name: str | None = None, preview: bool = False) -> tu
         t["h2"] = meta["h2"]   # 单篇文章覆盖章节样式
     r = Renderer(t, meta)
     r.preview = preview
+    r.image_map = image_map or {}
     inner = r.blocks(body.split("\n"), offset)
     inner += r.end_matter()
     if meta.get("byline"):
@@ -1170,12 +1181,87 @@ def lint_meta(meta: dict, r: Renderer) -> None:
     elif title and count_chars(title) > 40:
         r.warnings.insert(0, f"  META  标题含栏目前缀共 {count_chars(title)} 字，建议 ≤40 字")
     if r.local_images:
-        r.warnings.append(f"  META  {len(r.local_images)} 张本地图片（{r.local_images[0]} 等）复制到公众号时带不过去：先推到公网（如 GitHub），在 front matter 写 image_base: <图片所在目录的 https 地址>；或粘贴后在编辑器里手动上传")
+        r.warnings.append(f"  META  {len(r.local_images)} 张本地图片（{r.local_images[0]} 等）复制不过去")
+    ext = [u for u in dict.fromkeys(r.all_images) if "mmbiz.qpic.cn" not in r.image_map.get(u, u)]
+    if ext:
+        r.warnings.append(f"  META  {len(ext)} 张图片不在公众号图床上，发表时会提示“图片转存失败”：用 --wechat-upload 上传，或粘贴后在编辑器里逐张替换")
     summary = meta.get("summary", "")
     if not summary:
         r.warnings.insert(0, "  META  缺少 summary（摘要），分享卡片会自动截取正文开头")
     elif len(summary) > MAX_SUMMARY_CHARS:
         r.warnings.insert(0, f"  META  摘要 {len(summary)} 字，超过公众号 {MAX_SUMMARY_CHARS} 字上限")
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 上传图片到公众号图床（官方接口“上传图文消息内的图片获取 URL”）
+# 外链图片（包括 jsDelivr、GitHub）在编辑器里能显示，但发表时公众号要把它转存到自己的图床，
+# 经常失败并提示“图片转存失败，请重新插入图片”。直接上传到 mmbiz.qpic.cn 就不需要转存。
+# ──────────────────────────────────────────────────────────────────────────────
+WECHAT_API = os.environ.get("WECHAT_API_BASE", "https://api.weixin.qq.com")
+MAX_UPLOAD = 1024 * 1024   # 接口限制：jpg/png，1MB 以内
+
+
+def _wx_json(url: str, data: bytes | None = None, headers: dict | None = None) -> dict:
+    req = urllib.request.Request(url, data=data, headers=headers or {})
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        return json.loads(resp.read().decode("utf-8"))
+
+
+def _wx_error(res: dict) -> str:
+    code = res.get("errcode")
+    hint = {40164: "本机 IP 不在白名单：公众号后台 → 设置与开发 → 基本配置 → IP 白名单，加入报错里的 IP",
+            40013: "AppID 不对", 40125: "AppSecret 不对", 40001: "access_token 无效，重试一次"}.get(code, "")
+    return f"公众号接口返回 {code}：{res.get('errmsg')}" + (f"。{hint}" if hint else "")
+
+
+def wechat_upload_images(md_path: Path, srcs: list[str], image_base: str = "") -> dict:
+    appid, secret = os.environ.get("WECHAT_APPID"), os.environ.get("WECHAT_APPSECRET")
+    if not (appid and secret):
+        raise SystemExit("--wechat-upload 需要环境变量 WECHAT_APPID 和 WECHAT_APPSECRET（公众号后台 → 设置与开发 → 基本配置）")
+    cache_file = md_path.with_suffix(".wechat-images.json")   # 按文件内容哈希缓存，改稿重跑不会重复上传
+    cache = json.loads(cache_file.read_text(encoding="utf-8")) if cache_file.exists() else {}
+    token = None
+    out: dict = {}
+    for src in dict.fromkeys(srcs):
+        if "mmbiz.qpic.cn" in src:
+            continue
+        if re.match(r"^(https?:)?//", src):
+            with urllib.request.urlopen(src if src.startswith("http") else "https:" + src, timeout=60) as resp:
+                data = resp.read()
+        else:
+            f = (md_path.parent / src).resolve()
+            if not f.exists():
+                raise SystemExit(f"找不到图片 {src}（按 {md_path.parent} 解析）")
+            data = f.read_bytes()
+        if data[:8] == b"\x89PNG\r\n\x1a\n":
+            ext, mime = "png", "image/png"
+        elif data[:3] == b"\xff\xd8\xff":
+            ext, mime = "jpg", "image/jpeg"
+        else:
+            raise SystemExit(f"{src}：公众号接口只收 jpg / png")
+        if len(data) > MAX_UPLOAD:
+            raise SystemExit(f"{src}：{len(data) // 1024}KB，超过接口 1MB 上限，先压缩")
+        key = hashlib.sha256(data).hexdigest()
+        if key not in cache:
+            if token is None:
+                res = _wx_json(f"{WECHAT_API}/cgi-bin/stable_token",
+                               json.dumps({"grant_type": "client_credential", "appid": appid, "secret": secret}).encode(),
+                               {"Content-Type": "application/json"})
+                if "access_token" not in res:
+                    raise SystemExit(_wx_error(res))
+                token = res["access_token"]
+            boundary = uuid.uuid4().hex
+            body = (f"--{boundary}\r\nContent-Disposition: form-data; name=\"media\"; filename=\"{key[:12]}.{ext}\"\r\n"
+                    f"Content-Type: {mime}\r\n\r\n").encode() + data + f"\r\n--{boundary}--\r\n".encode()
+            res = _wx_json(f"{WECHAT_API}/cgi-bin/media/uploadimg?access_token={token}", body,
+                           {"Content-Type": f"multipart/form-data; boundary={boundary}"})
+            if not res.get("url"):
+                raise SystemExit(_wx_error(res))
+            cache[key] = re.sub(r"^http://", "https://", res["url"])
+            print(f"↑ {src} → {cache[key]}", file=sys.stderr)
+        out[src] = cache[key]
+    cache_file.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
+    return out
 
 
 PREVIEW_TMPL = """<!doctype html>
@@ -1214,11 +1300,11 @@ document.querySelectorAll('.bar button[data-theme]').forEach(b=>b.classList.togg
 async function copyArticle(){
   const src=document.querySelector('.wx-article.on'); const el=src.cloneNode(true); let local=0;
   // 图片换成公网地址（公众号只会转存 http/https 图片）；本地图片带不过去，只能提示手动上传
-  el.querySelectorAll('img').forEach((img,i)=>{ const u=img.getAttribute('data-copy-src')||src.querySelectorAll('img')[i].src; img.setAttribute('src',u); img.removeAttribute('data-copy-src'); if(!/^https?:/.test(u)) local++; });
+  el.querySelectorAll('img').forEach((img,i)=>{ const u=img.getAttribute('data-copy-src')||src.querySelectorAll('img')[i].src; img.setAttribute('src',u); img.removeAttribute('data-copy-src'); if(!/mmbiz\.qpic\.cn/.test(u)) local++; });
   el.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(el); const html=el.innerHTML;
   try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([el.innerText],{type:'text/plain'})})]);}
   catch(e){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();}
-  el.remove(); const t=document.getElementById('toast'); t.textContent = local ? `已复制。${local} 张本地图片带不过去，请在编辑器里手动上传（或设置 image_base）` : '已复制，去公众号编辑器粘贴即可'; t.classList.add('show');setTimeout(()=>t.classList.remove('show'), local ? 4000 : 1600);
+  el.remove(); const t=document.getElementById('toast'); t.textContent = local ? `已复制。${local} 张图片不在公众号图床上，发表时会提示转存失败：请在编辑器里逐张替换上传（见页面底部清单），或用 --wechat-upload 生成` : '已复制，去公众号编辑器粘贴即可'; t.classList.add('show');setTimeout(()=>t.classList.remove('show'), local ? 6000 : 1600);
 }
 pick('__DEFAULT__');
 </script>
@@ -1226,10 +1312,10 @@ pick('__DEFAULT__');
 """
 
 
-def build_preview(src: str, default_theme: str, meta: dict, r: Renderer) -> str:
+def build_preview(src: str, default_theme: str, meta: dict, r: Renderer, image_map: dict | None = None) -> str:
     articles, buttons = [], []
     for name, th in THEMES.items():
-        frag, _, _ = render(src, name, preview=True)
+        frag, _, _ = render(src, name, preview=True, image_map=image_map)
         articles.append(f'<div class="wx-article" data-theme="{name}">{frag}</div>')
         dot = (
             f'<span style="display:inline-block;width:6px;height:6px;background:{th["signal"]};margin-left:6px;vertical-align:middle"></span>'
@@ -1242,6 +1328,13 @@ def build_preview(src: str, default_theme: str, meta: dict, r: Renderer) -> str:
     warn = ""
     if r.warnings:
         warn = '<div class="warn">可读性提示（不会进入正文）：\n' + html.escape("\n".join(r.warnings)) + "</div>"
+    todo = [u for u in dict.fromkeys(r.all_images) if "mmbiz.qpic.cn" not in r.image_map.get(u, u)]
+    if todo:
+        link = lambda u: (r.image_base.rstrip("/") + "/" + u.lstrip("./")) if r.image_base and not re.match(r"^(https?:)?//", u) else u
+        items = "".join(f'<li><a href="{html.escape(link(u))}" target="_blank" download>{html.escape(u.rsplit("/", 1)[-1])}</a></li>' for u in todo)
+        warn += ('<div class="warn">发表前要处理的图片：这些图不在公众号图床上，粘贴后能显示，但点“发表”时会提示“图片转存失败”。'
+                 '在编辑器里点中每张图 →“替换”→ 上传下面对应的文件；或者用 <code>--wechat-upload</code> 重新生成。'
+                 f'<ol style="margin:6px 0 0;padding-left:20px">{items}</ol></div>')
     return (
         PREVIEW_TMPL.replace("__TITLE__", smart_quotes(html.escape(meta.get("title", "未命名文章"), quote=False)))
         .replace("__AUTHOR__", html.escape(meta.get("author", "作者")))
@@ -1262,6 +1355,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--fragment", action="store_true", help="只输出可粘贴的 HTML 片段，不含预览外壳")
     ap.add_argument("--check", action="store_true", help="只做可读性检查，不写文件")
     ap.add_argument("--image-base", help="图片相对路径的公网前缀（覆盖 front matter 的 image_base）")
+    ap.add_argument("--wechat-upload", action="store_true", help="把文中图片上传到公众号图床（需环境变量 WECHAT_APPID / WECHAT_APPSECRET，并把本机 IP 加入公众号 IP 白名单）")
     ap.add_argument("--no-style", action="store_true", help="跳过文风检查（套话 / 模糊信源 / 感叹号），只查排版")
     ap.add_argument("--json", action="store_true", help="以 JSON 输出统计与警告")
     ap.add_argument("--list-themes", action="store_true", help="列出主题")
@@ -1280,6 +1374,10 @@ def main(argv: list[str] | None = None) -> int:
         src = re.sub(r"^(---\s*\n.*?)(\n---)", lambda m: f"{m.group(1)}\nimage_base: {a.image_base}{m.group(2)}", src, count=1, flags=re.S) \
             if src.startswith("---") else f"---\nimage_base: {a.image_base}\n---\n{src}"
     frag, r, meta = render(src, a.theme)
+    image_map: dict = {}
+    if a.wechat_upload and r.all_images:
+        image_map = wechat_upload_images(Path(a.input), r.all_images, r.image_base)
+        frag, r, meta = render(src, a.theme, image_map=image_map)
     lint_meta(meta, r)
     lint_output(frag, r)
     if str(meta.get("lint", "true")).lower() != "layout" and not a.no_style:
@@ -1304,7 +1402,7 @@ def main(argv: list[str] | None = None) -> int:
     if a.check:
         return 0
     out = Path(a.output) if a.output else Path(a.input).with_suffix(".html")
-    content = frag if a.fragment else build_preview(src, theme, meta, r)
+    content = frag if a.fragment else build_preview(src, theme, meta, r, image_map)
     out.write_text(content, encoding="utf-8")
     print(f"→ {out}", file=sys.stderr)
     return 0

@@ -137,7 +137,10 @@ python scripts/md2wechat.py article.md --fragment  # 只输出可粘贴的 HTML 
 2. 最终标题 + 2 个备选、摘要
 3. 自评分数、最弱的一项，以及需要用户补充或核实的【待补】项和信源清单
 4. 封面建议：主图 900×383（2.35:1），分享图 1:1。主体放在中间，因为分享时会裁成正方形。
-5. 发布提示：**`.md` 只是源稿，样式全在 `.html` 里**。直接复制 Markdown，或者复制 GitHub 渲染出来的 Markdown 页面，样式都会丢；`:::lead` 这类组件也不会被识别。正确做法：在浏览器里打开 html，点「复制到公众号」，粘贴到编辑器；**图片**：公众号只会转存公网 https 图片，本地图片复制不过去。文章有本地图片时，先把图片推到公网（GitHub 仓库推荐 jsDelivr，地址钉在提交号上：`https://cdn.jsdelivr.net/gh/{owner}/{repo}@{commit}/{图片所在目录}`），在 front matter 写 `image_base:` 这个地址再生成 html；预览仍显示本地图，复制时自动换成公网地址。做不到时，告诉用户粘贴后手动上传。粘贴后编辑器如果弹出排版检查提示，请用户把原文发回来，按提示修脚本本身，不要只改这一篇（记录到 `EVOLUTION.md`）。
+5. 发布提示：**`.md` 只是源稿，样式全在 `.html` 里**。直接复制 Markdown，或者复制 GitHub 渲染出来的 Markdown 页面，样式都会丢；`:::lead` 这类组件也不会被识别。正确做法：在浏览器里打开 html，点「复制到公众号」，粘贴到编辑器；**图片**：发表时，不在公众号图床（`mmbiz.qpic.cn`）上的图片都要转存，外链图（包括 jsDelivr、GitHub）经常失败，提示“图片转存失败，请重新插入图片”。可靠的做法只有两种：
+   - **自动**：用户提供公众号 AppID / AppSecret（环境变量 `WECHAT_APPID` / `WECHAT_APPSECRET`），并把运行机器的出口 IP 加入公众号 IP 白名单，然后用 `--wechat-upload` 生成。图片会先传到公众号图床，复制出去就是 `mmbiz.qpic.cn` 地址。上传结果缓存在 `<文章>.wechat-images.json`，改稿重跑不会重复上传。
+   - **手动**：粘贴后在编辑器里点中每张图 →“替换”→ 本地上传。预览页底部列出了要替换的图片和下载链接。
+   - `image_base:` 只能让图片在编辑器里显示出来，不能保证发表成功。粘贴后编辑器如果弹出排版检查提示，请用户把原文发回来，按提示修脚本本身，不要只改这一篇（记录到 `EVOLUTION.md`）。
    - 用户拿不到本地文件时（比如在网页端，或者文件在 GitHub 上），给一个能直接打开的链接。GitHub 上的 `.html` 默认只显示源码，要用 `https://htmlpreview.github.io/?https://github.com/{owner}/{repo}/blob/{branch}/{path}.html` 打开（仓库必须是公开的）。
 
 ## 排版原则（为什么这样设计）

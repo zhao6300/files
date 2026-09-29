@@ -208,11 +208,11 @@ document.querySelectorAll('.bar button[data-theme]').forEach(b=>b.classList.togg
 async function copyArticle(){
   const src=document.querySelector('.wx-article.on'); const el=src.cloneNode(true); let local=0;
   // 图片换成公网地址（公众号只会转存 http/https 图片）；本地图片带不过去，只能提示手动上传
-  el.querySelectorAll('img').forEach((img,i)=>{ const u=img.getAttribute('data-copy-src')||src.querySelectorAll('img')[i].src; img.setAttribute('src',u); img.removeAttribute('data-copy-src'); if(!/^https?:/.test(u)) local++; });
+  el.querySelectorAll('img').forEach((img,i)=>{ const u=img.getAttribute('data-copy-src')||src.querySelectorAll('img')[i].src; img.setAttribute('src',u); img.removeAttribute('data-copy-src'); if(!/mmbiz\.qpic\.cn/.test(u)) local++; });
   el.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(el); const html=el.innerHTML;
   try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([el.innerText],{type:'text/plain'})})]);}
   catch(e){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();}
-  el.remove(); const t=document.getElementById('toast'); t.textContent = local ? `已复制。${local} 张本地图片带不过去，请在编辑器里手动上传（或设置 image_base）` : '已复制，去公众号编辑器粘贴即可'; t.classList.add('show');setTimeout(()=>t.classList.remove('show'), local ? 4000 : 1600);
+  el.remove(); const t=document.getElementById('toast'); t.textContent = local ? `已复制。${local} 张图片不在公众号图床上，发表时会提示转存失败：请在编辑器里逐张替换上传（见页面底部清单），或用 --wechat-upload 生成` : '已复制，去公众号编辑器粘贴即可'; t.classList.add('show');setTimeout(()=>t.classList.remove('show'), local ? 6000 : 1600);
 }
 pick('clay');
 </script>
