@@ -133,7 +133,7 @@ THEMES: dict[str, dict] = {
         "bullet": "square",
         "ol_font": MONO,
         "ol_color": "#8E8EA0",
-        "ol_fmt": "{n:02d}",
+        "ol_fmt": "{n}.",
         "table": "rule",
         "mark": "#FFE3D9",
         "link": "#0D0D0D",
@@ -276,7 +276,8 @@ class Renderer:
     def __init__(self, theme: dict, meta: dict):
         self.t = theme
         self.meta = meta
-        self.numbered = str(meta.get("numbered", "true")).lower() != "false"
+        # 章节序号默认关闭（晚点、少数派都不编号，见 benchmarks.md）；front matter 写 numbered: true 才显示
+        self.numbered = str(meta.get("numbered", "false")).lower() == "true"
         self.use_pangu = str(meta.get("pangu", "true")).lower() != "false"
         # 正文字号：15（默认，精致）或 16（大字，适合中老年读者 / 访谈长文）
         self.fs, self.lh = ("16px", "1.8") if str(meta.get("size", "15")).strip() == "16" else ("15px", "1.85")

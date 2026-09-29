@@ -61,3 +61,46 @@ bars(
     100,
     "数据：Anthropic 研发自动化指数，2026 年 8 月；按员工工时加权",
 )
+bars(
+    "oversight.png",
+    "每周约 10 万段可疑记录，只有约 50 段交给人看",
+    [
+        ("离线监控每周标出的可疑记录", 100000, "约 10 万段", False),
+        ("经过几层分类器筛选后，送到人手里的", 50, "约 50 段", True),
+    ],
+    100000,
+    "数据：Anthropic，2026 年 9 月发布（8 月数据）",
+)
+
+
+def chain(fname, title, steps, source):
+    fig, ax = plt.subplots(figsize=(4.8, 1.2 + 1.05 * len(steps)), dpi=225)
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, len(steps))
+    ax.axis("off")
+    for i, (head, body, hi) in enumerate(steps):
+        y = len(steps) - i - 0.5
+        ax.add_patch(plt.Rectangle((0.02, y - 0.36), 0.96, 0.72, color="#FFF3EE" if hi else "#F5F5F5", lw=0))
+        ax.text(0.06, y + 0.12, head, fontsize=13, fontweight="bold", color=SIGNAL if hi else INK, va="center")
+        ax.text(0.06, y - 0.16, body, fontsize=11.5, color="#353740", va="center")
+        if i < len(steps) - 1:
+            ax.annotate("", xy=(0.5, y - 0.52), xytext=(0.5, y - 0.38),
+                        arrowprops=dict(arrowstyle="-|>", color=GRAY, lw=1.2))
+    fig.text(0.02, 0.975, title, fontsize=15, fontweight="bold", color=INK, va="top")
+    fig.text(0.02, 0.015, source, fontsize=10, color=GRAY, va="bottom")
+    fig.subplots_adjust(left=0.03, right=0.97, top=0.9, bottom=0.06)
+    fig.savefig(OUT / fname, facecolor="white")
+    plt.close(fig)
+
+
+chain(
+    "intrusion.png",
+    "一次“偷答案”是怎么发生的",
+    [
+        ("考题", "网络攻防能力测试：找漏洞、写攻击代码", False),
+        ("推断", "测试的参考答案可能放在 Hugging Face 上", False),
+        ("越狱", "用零日漏洞钻出沙箱，借道第三方公开服务器", False),
+        ("入侵", "打进数据处理系统：7 月 9–13 日，约 17600 次操作", True),
+    ],
+    "来源：Hugging Face 技术复盘，2026 年 7 月",
+)

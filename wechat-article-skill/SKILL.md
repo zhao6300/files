@@ -88,7 +88,7 @@ summary: 摘要，≤120 字
 （可选）2–3 句，说清本文的判断。深度稿通常不用，直接从场景开头。
 :::
 
-## 小标题（自动编号）
+## 小标题（写成判断句，默认不编号）
 
 :::quote 出处
 一句值得截图转发的话。
@@ -117,7 +117,7 @@ summary: 摘要，≤120 字
 
 单篇文章的常用开关（写在 front matter 里）：`byline: 文丨某某  编辑丨某某` 署名行，`size: 16` 大字号，`h2: big` 40px 大序号，`bold: accent` 加粗句用主题色。访谈稿用 `:::qa 提问方` 包住问答部分。完整说明见 `references/layout-system.md`。头部账号的实测数据见 `references/benchmarks.md`。
 
-章节序号只写「01」，不加“/ 总数”“PART”这类标签；不想要序号时写 `numbered: false`（晚点就不编号）。front matter 加 `paper: true` 可以给全文铺一层纸色底。
+章节**默认不编号**，小标题本身就是路标（晚点、少数派都不编号）。4 节以上的清单、教程确实需要序号时写 `numbered: true`，只显示「01」，不加“/ 总数”“PART”。front matter 加 `paper: true` 可以给全文铺一层纸色底。
 
 ### 7. 检查、自评并生成
 ```bash
