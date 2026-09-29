@@ -5,7 +5,7 @@ md2wechat — 把 Markdown 转成可直接粘贴进微信公众号编辑器的 H
 特点
   * 零依赖：只用 Python 3.8+ 标准库。
   * 全内联样式：公众号会剥离 <style>、class、id、<script>，所以每个元素都自带 style。
-  * 移动端优先：15px 正文 / 1.9 行高 / 0.5px 字距 / 两端对齐，按 375pt 手机屏幕调校。
+  * 移动端优先：15px 正文 / 1.85 行高 / 0.5px 字距 / 两端对齐，按 375pt 手机屏幕调校。
   * 六套主题：陶土 clay（默认）、素白 mono、墨印 ink、青瓷 celadon、琥珀 amber、石墨 graphite。
   * 扩展组件：导读、金句、提示卡、卡片、结尾区块、==高亮==。
   * 外链自动转脚注（公众号正文不允许外链；mp.weixin.qq.com 链接保留）。
@@ -40,7 +40,7 @@ MONO = "Menlo,Monaco,Consolas,'Courier New',monospace"
 # ──────────────────────────────────────────────────────────────────────────────
 DEFAULTS: dict = {
     "head_font": None,      # 标题字体；None = 继承正文无衬线
-    "h2": "editorial",      # seal | numeral | editorial | index
+    "h2": "editorial",      # seal | numeral | editorial | index | big
     "h2_size": "19px",
     "h2_ls": "1px",
     "h2_rule": False,       # index 样式：章节上方是否加细线
@@ -204,7 +204,7 @@ CN_NUM = "零壹贰叁肆伍陆柒捌玖"
 
 # 可读性阈值（按 375pt 屏宽、15px 字号 ≈ 每行 21~22 个汉字 估算）
 MAX_PARA_CHARS = 110      # ≈ 5 行
-MAX_H2_CHARS = 16
+MAX_H2_CHARS = 20        # 观点句式小标题（晚点式）可到两行；短语式建议 6–12 字
 MAX_H3_CHARS = 20
 MAX_RUN_PARAS = 6         # 连续纯文字段落数
 MAX_TITLE_CHARS = 26      # 订阅号消息列表两行内
@@ -269,6 +269,10 @@ class Renderer:
         self.meta = meta
         self.numbered = str(meta.get("numbered", "true")).lower() != "false"
         self.use_pangu = str(meta.get("pangu", "true")).lower() != "false"
+        # 正文字号：15（默认，精致）或 16（大字，适合中老年读者 / 访谈长文）
+        self.fs, self.lh = ("16px", "1.8") if str(meta.get("size", "15")).strip() == "16" else ("15px", "1.85")
+        # bold: accent → 加粗句用主题色（刘润 / 晚点式“金句着色”）
+        self.strong = theme["signal"] if str(meta.get("bold", "")).lower() == "accent" else theme["heading"]
         self.footnotes: list[tuple[str, str]] = []
         self.h2_index = 0
         self.h2_total = h2_total
@@ -284,8 +288,8 @@ class Renderer:
     def p_style(self, **extra) -> str:
         base = dict(
             margin="0 0 20px",
-            font_size="15px",
-            line_height="1.9",
+            font_size=self.fs,
+            line_height=self.lh,
             letter_spacing="0.5px",
             color=self.t["text"],
             text_align="justify",
@@ -350,7 +354,7 @@ class Renderer:
 
         text = re.sub(
             r"\*\*(.+?)\*\*|__(.+?)__",
-            lambda m: f'<strong style="{style(font_weight="bold", color=t["heading"])}">{m.group(1) or m.group(2)}</strong>',
+            lambda m: f'<strong style="{style(font_weight="bold", color=self.strong)}">{m.group(1) or m.group(2)}</strong>',
             text,
         )
         text = re.sub(
@@ -551,6 +555,20 @@ class Renderer:
             self.run += 1
             if self.run == MAX_RUN_PARAS + 1:
                 self.warn(self.run_start, f"从此处起连续 {self.run}+ 段纯文字，建议插入小标题 / 图片 / 金句 / 列表")
+        qa = self.p_stack[-1].get("_qa")
+        if qa:
+            m = re.match(r"^(?:\*\*)?([^：:*\s]{1,12})(?:\*\*)?[：:]\s*(.*)$", text, re.S)
+            if m:
+                who, rest = m.groups()
+                t = self.t
+                if who == qa or who in ("问", "Q"):
+                    chip = (
+                        f'<span style="{style(display="inline-block", padding="0 6px", margin_right="8px", background_color=t["signal"], color="#FFFFFF", font_size="13px", line_height="1.7", border_radius="3px", letter_spacing="1px", vertical_align="1px")}">{html.escape(who)}</span>'
+                    )
+                    return f'<p style="{self.p_style(margin="32px 0 14px", font_weight="bold", color=t["heading"])}">{chip}{self.inline(rest)}</p>'
+                return (
+                    f'<p style="{self.p_style()}"><strong style="{style(font_weight="bold", color=t["heading"])}">{html.escape(who)}：</strong>{self.inline(rest)}</p>'
+                )
         return f'<p style="{self.p_style()}">{self.inline(text)}</p>'
 
     # ── 标题 ───────────────────────────────────────────────────────────────
@@ -592,6 +610,15 @@ class Renderer:
             margin="0", font_family=t["head_font"], font_size=t["h2_size"], font_weight="bold", line_height="1.5",
             letter_spacing=t["h2_ls"], color=t["heading"], text_align="left",
         )
+        if variant == "big":
+            # 大号序号（远川 / 刘润式）：40px 数字压在标题上方，左对齐
+            num = ""
+            if self.numbered:
+                num_font = SERIF if t["head_font"] else FONT
+                num = (
+                    f'<p style="{style(margin="0 0 8px", font_family=num_font, font_size="40px", font_weight="bold" if not t["head_font"] else None, line_height="1", letter_spacing="1px", color=t["signal"], text_align="left")}">{idx:02d}</p>'
+                )
+            return f'<section style="{style(margin="52px 0 22px")}">{num}<p style="{title_style}">{body}</p></section>'
         if variant == "index":
             # 序号写成“当前 / 总数”，读者在手机上随时知道读到了哪里
             kicker = ""
@@ -881,6 +908,9 @@ class Renderer:
             return (
                 f'<section style="{style(margin="28px 0", padding="20px 20px 12px", border="1px solid " + border, border_radius=t["radius"])}">{title}{body}</section>'
             )
+        if typ in ("qa", "interview"):
+            # 访谈体：以“提问方：”开头的段落渲染为问题（色块标签 + 粗体），“某某：”开头的段落名字加粗
+            return inner(_qa=arg or "问")
         if typ == "center":
             return inner(text_align="center", _breaks=True)
         if typ == "footer":
@@ -952,9 +982,23 @@ def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict
     if name not in THEMES:
         raise SystemExit(f"未知主题 {name!r}，可选：{', '.join(THEMES)}")
     t = resolve_theme(name)
+    if meta.get("h2") in ("index", "big", "seal", "numeral", "editorial"):
+        t["h2"] = meta["h2"]   # 单篇文章覆盖章节样式
     r = Renderer(t, meta, count_h2(body))
     inner = r.blocks(body.split("\n"), offset)
     inner += r.end_matter()
+    if meta.get("byline"):
+        # 署名：文丨某某　编辑丨某某（晚点 / 人物 / 三联的惯例，放在正文最上方）
+        by = re.sub(r"\s*[|｜]\s*", "丨", meta["byline"])
+        by = re.sub(r"\s{2,}|　", "\x03", by)
+        cells = "".join(
+            f'<span style="{style(display="inline-block", margin_right="16px")}">{r.inline(c.strip())}</span>'
+            for c in by.split("\x03") if c.strip()
+        )
+        inner = (
+            f'<p style="{style(margin="0 0 28px", font_size="13px", line_height="1.8", letter_spacing="1px", color=t["muted"], text_align="left")}">{cells}</p>'
+            + inner
+        )
     paper = str(meta.get("paper", "false")).lower() == "true"
     root = style(
         margin="0",
@@ -962,9 +1006,9 @@ def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict
         background_color=t["paper"] if paper else None,
         border_radius="12px" if paper else None,
         font_family=FONT,
-        font_size="15px",
+        font_size=r.fs,
         color=t["text"],
-        line_height="1.9",
+        line_height=r.lh,
         letter_spacing="0.5px",
         word_wrap="break-word",
         text_align="justify",
@@ -974,8 +1018,12 @@ def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict
 
 def lint_meta(meta: dict, r: Renderer) -> None:
     title = meta.get("title", "")
-    if title and count_chars(title) > MAX_TITLE_CHARS:
-        r.warnings.insert(0, f"  META  标题 {count_chars(title)} 字，订阅号列表会被截断，建议 ≤{MAX_TITLE_CHARS} 字")
+    # 栏目前缀（“晚点对话丨”“APPSO 独家｜”）不计入主体长度，但整体仍不宜超过 40 字
+    main = re.split(r"[丨｜|]", title, maxsplit=1)[-1] if re.search(r"[丨｜|]", title) else title
+    if title and count_chars(main) > MAX_TITLE_CHARS:
+        r.warnings.insert(0, f"  META  标题主体 {count_chars(main)} 字，订阅号列表会被截断，建议 ≤{MAX_TITLE_CHARS} 字")
+    elif title and count_chars(title) > 40:
+        r.warnings.insert(0, f"  META  标题含栏目前缀共 {count_chars(title)} 字，建议 ≤40 字")
     summary = meta.get("summary", "")
     if not summary:
         r.warnings.insert(0, "  META  缺少 summary（摘要），分享卡片会自动截取正文开头")
