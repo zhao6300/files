@@ -11,7 +11,9 @@ md2wechat — 把 Markdown 转成可直接粘贴进微信公众号编辑器的 H
   * 外链自动转脚注（公众号正文不允许外链；mp.weixin.qq.com 链接保留）。
   * 中英文之间自动加空格（盘古之白），中文语境直引号转弯引号。
   * --check 可读性检查：段落过长、小标题过长、连续大段无视觉锚点等。
-  * 文风检查：套话、AI 腔、模糊信源（“有研究表明”）、空标题、感叹号过多（--no-style 或 front matter lint: layout 关闭）。
+  * 文风检查：套话、AI 腔、模糊信源（“有研究表明”）、空标题、感叹号过多；
+    人味检查：书面腔 / 拔高腔 / 收尾腔、设问自答、排比三连、高频句式、破折号、句长节奏
+    （--no-style 或 front matter lint: layout 关闭）。
   * <!-- 注释 --> 不进入正文，可用来写论点卡和写作备注。
 
 用法
@@ -984,8 +986,27 @@ STYLE_RULES: list[tuple[str, str, str]] = [
     ("AI 腔", r"让我们(?:一起)?|不仅(?:仅)?是.{1,20}(?:更|而且)是|这不仅.{1,20}更|一场.{1,10}的(?:革命|变革)|开启.{1,8}新篇章|深刻(?:改变|影响)|无疑", "改成直接陈述"),
     ("排比凑数", r"首先.{0,200}其次|其次.{0,200}再次", "改成列表，或只保留真正并列的项"),
     ("模糊信源", r"有(?:研究|调查|数据|报告|统计)(?:表明|显示|发现|指出)|据统计|据悉|据了解|(?:有|一些|很多)?专家(?:认为|表示|指出)|业内人士|有关人士|有人(?:说|认为)", "写出具体的机构、人名、时间"),
+    # 以下来自 references/human-voice.md：出现一次就值得改
+    ("书面腔", r"悄然|彰显|诠释|璀璨|绽放|熠熠生辉|砥砺前行|扬帆起航", "换成口语里会说的词"),
+    ("亲切腔", r"你是否也曾|你有没有过这样的(?:体验|经历|感觉)|相信(?:很多|不少|大家)|在这个快节奏|信息爆炸的时代", "换成一个真实、具体的场景"),
+    ("拔高腔", r"值得[^，。！？]{0,8}深思|引人深思|发人深省|这也提醒(?:了)?我们|何尝不是|这或许就是.{1,10}的意义", "停在事实上，把判断留给读者"),
+    ("收尾腔", r"希望(?:这篇|本文|以上).{0,8}(?:帮助|启发)|让我们拭目以待|未来可期|一起加油", "结尾停在具体画面、未解问题或下一步信号上"),
+    ("设问自答", r"[？?]\s*(?:答案|原因|其实|很简单|因为|这是因为)", "直接说答案，删掉设问"),
+    ("冒号揭晓", r"(?:真相|答案|关键|秘密|原因|本质)(?:只有一个|很简单|就是|在于)?[：:]", "删掉预告词，直接写内容"),
 ]
 STYLE_RES = [(cat, re.compile(p), tip) for cat, p, tip in STYLE_RULES]
+# 频率类：单用无妨，AI 的问题是每段都用。超过上限才提示
+DENSITY_RULES: list[tuple[str, str, int]] = [
+    ("“不是……而是……”句式", r"不是[^。！？\n]{1,24}[，,]\s*(?:而|就|更)?是", 2),
+    ("揭晓词（本质 / 归根结底 / 说白了 / 换句话说 / 说到底）", r"本质上?|归根结底|说白了|换句话说|说到底", 2),
+    ("“真正的”", r"真正的", 2),
+    ("“更重要的是”", r"更重要的是", 1),
+    ("“意味着”", r"意味着", 3),
+]
+DENSITY_RES = [(name, re.compile(p), n) for name, p, n in DENSITY_RULES]
+MAX_DASH_PER_K = 3          # 每千字破折号上限
+MIN_RHYTHM_SENTENCES = 20   # 句子数够多才判断节奏
+MIN_RHYTHM_CV = 0.4         # 句长变异系数低于此值 = 句子长短过于均匀
 EMPTY_HEADINGS = {"背景", "总结", "结语", "前言", "引言", "概述", "小结", "介绍", "简介", "结论"}
 MAX_EXCLAIM = 2
 
@@ -994,6 +1015,9 @@ def lint_style(body: str, offset: int, r: Renderer) -> None:
     fence = None
     hits: list[str] = []
     exclaim: list[int] = []
+    density: dict[str, list[int]] = {}
+    dashes: list[int] = []
+    sent_lens: list[int] = []
     for i, line in enumerate(body.split("\n")):
         s = line.strip()
         m = re.match(r"^(```+|~~~+)", s)
@@ -1015,8 +1039,43 @@ def lint_style(body: str, offset: int, r: Renderer) -> None:
             cat, tip = key.split("|")
             hits.append(f"  L{ln:<4} [{cat}] “{'”“'.join(dict.fromkeys(words))}”→ {tip}")
         exclaim.extend([ln] * len(re.findall(r"[！!](?![\[(])", text)))
+        if h:
+            continue
+        for name, rx, _ in DENSITY_RES:
+            density.setdefault(name, []).extend([ln] * len(rx.findall(text)))
+        dashes.extend([ln] * text.count("——"))
+        prose = not (LIST_RE.match(text) or text.startswith(("|", ">", "!["))) and RE_CJK.search(text)
+        if prose:
+            plain = re.sub(r"[*=_~]", "", text)
+            # 排比三连：连续 3 个分句用同样的两个字开头（“它是……，它是……，它是……”）
+            clauses = [c.strip("“”\"' ") for c in re.split(r"[，。；！？、,;]", plain)]
+            clauses = [c for c in clauses if count_chars(c) >= 4]
+            for k in range(len(clauses) - 2):
+                a = clauses[k][:2]
+                if RE_CJK.match(a[:1]) and clauses[k + 1].startswith(a) and clauses[k + 2].startswith(a):
+                    hits.append(f"  L{ln:<4} [排比三连] 连续以“{a}”开头 → 挑最有力的一项，其余删掉")
+                    break
+            for s in re.split(r"[。！？!?]+", plain):
+                c = count_chars(s)
+                if c >= 2:
+                    sent_lens.append(c)
     if len(exclaim) > MAX_EXCLAIM:
         hits.append(f"  L{exclaim[0]:<4} [感叹号] 全文 {len(exclaim)} 处（L{', L'.join(map(str, dict.fromkeys(exclaim)))}），建议 ≤{MAX_EXCLAIM}，让事实本身有力量")
+    for name, rx, limit in DENSITY_RES:
+        lines = density.get(name, [])
+        if len(lines) > limit:
+            hits.append(f"  L{lines[0]:<4} [AI 味·频率] {name} 全文 {len(lines)} 次（L{', L'.join(map(str, dict.fromkeys(lines)))}），建议 ≤{limit}")
+    total = max(1, sum(sent_lens))
+    if len(dashes) * 1000 / total > MAX_DASH_PER_K and len(dashes) > 2:
+        hits.append(f"  L{dashes[0]:<4} [破折号] 全文 {len(dashes)} 处，约每千字 {len(dashes) * 1000 // total} 处，建议 ≤{MAX_DASH_PER_K}")
+    if len(sent_lens) >= MIN_RHYTHM_SENTENCES:
+        mean = sum(sent_lens) / len(sent_lens)
+        cv = (sum((x - mean) ** 2 for x in sent_lens) / len(sent_lens)) ** 0.5 / mean
+        short = sum(1 for x in sent_lens if x <= 8)
+        if cv < MIN_RHYTHM_CV:
+            hits.append(f"  META  [节奏] {len(sent_lens)} 句平均 {mean:.0f} 字，长短差异很小（变异系数 {cv:.2f}，建议 ≥{MIN_RHYTHM_CV}）→ 穿插几个短句，让重要的地方停一下")
+        elif short == 0:
+            hits.append(f"  META  [节奏] 全文没有 ≤8 字的短句 → 在需要停顿的地方用一两个短句")
     r.warnings.extend(hits)
 
 

@@ -4,6 +4,7 @@
 
 - **想**：以晚点、财新、三联、远川、《经济学人》为参照。动笔前先写论点卡，核心判断必须可以被反驳；用拆数字、换参照系、二阶效应等 7 种方法找独到角度；证据必须具名，不编造。交稿前按 6 项评分表自评，不达标就继续改。
 - **写**：按手机阅读习惯写稿。标题 ≤26 字，段落 ≤110 字，每 300–500 字一个视觉锚点。改稿三遍（结构、段落、句子），终稿比初稿短 20%–30%。
+- **人味**：作者在场、细节有信息量、写动作不写情绪、句子长短跟着意思走、结尾不升华。不虚构经历和细节。最后专门留一遍去 AI 味，`--check` 会标出书面腔、拔高腔、设问自答、排比三连、高频“不是……而是……”、句子长短过于均匀等 20 多类问题。
 - **排**：一条命令把 Markdown 转成全内联样式的 HTML，能直接粘贴进公众号编辑器。主推两套主题，分别借鉴 Claude 和 OpenAI 的设计风格，另有四套备选主题。
 
 ## 主推主题
@@ -42,6 +43,7 @@ wechat-article-skill/
 ├── scripts/md2wechat.py        # Markdown → 公众号 HTML（零依赖）
 ├── references/
 │   ├── content-craft.md        # 内容功夫：选题 / 立论 / 独到观点 / 证据与核查 / 精炼 / 自评
+│   ├── human-voice.md          # 人味：细节、节奏、克制、AI 味清单、改写示例
 │   ├── writing-guide.md        # 移动端写作指南：标题 / 开头 / 段落 / 结尾 / 合规
 │   ├── layout-system.md        # 排版系统：字体间距、主题、开关、语法、组件、兼容性
 │   └── benchmarks.md           # 头部公众号实测：正文 / 小标题 / 标题的规律
@@ -66,7 +68,7 @@ cp -r wechat-article-skill .kiro/skills/wechat-article         # Kiro（工作�
 ```bash
 python scripts/md2wechat.py article.md             # → article.html：手机预览 + 六主题切换 + 一键复制
 python scripts/md2wechat.py article.md -t mono     # 指定主题
-python scripts/md2wechat.py article.md --check     # 只做检查：排版 + 文风（套话 / AI 腔 / 模糊信源 / 感叹号）
+python scripts/md2wechat.py article.md --check     # 只做检查：排版 + 文风 + 人味（套话 / AI 腔 / 模糊信源 / 句子节奏）
 python scripts/md2wechat.py article.md --check --no-style   # 只查排版
 python scripts/md2wechat.py article.md --fragment  # 只输出可粘贴的 HTML 片段
 python scripts/md2wechat.py --list-themes
