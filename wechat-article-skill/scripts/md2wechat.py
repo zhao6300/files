@@ -1,0 +1,907 @@
+#!/usr/bin/env python3
+"""
+md2wechat — 把 Markdown 转成可直接粘贴进微信公众号编辑器的 HTML。
+
+特点
+  * 零依赖：只用 Python 3.8+ 标准库。
+  * 全内联样式：公众号会剥离 <style>、class、id、<script>，所以每个元素都自带 style。
+  * 移动端优先：15px 正文 / 1.9 行高 / 0.5px 字距 / 两端对齐，按 375pt 手机屏幕调校。
+  * 四套主题：墨印 ink、青瓷 celadon、琥珀 amber、石墨 graphite。
+  * 扩展组件：导读、金句、提示卡、卡片、结尾区块、==高亮==。
+  * 外链自动转脚注（公众号正文不允许外链；mp.weixin.qq.com 链接保留）。
+  * 中英文之间自动加空格（盘古之白）。
+  * --check 可读性检查：段落过长、小标题过长、连续大段无视觉锚点等。
+
+用法
+  python md2wechat.py article.md                 # 输出 article.html（带手机预览 + 一键复制）
+  python md2wechat.py article.md --theme celadon
+  python md2wechat.py article.md --fragment -o out.html   # 仅输出可粘贴的 HTML 片段
+  python md2wechat.py article.md --check         # 只做可读性检查
+  python md2wechat.py --list-themes
+"""
+from __future__ import annotations
+
+import argparse
+import html
+import json
+import re
+import sys
+from pathlib import Path
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 主题
+# ──────────────────────────────────────────────────────────────────────────────
+THEMES: dict[str, dict] = {
+    "ink": {
+        "label": "墨印",
+        "desc": "宣纸白 + 朱砂印章红。东方留白，适合人文、随笔、观点、品牌故事。",
+        "accent": "#B5462F",
+        "soft": "#F8F1EE",
+        "mid": "#E5C8BE",
+        "text": "#3F3F3F",
+        "heading": "#1F1F1F",
+        "muted": "#8C8C8C",
+        "code_bg": "#F7F5F2",
+        "h2": "seal",
+        "h3": "square",
+        "hr": "◆",
+    },
+    "celadon": {
+        "label": "青瓷",
+        "desc": "青绿釉色 + 细衬线数字。安静克制，适合生活方式、读书、健康、教育。",
+        "accent": "#3D7A70",
+        "soft": "#EEF4F2",
+        "mid": "#C3D9D3",
+        "text": "#3A4240",
+        "heading": "#1E2A28",
+        "muted": "#8A9693",
+        "code_bg": "#F3F6F5",
+        "h2": "numeral",
+        "h3": "bar",
+        "hr": "· · ·",
+    },
+    "amber": {
+        "label": "琥珀",
+        "desc": "暖琥珀 + 杂志式 PART 标签。有温度的深度长文、商业分析、人物稿。",
+        "accent": "#A8651E",
+        "soft": "#FAF4EB",
+        "mid": "#EAD4B6",
+        "text": "#403A33",
+        "heading": "#221C15",
+        "muted": "#958B7F",
+        "code_bg": "#F8F5F0",
+        "h2": "editorial",
+        "h3": "bar",
+        "hr": "◇ ◇ ◇",
+    },
+    "graphite": {
+        "label": "石墨",
+        "desc": "石墨灰 + 钢蓝。理性清晰，适合技术、产品、数据、教程。",
+        "accent": "#2E5E8C",
+        "soft": "#EFF3F8",
+        "mid": "#C8D5E4",
+        "text": "#3B3F45",
+        "heading": "#1B1F24",
+        "muted": "#8A9099",
+        "code_bg": "#F5F7FA",
+        "h2": "editorial",
+        "h3": "square",
+        "hr": "/ / /",
+    },
+}
+
+FONT = "-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Arial,sans-serif"
+SERIF = "Georgia,'Times New Roman','Songti SC',serif"
+MONO = "Menlo,Monaco,Consolas,'Courier New',monospace"
+
+CN_NUM = "零壹贰叁肆伍陆柒捌玖"
+
+# 可读性阈值（按 375pt 屏宽、15px 字号 ≈ 每行 21~22 个汉字 估算）
+MAX_PARA_CHARS = 110      # ≈ 5 行
+MAX_H2_CHARS = 16
+MAX_H3_CHARS = 20
+MAX_RUN_PARAS = 6         # 连续纯文字段落数
+MAX_TITLE_CHARS = 26      # 订阅号消息列表两行内
+MAX_SUMMARY_CHARS = 120   # 公众号摘要上限
+MAX_CODE_LINE = 40        # 12.5px 等宽字体在手机上一行约 40 字符，超过会横向滚动
+READ_SPEED = 400          # 字/分钟
+
+CJK = (
+    r"\u2e80-\u2eff\u2f00-\u2fdf\u3040-\u309f\u30a0-\u30ff\u3100-\u312f"
+    r"\u3200-\u32ff\u3400-\u4dbf\u4e00-\u9fff\uf900-\ufaff"
+)
+RE_CJK = re.compile(f"[{CJK}]")
+LIST_RE = re.compile(r"^(\s*)([-*+]|\d+[.)])\s+(.*)$")
+TABLE_SEP_RE = re.compile(r"^\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?$")
+IMG_ONLY_RE = re.compile(r'^!\[([^\]]*)\]\(\s*([^)\s]+)(?:\s+"([^"]*)")?\s*\)$')
+CODE_PH = "\x02"   # 行内代码占位符（盘古空格把它当作拉丁字符）
+PH = "\x00"        # 其它行内占位符
+
+
+def count_chars(text: str) -> int:
+    """汉字按 1 计，连续的英文单词/数字按 1 计。"""
+    return len(RE_CJK.findall(text)) + len(re.findall(r"[A-Za-z0-9]+", text))
+
+
+def pangu(text: str) -> str:
+    alnum = f"A-Za-z0-9{CODE_PH}"
+    text = re.sub(f"([{CJK}])([{alnum}@#$&])", r"\1 \2", text)
+    text = re.sub(f"([{alnum}%])([{CJK}])", r"\1 \2", text)
+    return text
+
+
+def smart_quotes(text: str) -> str:
+    """中文语境下把直引号 "…" 换成弯引号 “…”（内容含汉字才替换，英文原样保留）。"""
+    return re.sub(r'"([^"\n]+?)"', lambda m: f"“{m.group(1)}”" if RE_CJK.search(m.group(1)) else m.group(0), text)
+
+
+def style(**kw) -> str:
+    return ";".join(f"{k.replace('_', '-')}:{v}" for k, v in kw.items() if v is not None)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 渲染器
+# ──────────────────────────────────────────────────────────────────────────────
+class Renderer:
+    def __init__(self, theme: dict, meta: dict):
+        self.t = theme
+        self.meta = meta
+        self.numbered = str(meta.get("numbered", "true")).lower() != "false"
+        self.use_pangu = str(meta.get("pangu", "true")).lower() != "false"
+        self.footnotes: list[tuple[str, str]] = []
+        self.h2_index = 0
+        self.warnings: list[str] = []
+        self.chars = 0
+        self.images = 0
+        self.run = 0          # 连续段落计数
+        self.run_start = 0
+        # 段落样式覆盖栈（容器内部字号/颜色不同）
+        self.p_stack: list[dict] = [{}]
+
+    # ── 基础样式 ───────────────────────────────────────────────────────────
+    def p_style(self, **extra) -> str:
+        base = dict(
+            margin="0 0 20px",
+            font_size="15px",
+            line_height="1.9",
+            letter_spacing="0.5px",
+            color=self.t["text"],
+            text_align="justify",
+            word_wrap="break-word",
+        )
+        base.update({k: v for k, v in self.p_stack[-1].items() if not k.startswith("_")})
+        base.update(extra)
+        return style(**base)
+
+    def warn(self, line: int, msg: str) -> None:
+        self.warnings.append(f"  L{line:<4} {msg}")
+
+    def anchor(self) -> None:
+        """遇到小标题/图片/金句等视觉锚点，重置连续段落计数。"""
+        self.run = 0
+
+    # ── 行内 ───────────────────────────────────────────────────────────────
+    def inline(self, text: str) -> str:
+        t = self.t
+        ph: list[str] = []
+        code_ph: list[str] = []
+
+        def keep(h: str) -> str:
+            ph.append(h)
+            return f"{PH}{len(ph) - 1}{PH}"
+
+        def keep_code(h: str) -> str:
+            code_ph.append(h)
+            return f"{CODE_PH}{len(code_ph) - 1}{CODE_PH}"
+
+        # 行内代码
+        text = re.sub(
+            r"(`+)(.+?)\1",
+            lambda m: keep_code(
+                f'<code style="{style(font_family=MONO, font_size="13px", color=t["accent"], background_color=t["soft"], padding="2px 5px", margin="0 2px", border_radius="3px", word_break="break-all")}">'
+                f"{html.escape(m.group(2).strip())}</code>"
+            ),
+            text,
+        )
+        # 行内图片
+        text = re.sub(
+            r'!\[([^\]]*)\]\(\s*([^)\s]+)(?:\s+"[^"]*")?\s*\)',
+            lambda m: keep(
+                f'<img src="{html.escape(m.group(2))}" alt="{html.escape(m.group(1))}" '
+                f'style="{style(display="inline-block", max_width="100%", height="auto", vertical_align="middle")}"/>'
+            ),
+            text,
+        )
+        # 链接
+        text = re.sub(
+            r'\[([^\]]+)\]\(\s*([^)\s]+)(?:\s+"[^"]*")?\s*\)',
+            lambda m: keep(self.link(m.group(1), m.group(2))),
+            text,
+        )
+        # 自动链接 <https://...>
+        text = re.sub(r"<(https?://[^>\s]+)>", lambda m: keep(self.link(m.group(1), m.group(1))), text)
+
+        text = html.escape(text, quote=False)
+        text = smart_quotes(text)
+        if self.use_pangu:
+            text = pangu(text)
+
+        text = re.sub(
+            r"\*\*(.+?)\*\*|__(.+?)__",
+            lambda m: f'<strong style="{style(font_weight="bold", color=t["heading"])}">{m.group(1) or m.group(2)}</strong>',
+            text,
+        )
+        text = re.sub(
+            r"==(.+?)==",
+            lambda m: f'<span style="{style(background_color=t["mid"], color=t["heading"], padding="1px 3px", border_radius="2px")}">{m.group(1)}</span>',
+            text,
+        )
+        text = re.sub(
+            r"~~(.+?)~~",
+            lambda m: f'<span style="{style(text_decoration="line-through", color=t["muted"])}">{m.group(1)}</span>',
+            text,
+        )
+        # 中文不适合斜体：*强调* 渲染为主题色 + 着重下划线
+        text = re.sub(
+            r"(?<![*A-Za-z0-9])\*(?![\s*])(.+?)(?<![\s*])\*(?![*A-Za-z0-9])",
+            lambda m: f'<span style="{style(color=t["accent"], border_bottom="1px dashed " + t["accent"], padding_bottom="1px")}">{m.group(1)}</span>',
+            text,
+        )
+        text = text.replace("\x01", "<br/>")
+
+        text = re.sub(f"{CODE_PH}(\\d+){CODE_PH}", lambda m: code_ph[int(m.group(1))], text)
+        text = re.sub(f"{PH}(\\d+){PH}", lambda m: ph[int(m.group(1))], text)
+        return text
+
+    def link(self, label: str, url: str) -> str:
+        t = self.t
+        label_html = self.inline(label) if label != url else html.escape(url)
+        if "mp.weixin.qq.com" in url:
+            return (
+                f'<a href="{html.escape(url)}" style="{style(color=t["accent"], text_decoration="none", border_bottom="1px solid " + t["mid"])}">'
+                f"{label_html}</a>"
+            )
+        urls = [u for _, u in self.footnotes]
+        if url in urls:
+            n = urls.index(url) + 1
+        else:
+            self.footnotes.append((label, url))
+            n = len(self.footnotes)
+        if label == url:  # 裸链接只保留脚注编号
+            return f'<sup style="{style(font_size="10px", color=t["accent"], line_height="0")}">[{n}]</sup>'
+        return (
+            f'<span style="{style(color=t["accent"], border_bottom="1px solid " + t["mid"])}">{label_html}</span>'
+            f'<sup style="{style(font_size="10px", color=t["accent"], line_height="0", margin_left="1px")}">[{n}]</sup>'
+        )
+
+    # ── 块级 ───────────────────────────────────────────────────────────────
+    def is_block_start(self, line: str, nxt: str | None) -> bool:
+        s = line.strip()
+        return bool(
+            not s
+            or re.match(r"^(```|~~~)", s)
+            or re.match(r"^:::", s)
+            or re.match(r"^#{1,6}\s", s)
+            or re.match(r"^([-*_])(\s*\1){2,}$", s)
+            or s.startswith(">")
+            or LIST_RE.match(line)
+            or IMG_ONLY_RE.match(s)
+            or ("|" in s and nxt is not None and TABLE_SEP_RE.match(nxt.strip()))
+        )
+
+    def blocks(self, lines: list[str], base: int = 1) -> str:
+        out: list[str] = []
+        i, n = 0, len(lines)
+        while i < n:
+            line = lines[i]
+            s = line.strip()
+            ln = base + i
+            if not s:
+                i += 1
+                continue
+
+            # 围栏代码
+            m = re.match(r"^(```+|~~~+)\s*([\w+#.-]*)", s)
+            if m:
+                fence, lang = m.group(1), m.group(2)
+                j, buf = i + 1, []
+                while j < n and not lines[j].strip().startswith(fence):
+                    buf.append(lines[j])
+                    j += 1
+                out.append(self.code_block(buf, lang, ln))
+                i = j + 1
+                continue
+
+            # ::: 容器
+            m = re.match(r"^:::\s*([\w-]+)\s*(.*)$", s)
+            if m:
+                typ, arg = m.group(1).lower(), m.group(2).strip()
+                j, depth, buf = i + 1, 1, []
+                while j < n:
+                    sj = lines[j].strip()
+                    if re.match(r"^:::\s*[\w-]+", sj):
+                        depth += 1
+                    elif sj == ":::":
+                        depth -= 1
+                        if depth == 0:
+                            break
+                    buf.append(lines[j])
+                    j += 1
+                out.append(self.container(typ, arg, buf, ln + 1))
+                i = j + 1
+                continue
+
+            # 标题
+            m = re.match(r"^(#{1,6})\s+(.*?)\s*#*$", s)
+            if m:
+                out.append(self.heading(len(m.group(1)), m.group(2), ln))
+                i += 1
+                continue
+
+            # 分隔线
+            if re.match(r"^([-*_])(\s*\1){2,}$", s):
+                out.append(self.hr())
+                i += 1
+                continue
+
+            # 引用
+            if s.startswith(">"):
+                j, buf = i, []
+                while j < n and lines[j].strip().startswith(">"):
+                    buf.append(re.sub(r"^\s*>\s?", "", lines[j]))
+                    j += 1
+                out.append(self.blockquote(buf, ln))
+                i = j
+                continue
+
+            # 表格
+            if "|" in s and i + 1 < n and TABLE_SEP_RE.match(lines[i + 1].strip()):
+                j, rows = i + 2, []
+                while j < n and "|" in lines[j] and lines[j].strip():
+                    rows.append(lines[j])
+                    j += 1
+                out.append(self.table(lines[i], lines[i + 1], rows, ln))
+                i = j
+                continue
+
+            # 列表
+            if LIST_RE.match(line):
+                j, buf = i, []
+                while j < n:
+                    lj = lines[j]
+                    if not lj.strip():
+                        k = j + 1
+                        while k < n and not lines[k].strip():
+                            k += 1
+                        if k < n and LIST_RE.match(lines[k]):
+                            j = k
+                            continue
+                        break
+                    if LIST_RE.match(lj) or (buf and lj[:1] in (" ", "\t")):
+                        buf.append(lj)
+                        j += 1
+                        continue
+                    break
+                out.append(self.list_block(buf, ln))
+                i = j
+                continue
+
+            # 独立图片
+            m = IMG_ONLY_RE.match(s)
+            if m:
+                out.append(self.figure(m.group(2), m.group(3) or m.group(1)))
+                i += 1
+                continue
+
+            # 段落
+            j, buf = i, []
+            while j < n:
+                nxt = lines[j + 1] if j + 1 < n else None
+                if buf and self.is_block_start(lines[j], nxt):
+                    break
+                if not lines[j].strip():
+                    break
+                buf.append(lines[j])
+                j += 1
+            out.append(self.paragraph(buf, ln))
+            i = j
+        return "\n".join(out)
+
+    def join_lines(self, buf: list[str]) -> str:
+        text = ""
+        keep_breaks = bool(self.p_stack[-1].get("_breaks"))
+        for raw in buf:
+            hard = keep_breaks or raw.endswith("  ") or raw.rstrip().endswith("\\")
+            piece = raw.strip().rstrip("\\").rstrip()
+            if text and not text.endswith("\x01"):
+                if not (RE_CJK.match(text[-1]) or (piece and RE_CJK.match(piece[0]))):
+                    text += " "
+            text += piece + ("\x01" if hard else "")
+        return text.rstrip("\x01")
+
+    def paragraph(self, buf: list[str], ln: int) -> str:
+        text = self.join_lines(buf)
+        c = count_chars(re.sub(r"\]\([^)]*\)", "]", text))
+        self.chars += c
+        if len(self.p_stack) == 1:
+            if c > MAX_PARA_CHARS:
+                self.warn(ln, f"段落约 {c} 字（手机上 ≈{c // 21 + 1} 行），建议拆成 ≤{MAX_PARA_CHARS} 字的短段")
+            if self.run == 0:
+                self.run_start = ln
+            self.run += 1
+            if self.run == MAX_RUN_PARAS + 1:
+                self.warn(self.run_start, f"从此处起连续 {self.run}+ 段纯文字，建议插入小标题 / 图片 / 金句 / 列表")
+        return f'<p style="{self.p_style()}">{self.inline(text)}</p>'
+
+    def heading(self, level: int, text: str, ln: int) -> str:
+        t = self.t
+        self.anchor()
+        c = count_chars(text)
+        self.chars += c
+        body = self.inline(text)
+        if level == 1:
+            return (
+                f'<p style="{style(margin="8px 0 32px", font_size="22px", font_weight="bold", line_height="1.5", letter_spacing="1px", color=t["heading"], text_align="center")}">{body}</p>'
+            )
+        if level == 2:
+            if c > MAX_H2_CHARS:
+                self.warn(ln, f"二级标题 {c} 字，建议 ≤{MAX_H2_CHARS} 字（手机上最好一行）")
+            self.h2_index += 1
+            return self.h2(body, self.h2_index)
+        if level == 3:
+            if c > MAX_H3_CHARS:
+                self.warn(ln, f"三级标题 {c} 字，建议 ≤{MAX_H3_CHARS} 字")
+            if t["h3"] == "square":
+                mark = f'<span style="{style(display="inline-block", width="7px", height="7px", background_color=t["accent"], margin_right="10px", vertical_align="middle", position=None)}"></span>'
+            else:
+                mark = f'<span style="{style(display="inline-block", width="3px", height="15px", background_color=t["accent"], margin_right="10px", vertical_align="-2px", border_radius="2px")}"></span>'
+            return (
+                f'<p style="{style(margin="36px 0 14px", font_size="16px", font_weight="bold", line_height="1.6", letter_spacing="1px", color=t["heading"], text_align="left")}">{mark}{body}</p>'
+            )
+        return (
+            f'<p style="{style(margin="28px 0 10px", font_size="15px", font_weight="bold", line_height="1.6", letter_spacing="1px", color=t["accent"], text_align="left")}">{body}</p>'
+        )
+
+    def h2(self, body: str, idx: int) -> str:
+        t = self.t
+        variant = t["h2"]
+        if variant == "seal":
+            num = ""
+            if self.numbered:
+                label = CN_NUM[idx] if idx < 10 else ("拾" + (CN_NUM[idx - 10] if idx > 10 else ""))
+                num = (
+                    f'<p style="{style(margin="0 0 14px", line_height="1", text_align="center")}">'
+                    f'<span style="{style(display="inline-block", width="30px", height="30px", line_height="30px", background_color=t["accent"], color="#FFFFFF", font_family=SERIF, font_size="16px", text_align="center", border_radius="3px", letter_spacing="0")}">{label}</span></p>'
+                )
+            return (
+                f'<section style="{style(margin="56px 0 28px", text_align="center")}">{num}'
+                f'<p style="{style(margin="0", font_size="18px", font_weight="bold", line_height="1.6", letter_spacing="2px", color=t["heading"], text_align="center")}">{body}</p>'
+                f'<p style="{style(margin="10px 0 0", line_height="1", font_size="0", text_align="center")}">'
+                f'<span style="{style(display="inline-block", width="4px", height="4px", background_color=t["mid"], margin="0 3px", border_radius="50%")}"></span>'
+                f'<span style="{style(display="inline-block", width="4px", height="4px", background_color=t["accent"], margin="0 3px", border_radius="50%")}"></span>'
+                f'<span style="{style(display="inline-block", width="4px", height="4px", background_color=t["mid"], margin="0 3px", border_radius="50%")}"></span></p>'
+                f"</section>"
+            )
+        if variant == "numeral":
+            num = ""
+            if self.numbered:
+                num = (
+                    f'<p style="{style(margin="0 0 6px", font_family=SERIF, font_size="34px", font_style="italic", line_height="1.1", color=t["accent"], letter_spacing="2px", text_align="center", opacity="0.9")}">{idx:02d}</p>'
+                )
+            return (
+                f'<section style="{style(margin="56px 0 28px", text_align="center")}">{num}'
+                f'<p style="{style(margin="0", font_size="18px", font_weight="bold", line_height="1.6", letter_spacing="2px", color=t["heading"], text_align="center")}">{body}</p>'
+                f'<p style="{style(margin="12px 0 0", line_height="1", font_size="0", text_align="center")}">'
+                f'<span style="{style(display="inline-block", width="28px", height="2px", background_color=t["accent"])}"></span></p>'
+                f"</section>"
+            )
+        # editorial
+        kicker = ""
+        if self.numbered:
+            kicker = (
+                f'<p style="{style(margin="0 0 6px", font_family=SERIF, font_size="12px", font_weight="bold", line_height="1.4", letter_spacing="3px", color=t["accent"], text_align="left")}">PART {idx:02d}</p>'
+            )
+        return (
+            f'<section style="{style(margin="52px 0 24px", padding="0 0 12px", border_bottom="1px solid " + t["mid"])}">{kicker}'
+            f'<p style="{style(margin="0", font_size="19px", font_weight="bold", line_height="1.5", letter_spacing="1px", color=t["heading"], text_align="left")}">{body}</p>'
+            f"</section>"
+        )
+
+    def hr(self) -> str:
+        self.anchor()
+        t = self.t
+        return (
+            f'<p style="{style(margin="40px 0", font_size="12px", line_height="1", letter_spacing="6px", color=t["accent"], text_align="center", opacity="0.75")}">{html.escape(t["hr"])}</p>'
+        )
+
+    def blockquote(self, buf: list[str], ln: int) -> str:
+        t = self.t
+        self.anchor()
+        self.p_stack.append(dict(font_size="14px", color=t["muted"], margin="0 0 8px", line_height="1.85"))
+        inner = self.blocks(buf, ln)
+        self.p_stack.pop()
+        return (
+            f'<section style="{style(margin="24px 0", padding="4px 0 4px 16px", border_left="3px solid " + t["mid"])}">{inner}</section>'
+        )
+
+    def figure(self, src: str, caption: str) -> str:
+        t = self.t
+        self.anchor()
+        self.images += 1
+        cap = ""
+        if caption:
+            cap = (
+                f'<p style="{style(margin="10px 0 0", font_size="12px", line_height="1.6", letter_spacing="1px", color=t["muted"], text_align="center")}">{self.inline(caption)}</p>'
+            )
+        return (
+            f'<section style="{style(margin="28px 0", text_align="center")}">'
+            f'<img src="{html.escape(src)}" alt="{html.escape(caption)}" style="{style(display="block", width="100%", height="auto", margin="0 auto", border_radius="4px")}"/>'
+            f"{cap}</section>"
+        )
+
+    def code_block(self, buf: list[str], lang: str, ln: int) -> str:
+        t = self.t
+        self.anchor()
+        rendered = []
+        for k, raw in enumerate(buf):
+            raw = raw.replace("\t", "    ")
+            if len(raw) > MAX_CODE_LINE:
+                self.warn(ln + 1 + k, f"代码行 {len(raw)} 字符，手机上需横向滑动，建议 ≤{MAX_CODE_LINE}")
+            esc = html.escape(raw).replace(" ", "&nbsp;")
+            rendered.append(esc or "&nbsp;")
+        label = ""
+        if lang:
+            label = (
+                f'<p style="{style(margin="0", padding="10px 14px 0", font_family=MONO, font_size="11px", line_height="1.4", letter_spacing="1px", color=t["muted"], text_align="left")}">{html.escape(lang.upper())}</p>'
+            )
+        return (
+            f'<section style="{style(margin="24px 0", background_color=t["code_bg"], border_radius="6px", border="1px solid " + t["soft"])}">{label}'
+            f'<pre style="{style(margin="0", padding="10px 14px 14px" if lang else "14px", overflow_x="auto", background="transparent")}">'
+            f'<code style="{style(display="block", font_family=MONO, font_size="12.5px", line_height="1.75", color="#3A3F47", white_space="nowrap", background="transparent")}">'
+            + "<br/>".join(rendered)
+            + "</code></pre></section>"
+        )
+
+    def list_block(self, buf: list[str], ln: int) -> str:
+        t = self.t
+        items: list[list] = []  # [level, ordered, text_lines]
+        base_indent = None
+        for raw in buf:
+            raw = raw.replace("\t", "    ")
+            m = LIST_RE.match(raw)
+            if m:
+                indent = len(m.group(1))
+                if base_indent is None:
+                    base_indent = indent
+                level = max(0, (indent - base_indent) // 2)
+                items.append([min(level, 2), m.group(2)[0].isdigit(), [m.group(3)]])
+            elif items:
+                items[-1][2].append(raw.strip())
+
+        counters = [0, 0, 0]
+        ps = self.p_stack[-1]
+        out = []
+        for level, ordered, lines in items:
+            counters[level] += 1
+            for deeper in range(level + 1, 3):
+                counters[deeper] = 0
+            text = self.join_lines(lines)
+            self.chars += count_chars(text)
+            pad = 1.4 + level * 1.4
+            if ordered:
+                marker = (
+                    f'<span style="{style(display="inline-block", width="1.4em", text_indent="0", font_family=SERIF, font_weight="bold", color=t["accent"])}">{counters[level]}.</span>'
+                )
+            elif level == 0:
+                marker = (
+                    f'<span style="{style(display="inline-block", width="1.4em", text_indent="0", vertical_align="middle", line_height="1")}">'
+                    f'<span style="{style(display="inline-block", width="6px", height="6px", border_radius="50%", background_color=t["accent"], vertical_align="middle")}"></span></span>'
+                )
+            else:
+                marker = (
+                    f'<span style="{style(display="inline-block", width="1.4em", text_indent="0", vertical_align="middle", line_height="1")}">'
+                    f'<span style="{style(display="inline-block", width="5px", height="5px", border_radius="50%", border="1px solid " + t["accent"], vertical_align="middle")}"></span></span>'
+                )
+            p = self.p_style(margin="0 0 10px", padding_left=f"{pad}em", text_indent="-1.4em")
+            out.append(f'<p style="{p}">{marker}{self.inline(text)}</p>')
+        self.anchor()
+        bottom = ps.get("margin", "0 0 20px").split()[-1] if ps else "20px"
+        return f'<section style="{style(margin=f"4px 0 {bottom}")}">' + "".join(out) + "</section>"
+
+    def table(self, head: str, sep: str, rows: list[str], ln: int) -> str:
+        t = self.t
+        self.anchor()
+
+        def cells(r: str) -> list[str]:
+            r = r.strip()
+            if r.startswith("|"):
+                r = r[1:]
+            if r.endswith("|"):
+                r = r[:-1]
+            return [c.strip() for c in r.split("|")]
+
+        heads = cells(head)
+        aligns = []
+        for c in cells(sep):
+            if c.startswith(":") and c.endswith(":"):
+                aligns.append("center")
+            elif c.endswith(":"):
+                aligns.append("right")
+            else:
+                aligns.append("left")
+        if len(heads) > 3:
+            self.warn(ln, f"表格 {len(heads)} 列，手机上会拥挤，建议 ≤3 列或改成列表")
+        th = "".join(
+            f'<th style="{style(padding="9px 10px", background_color=t["soft"], color=t["heading"], font_weight="bold", text_align=aligns[k] if k < len(aligns) else "left", border_bottom="1px solid " + t["mid"], white_space="nowrap")}">{self.inline(h)}</th>'
+            for k, h in enumerate(heads)
+        )
+        trs = []
+        for r in rows:
+            cs = cells(r)
+            tds = "".join(
+                f'<td style="{style(padding="9px 10px", color=t["text"], text_align=aligns[k] if k < len(aligns) else "left", border_bottom="1px solid #EEEEEE")}">{self.inline(c)}</td>'
+                for k, c in enumerate(cs)
+            )
+            trs.append(f"<tr>{tds}</tr>")
+        return (
+            f'<section style="{style(margin="24px 0", overflow_x="auto")}">'
+            f'<table style="{style(width="100%", border_collapse="collapse", font_size="13px", line_height="1.7", letter_spacing="0.3px")}">'
+            f"<thead><tr>{th}</tr></thead><tbody>{''.join(trs)}</tbody></table></section>"
+        )
+
+    # ── 扩展容器 ───────────────────────────────────────────────────────────
+    def label(self, text: str, color: str) -> str:
+        return (
+            f'<p style="{style(margin="0 0 8px", font_size="12px", font_weight="bold", line_height="1.4", letter_spacing="3px", color=color, text_align="left")}">{html.escape(text)}</p>'
+        )
+
+    def container(self, typ: str, arg: str, buf: list[str], ln: int) -> str:
+        t = self.t
+        self.anchor()
+
+        def inner(**ps) -> str:
+            self.p_stack.append(ps)
+            h = self.blocks(buf, ln)
+            self.p_stack.pop()
+            return h
+
+        if typ == "lead":
+            body = inner(font_size="14px", color=t["muted"], margin="0 0 6px", line_height="1.85")
+            return (
+                f'<section style="{style(margin="4px 0 36px", padding="18px 20px 12px", background_color=t["soft"], border_radius="2px")}">'
+                f"{self.label(arg or '导读', t['accent'])}{body}</section>"
+            )
+        if typ == "quote":
+            body = inner(font_size="17px", color=t["heading"], margin="0 0 6px", line_height="1.8", letter_spacing="1px", text_align="center", font_weight="bold")
+            author = ""
+            if arg:
+                author = (
+                    f'<p style="{style(margin="12px 0 0", font_size="13px", line_height="1.5", letter_spacing="1px", color=t["muted"], text_align="center")}">—— {self.inline(arg)}</p>'
+                )
+            return (
+                f'<section style="{style(margin="44px 12px", text_align="center")}">'
+                f'<p style="{style(margin="0 0 4px", font_family=SERIF, font_size="44px", line_height="1", height="30px", color=t["accent"], text_align="center", opacity="0.85")}">&ldquo;</p>'
+                f"{body}{author}</section>"
+            )
+        if typ in ("tip", "note", "info", "warn", "warning", "danger"):
+            is_warn = typ in ("warn", "warning", "danger")
+            color = "#B0413E" if is_warn else t["accent"]
+            bg = "#FBF0EF" if is_warn else t["soft"]
+            default = {"tip": "提示", "note": "要点", "info": "说明"}.get(typ, "注意")
+            body = inner(font_size="14px", color=t["text"], margin="0 0 6px", line_height="1.85")
+            return (
+                f'<section style="{style(margin="24px 0", padding="14px 16px 8px", background_color=bg, border_left="3px solid " + color, border_radius="0 4px 4px 0")}">'
+                f"{self.label(arg or default, color)}{body}</section>"
+            )
+        if typ == "card":
+            title = ""
+            if arg:
+                title = (
+                    f'<p style="{style(margin="0 0 10px", font_size="15px", font_weight="bold", line_height="1.6", color=t["heading"], letter_spacing="1px")}">{self.inline(arg)}</p>'
+                )
+            body = inner(font_size="14px", margin="0 0 8px", line_height="1.85")
+            return (
+                f'<section style="{style(margin="24px 0", padding="18px 18px 10px", border="1px solid " + t["mid"], border_radius="6px")}">{title}{body}</section>'
+            )
+        if typ == "center":
+            return inner(text_align="center", _breaks=True)
+        if typ == "footer":
+            body = inner(font_size="13px", color=t["muted"], text_align="center", margin="0 0 6px", line_height="1.8", _breaks=True)
+            return (
+                f'<section style="{style(margin="36px 0 0", padding="20px 0 0", border_top="1px solid #EEEEEE", text_align="center")}">{body}</section>'
+            )
+        # 未知容器：原样渲染内部
+        return inner()
+
+    # ── 收尾 ───────────────────────────────────────────────────────────────
+    def end_matter(self) -> str:
+        t = self.t
+        out = []
+        if str(self.meta.get("end", "true")).lower() != "false":
+            out.append(
+                f'<p style="{style(margin="56px 0 8px", font_size="12px", line_height="1", letter_spacing="6px", color=t["muted"], text_align="center")}">— END —</p>'
+            )
+        if self.footnotes:
+            items = "".join(
+                f'<p style="{style(margin="0 0 6px", font_size="12px", line_height="1.7", color=t["muted"], text_align="left", word_break="break-all")}">'
+                f'<span style="{style(color=t["accent"])}">[{k}]</span> '
+                + ("" if label == url else f"{html.escape(label)}<br/>")
+                + f'<span style="{style(color="#A0A0A0")}">{html.escape(url)}</span></p>'
+                for k, (label, url) in enumerate(self.footnotes, 1)
+            )
+            out.append(
+                f'<section style="{style(margin="32px 0 0", padding="16px 0 0", border_top="1px solid #EEEEEE")}">'
+                f'<p style="{style(margin="0 0 10px", font_size="12px", font_weight="bold", letter_spacing="3px", color=t["muted"])}">参考资料</p>{items}</section>'
+            )
+        return "".join(out)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 入口
+# ──────────────────────────────────────────────────────────────────────────────
+def parse_front_matter(src: str) -> tuple[dict, str, int]:
+    meta: dict = {}
+    if src.startswith("---"):
+        m = re.match(r"^---\s*\n(.*?)\n---\s*\n?", src, re.S)
+        if m:
+            for line in m.group(1).splitlines():
+                if ":" in line:
+                    k, v = line.split(":", 1)
+                    v = v.strip()
+                    if len(v) >= 2 and v[0] == v[-1] and v[0] in "\"'":
+                        v = v[1:-1]
+                    meta[k.strip().lower()] = v
+            return meta, src[m.end():], m.group(0).count("\n") + 1
+    return meta, src, 1
+
+
+def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict]:
+    meta, body, offset = parse_front_matter(src.replace("\r\n", "\n"))
+    name = theme_name or meta.get("theme") or "ink"
+    if name not in THEMES:
+        raise SystemExit(f"未知主题 {name!r}，可选：{', '.join(THEMES)}")
+    r = Renderer(THEMES[name], meta)
+    inner = r.blocks(body.split("\n"), offset)
+    inner += r.end_matter()
+    root = style(
+        margin="0",
+        padding="0 4px",
+        font_family=FONT,
+        font_size="15px",
+        color=THEMES[name]["text"],
+        line_height="1.9",
+        letter_spacing="0.5px",
+        word_wrap="break-word",
+        text_align="justify",
+    )
+    return f'<section style="{root}">{inner}</section>', r, meta
+
+
+def lint_meta(meta: dict, r: Renderer) -> None:
+    title = meta.get("title", "")
+    if title and count_chars(title) > MAX_TITLE_CHARS:
+        r.warnings.insert(0, f"  META  标题 {count_chars(title)} 字，订阅号列表会被截断，建议 ≤{MAX_TITLE_CHARS} 字")
+    summary = meta.get("summary", "")
+    if not summary:
+        r.warnings.insert(0, "  META  缺少 summary（摘要），分享卡片会自动截取正文开头")
+    elif len(summary) > MAX_SUMMARY_CHARS:
+        r.warnings.insert(0, f"  META  摘要 {len(summary)} 字，超过公众号 {MAX_SUMMARY_CHARS} 字上限")
+
+
+PREVIEW_TMPL = """<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__ · 公众号预览</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#E9E7E3;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;color:#333}
+  .bar{position:sticky;top:0;z-index:9;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:10px 12px;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid #ddd;font-size:13px}
+  .bar button{border:1px solid #ccc;background:#fff;border-radius:16px;padding:5px 14px;font-size:13px;cursor:pointer}
+  .bar button.on{border-color:var(--c);color:#fff;background:var(--c)}
+  .bar .copy{background:#07C160;border-color:#07C160;color:#fff;font-weight:600}
+  .bar .stat{color:#888}
+  .phone{width:390px;max-width:100%;margin:24px auto 60px;background:#fff;border-radius:28px;box-shadow:0 12px 40px rgba(0,0,0,.12);overflow:hidden}
+  @media (max-width:430px){.phone{margin:0;border-radius:0;box-shadow:none}}
+  .head{padding:28px 20px 0}
+  .head h1{margin:0 0 14px;font-size:22px;line-height:1.4;font-weight:700;color:#191919;letter-spacing:.5px}
+  .head .by{font-size:15px;color:#576B95;margin-bottom:22px}
+  .head .by span{color:#999;margin-left:10px}
+  .body{padding:0 16px 40px}
+  .wx-article{display:none}.wx-article.on{display:block}
+  .toast{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);background:rgba(0,0,0,.78);color:#fff;padding:12px 22px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.show{opacity:1}
+  .warn{max-width:390px;margin:-40px auto 60px;font-size:12px;color:#8a6d3b;background:#fcf8e3;border:1px solid #faebcc;border-radius:8px;padding:10px 14px;white-space:pre-wrap;line-height:1.7}
+</style></head>
+<body>
+<div class="bar">__BUTTONS__<button class="copy" onclick="copyArticle()">复制到公众号</button><span class="stat">__STAT__</span></div>
+<div class="phone"><div class="head"><h1>__TITLE__</h1><div class="by">__AUTHOR__<span>__DATE__</span></div></div>
+<div class="body">__ARTICLES__</div></div>
+__WARN__
+<div class="toast" id="toast">已复制，去公众号编辑器粘贴即可</div>
+<script>
+function pick(name){document.querySelectorAll('.wx-article').forEach(e=>e.classList.toggle('on',e.dataset.theme===name));
+document.querySelectorAll('.bar button[data-theme]').forEach(b=>b.classList.toggle('on',b.dataset.theme===name));}
+async function copyArticle(){
+  const el=document.querySelector('.wx-article.on'); const html=el.innerHTML;
+  try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([el.innerText],{type:'text/plain'})})]);}
+  catch(e){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();}
+  const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);
+}
+pick('__DEFAULT__');
+</script>
+</body></html>
+"""
+
+
+def build_preview(src: str, default_theme: str, meta: dict, r: Renderer) -> str:
+    articles, buttons = [], []
+    for name, th in THEMES.items():
+        frag, _, _ = render(src, name)
+        articles.append(f'<div class="wx-article" data-theme="{name}">{frag}</div>')
+        buttons.append(
+            f'<button data-theme="{name}" style="--c:{th["accent"]}" onclick="pick(\'{name}\')">{th["label"]}</button>'
+        )
+    minutes = max(1, round(r.chars / READ_SPEED))
+    warn = ""
+    if r.warnings:
+        warn = '<div class="warn">可读性提示（不会进入正文）：\n' + html.escape("\n".join(r.warnings)) + "</div>"
+    return (
+        PREVIEW_TMPL.replace("__TITLE__", smart_quotes(html.escape(meta.get("title", "未命名文章"), quote=False)))
+        .replace("__AUTHOR__", html.escape(meta.get("author", "作者")))
+        .replace("__DATE__", html.escape(meta.get("date", "")))
+        .replace("__BUTTONS__", "".join(buttons))
+        .replace("__STAT__", f"约 {r.chars} 字 · {minutes} 分钟 · {r.images} 图")
+        .replace("__ARTICLES__", "".join(articles))
+        .replace("__WARN__", warn)
+        .replace("__DEFAULT__", default_theme)
+    )
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(description="Markdown → 微信公众号排版 HTML（移动端优先）")
+    ap.add_argument("input", nargs="?", help="Markdown 文件")
+    ap.add_argument("-o", "--output", help="输出路径，默认与输入同名 .html")
+    ap.add_argument("-t", "--theme", choices=list(THEMES), help="主题（覆盖 front matter）")
+    ap.add_argument("--fragment", action="store_true", help="只输出可粘贴的 HTML 片段，不含预览外壳")
+    ap.add_argument("--check", action="store_true", help="只做可读性检查，不写文件")
+    ap.add_argument("--json", action="store_true", help="以 JSON 输出统计与警告")
+    ap.add_argument("--list-themes", action="store_true", help="列出主题")
+    a = ap.parse_args(argv)
+
+    if a.list_themes:
+        for k, v in THEMES.items():
+            print(f"{k:<9} {v['label']}  {v['accent']}  {v['desc']}")
+        return 0
+    if not a.input:
+        ap.error("需要输入 Markdown 文件")
+
+    src = Path(a.input).read_text(encoding="utf-8")
+    frag, r, meta = render(src, a.theme)
+    lint_meta(meta, r)
+    theme = a.theme or meta.get("theme") or "ink"
+    minutes = max(1, round(r.chars / READ_SPEED))
+
+    if a.json:
+        print(json.dumps({"theme": theme, "chars": r.chars, "minutes": minutes, "images": r.images,
+                          "sections": r.h2_index, "footnotes": len(r.footnotes), "warnings": r.warnings},
+                         ensure_ascii=False, indent=2))
+    else:
+        print(f"✓ 主题 {theme}（{THEMES[theme]['label']}） · 约 {r.chars} 字 · 阅读 {minutes} 分钟 · "
+              f"{r.h2_index} 个章节 · {r.images} 张图 · {len(r.footnotes)} 条脚注", file=sys.stderr)
+        if r.warnings:
+            print(f"⚠ 可读性提示 {len(r.warnings)} 条：", file=sys.stderr)
+            print("\n".join(r.warnings), file=sys.stderr)
+        else:
+            print("✓ 可读性检查通过", file=sys.stderr)
+
+    if a.check:
+        return 0
+    out = Path(a.output) if a.output else Path(a.input).with_suffix(".html")
+    content = frag if a.fragment else build_preview(src, theme, meta, r)
+    out.write_text(content, encoding="utf-8")
+    print(f"→ {out}", file=sys.stderr)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

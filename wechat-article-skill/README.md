@@ -1,0 +1,54 @@
+# wechat-article · 微信公众号写作与排版 Skill
+
+一个面向 AI 编码助手（Claude Code / Kiro 等支持 `SKILL.md` 的 Agent）的 skill，负责**写**和**排**两件事：
+
+- **写**：按手机阅读习惯写稿。标题 ≤26 字，段落 ≤110 字，每 300–500 字一个视觉锚点。
+- **排**：一条命令把 Markdown 转成全内联样式的 HTML，能直接粘贴进公众号编辑器。提供四套主题，风格各不相同。
+
+![四套主题](assets/themes-cover.png)
+
+![组件](assets/themes-components.png)
+
+## 目录
+
+```
+wechat-article-skill/
+├── SKILL.md                    # Agent 入口：工作流程与硬性规则
+├── scripts/md2wechat.py        # Markdown → 公众号 HTML（零依赖）
+├── references/
+│   ├── writing-guide.md        # 移动端写作指南：标题 / 开头 / 段落 / 结尾 / 合规
+│   └── layout-system.md        # 排版系统：字体间距、主题、语法、组件、兼容性
+├── templates/                  # 观点 / 清单 / 故事 / 教程 四种骨架
+├── examples/demo.md|html       # 示例文章与生成的预览
+└── assets/                     # 截图
+```
+
+## 安装
+
+把 `wechat-article-skill/` 复制到 Agent 的 skills 目录，例如：
+
+```bash
+cp -r wechat-article-skill ~/.claude/skills/wechat-article     # Claude Code
+cp -r wechat-article-skill .kiro/skills/wechat-article         # Kiro（工作区级）
+```
+
+之后对 Agent 说“帮我写一篇公众号文章，主题是……”即可触发。
+
+## 单独使用排版脚本
+
+```bash
+python scripts/md2wechat.py article.md             # → article.html：手机预览 + 四主题切换 + 一键复制
+python scripts/md2wechat.py article.md -t amber    # 指定主题
+python scripts/md2wechat.py article.md --check     # 只做可读性检查
+python scripts/md2wechat.py article.md --fragment  # 只输出可粘贴的 HTML 片段
+python scripts/md2wechat.py --list-themes
+```
+
+在浏览器里打开生成的 `.html`，点「复制到公众号」，再粘贴到公众号后台编辑器。
+
+## 设计要点
+
+- **移动端优先**：正文 15px、行高 1.9、字距 0.5px、两端对齐，每行约 21 个汉字。
+- **全文一个强调色**：主题色只用在序号、标记、重点、链接上。
+- **章节样式各有辨识度**：墨印用朱砂印章汉字序号，青瓷用斜体衬线数字，琥珀和石墨用杂志式 PART 标签。
+- **符合公众号限制**：全部内联样式；外链自动转成脚注；背景用低饱和浅色，兼容深色模式；中文用弯引号；中英文之间自动加空格。
