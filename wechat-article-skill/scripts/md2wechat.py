@@ -1184,7 +1184,7 @@ def lint_meta(meta: dict, r: Renderer) -> None:
         r.warnings.append(f"  META  {len(r.local_images)} 张本地图片（{r.local_images[0]} 等）复制不过去")
     ext = [u for u in dict.fromkeys(r.all_images) if "mmbiz.qpic.cn" not in r.image_map.get(u, u)]
     if ext:
-        r.warnings.append(f"  META  {len(ext)} 张图片不在公众号图床上，发表时会提示“图片转存失败”：用 --wechat-upload 上传，或粘贴后在编辑器里逐张替换")
+        r.warnings.append(f"  META  {len(ext)} 张图片不在公众号图床上：复制时会换成占位行，粘贴后插入本地图片；或用 --wechat-draft 直接存进草稿箱")
     summary = meta.get("summary", "")
     if not summary:
         r.warnings.insert(0, "  META  缺少 summary（摘要），分享卡片会自动截取正文开头")

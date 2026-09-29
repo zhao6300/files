@@ -77,14 +77,14 @@ python scripts/md2wechat.py --list-themes
 
 在浏览器里打开生成的 `.html`，点「复制到公众号」，再粘贴到公众号后台编辑器。
 
-文章里有图片时，发表前图片必须在公众号图床上，外链图发表时常常转存失败。两种办法：
+文章里有图片时，最省事的是直接存进公众号草稿箱（front matter 写 `cover:` 封面路径）：
 
 ```bash
 export WECHAT_APPID=wx...  WECHAT_APPSECRET=...   # 本机出口 IP 要加入公众号 IP 白名单
-python scripts/md2wechat.py article.md --wechat-upload
+python scripts/md2wechat.py article.md --wechat-draft
 ```
 
-或者粘贴后，在编辑器里逐张替换图片（预览页底部有清单和下载链接）。
+没有 AppID 时就复制粘贴：图片位置会变成占位行，粘贴后在占位处插入本地图片，再本地上传封面。
 
 注意：`.md` 是源稿，样式只存在于生成的 `.html` 里。直接复制 Markdown 会丢掉全部样式。文件在 GitHub 上时，用 `https://htmlpreview.github.io/?<.html 文件的 GitHub 地址>` 在浏览器里打开，再点复制。例如[示例文章预览](https://htmlpreview.github.io/?https://github.com/zhao6300/files/blob/wechat-article-skill/wechat-article-skill/examples/rsi.html)。
 
