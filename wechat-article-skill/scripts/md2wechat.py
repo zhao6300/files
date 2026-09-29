@@ -1333,7 +1333,7 @@ def build_preview(src: str, default_theme: str, meta: dict, r: Renderer, image_m
         link = lambda u: (r.image_base.rstrip("/") + "/" + u.lstrip("./")) if r.image_base and not re.match(r"^(https?:)?//", u) else u
         items = "".join(f'<li><a href="{html.escape(link(u))}" target="_blank" download>{html.escape(u.rsplit("/", 1)[-1])}</a></li>' for u in todo)
         warn += ('<div class="warn">发表前要处理的图片：这些图不在公众号图床上，粘贴后能显示，但点“发表”时会提示“图片转存失败”。'
-                 '在编辑器里点中每张图 →“替换”→ 上传下面对应的文件；或者用 <code>--wechat-upload</code> 重新生成。'
+                 '在编辑器里点中每张图 →“替换”→ 上传下面对应的文件；或者用 <code>--wechat-upload</code> 重新生成。<b>封面也要检查</b>：编辑器会自动拿第一张图当封面，正文里的图删掉了，封面还留着外链，也要本地上传一张。'
                  f'<ol style="margin:6px 0 0;padding-left:20px">{items}</ol></div>')
     return (
         PREVIEW_TMPL.replace("__TITLE__", smart_quotes(html.escape(meta.get("title", "未命名文章"), quote=False)))

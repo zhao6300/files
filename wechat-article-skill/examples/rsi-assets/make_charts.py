@@ -104,3 +104,24 @@ chain(
     ],
     "来源：Hugging Face 技术复盘，2026 年 7 月",
 )
+
+
+def cover(fname, lines, kicker):
+    """公众号封面 2.35:1（900×383 的 2 倍）。文字放在中间的正方形里，分享时裁成 1:1 也完整。"""
+    W, H = 1800, 766
+    fig = plt.figure(figsize=(W / 200, H / 200), dpi=200)
+    fig.patch.set_facecolor("white")
+    ax = fig.add_axes([0, 0, 1, 1])
+    ax.set_xlim(0, W)
+    ax.set_ylim(0, H)
+    ax.axis("off")
+    x0 = (W - H) / 2  # 中间正方形左边界
+    ax.add_patch(plt.Rectangle((x0 + 70, H - 190), 14, 14, color=SIGNAL, lw=0))
+    ax.text(x0 + 96, H - 183, kicker, fontsize=14, color=GRAY, va="center")
+    for i, (t, hi) in enumerate(lines):
+        ax.text(x0 + 70, H - 290 - i * 104, t, fontsize=29, fontweight="bold", color=SIGNAL if hi else INK, va="center")
+    fig.savefig(OUT / fname, facecolor="white")
+    plt.close(fig)
+
+
+cover("cover.png", [("AI 已经在造 AI 了", False), ("给它打分的", False), ("也是 AI", True)], "递归自我改进")
