@@ -40,6 +40,7 @@
 ```
 wechat-article-skill/
 ├── SKILL.md                    # Agent 入口：工作流程与硬性规则
+├── EVOLUTION.md                # 演进记录：每次修改的问题、证据、结果、取舍
 ├── scripts/md2wechat.py        # Markdown → 公众号 HTML（零依赖）
 ├── references/
 │   ├── content-craft.md        # 内容功夫：选题 / 立论 / 独到观点 / 证据与核查 / 精炼 / 自评

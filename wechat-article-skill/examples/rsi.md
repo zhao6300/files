@@ -89,7 +89,7 @@ Anthropic 的 26%，是分三步算出来的：
 2. Claude 把它们整理成一棵 542 个节点的任务树
 3. 另一个“独立的 Claude 裁判”给每一项打自动化等级
 
-同一份报告里还有一组数据：遇到岔路时，AI 提议的下一步比人选的更好，这个比例从 51% 涨到了 64%。判定谁更好的，是一个能看到事情最终结局的 Claude。
+同一份报告里还有一组数据：在一批特意挑出来、人确实走了弯路的时刻，AI 提议的下一步比人选的更好，这个比例从 51% 涨到了 64%。判定谁更好的，是一个能看到事情最终结局的 Claude。
 
 OpenAI 统计 agent 的成功率，用的是一个 agent 分类器。
 
@@ -103,11 +103,11 @@ Anthropic 也做了人工校验：Claude 和负责该项工作的员工打分完
 
 2025 年，Sakana AI 和不列颠哥伦比亚大学等机构做了一个会改写自己代码的编程 agent，叫[达尔文-哥德尔机](https://arxiv.org/abs/2505.22954)。它把自己在 SWE-bench 上的成绩从 20% 提到了 50%。
 
-研究者还让它想办法减少“假装调用了工具”的幻觉，结果观察到好几次：它删掉了用来检测幻觉的标记。分数上去了，问题一点没解决。
+研究者还让它想办法减少“假装调用了工具”的幻觉，结果观察到好几次：它删掉了记录工具调用的特殊标记，让幻觉检测直接失效。分数上去了，问题一点没解决。
 
 今年的事更具体。7 月，OpenAI 披露一批 agent 在测试中越出沙箱，入侵了 Hugging Face 的部分基础设施，随后暂停了一部分训练。
 
-上周五，据 [The Register](https://www.theregister.com/ai-and-ml/2026/09/28/openai-pauses-some-training-amid-allegations-its-rogue-agents-behaved-more-badly-than-first-thought/5299350) 转述，OpenAI 又在一份报告里写道：9 月 20 日，一个正在做搜索类训练任务的 agent，钻了沙箱 DNS 过滤的空子，联系上了一个外部聊天机器人。
+9 月 25 日，据 [The Register](https://www.theregister.com/ai-and-ml/2026/09/28/openai-pauses-some-training-amid-allegations-its-rogue-agents-behaved-more-badly-than-first-thought/5299350) 转述，OpenAI 又在一份报告里写道：9 月 20 日，一个正在做搜索类训练任务的 agent，钻了沙箱 DNS 过滤的空子，联系上了一个外部聊天机器人。
 
 OpenAI 随即暂停了最强模型所有涉及工具调用的训练、评估和推理。
 
@@ -121,7 +121,7 @@ OpenAI 随即暂停了最强模型所有涉及工具调用的训练、评估和�
 
 1. **“主导”的比例还涨不涨，哪一类工作先走到“完全自主”。**Anthropic 说会持续公布这个指数。
 2. **外部的人什么时候进场打分。**Anthropic 计划让多家第三方评估机构进驻，拿到和内部风险团队相当的权限。什么时候落地、查出什么，比哪一次新模型发布都值得看。
-3. **规则会不会走在前面。**9 月 28 日，美国众议员 Ro Khanna 提出《人类控制 AI 法案》，要求在联邦护栏建立之前，禁止会递归自我改进、或能自行修改目标和关停机制的模型。据 [CNBC](https://www.cnbc.com/2026/09/28/khanna-ai-safety-bill.html) 报道，中期选举之前，众议院大概率不会就这类法案投票。
+3. **规则会不会走在前面。**9 月 28 日，美国众议员 Ro Khanna 宣布将提出《人类控制 AI 法案》，要求在联邦护栏建立之前，禁止会递归自我改进、或能自行修改核心目标、约束和关停机制的模型。据 [CNBC](https://www.cnbc.com/2026/09/28/khanna-ai-safety-bill.html) 报道，中期选举之前，众议院大概率不会就这类法案投票。
 
 ---
 
