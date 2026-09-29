@@ -1,7 +1,7 @@
 ---
 title: 【反常识判断，≤26 字】
 author: 作者
-theme: ink
+theme: clay
 summary: 【一句话讲清冲突与收获，≤120 字】
 ---
 

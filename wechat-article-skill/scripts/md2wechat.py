@@ -6,15 +6,15 @@ md2wechat — 把 Markdown 转成可直接粘贴进微信公众号编辑器的 H
   * 零依赖：只用 Python 3.8+ 标准库。
   * 全内联样式：公众号会剥离 <style>、class、id、<script>，所以每个元素都自带 style。
   * 移动端优先：15px 正文 / 1.9 行高 / 0.5px 字距 / 两端对齐，按 375pt 手机屏幕调校。
-  * 四套主题：墨印 ink、青瓷 celadon、琥珀 amber、石墨 graphite。
+  * 六套主题：陶土 clay（默认）、素白 mono、墨印 ink、青瓷 celadon、琥珀 amber、石墨 graphite。
   * 扩展组件：导读、金句、提示卡、卡片、结尾区块、==高亮==。
   * 外链自动转脚注（公众号正文不允许外链；mp.weixin.qq.com 链接保留）。
-  * 中英文之间自动加空格（盘古之白）。
+  * 中英文之间自动加空格（盘古之白），中文语境直引号转弯引号。
   * --check 可读性检查：段落过长、小标题过长、连续大段无视觉锚点等。
 
 用法
   python md2wechat.py article.md                 # 输出 article.html（带手机预览 + 一键复制）
-  python md2wechat.py article.md --theme celadon
+  python md2wechat.py article.md --theme mono
   python md2wechat.py article.md --fragment -o out.html   # 仅输出可粘贴的 HTML 片段
   python md2wechat.py article.md --check         # 只做可读性检查
   python md2wechat.py --list-themes
@@ -28,10 +28,120 @@ import re
 import sys
 from pathlib import Path
 
+FONT = "-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Arial,sans-serif"
+SERIF = "Georgia,'Times New Roman','Songti SC',serif"
+# 中文衬线标题：iOS 宋体 / 安卓思源宋体 / Windows 宋体，均为系统字体，无需加载
+SERIF_CN = "'Songti SC','Noto Serif SC','Source Han Serif SC','Noto Serif CJK SC',STSong,SimSun,Georgia,serif"
+MONO = "Menlo,Monaco,Consolas,'Courier New',monospace"
+
 # ──────────────────────────────────────────────────────────────────────────────
 # 主题
+# 每个主题 = 颜色 + 一组“结构开关”。未声明的开关取 DEFAULTS。
 # ──────────────────────────────────────────────────────────────────────────────
+DEFAULTS: dict = {
+    "head_font": None,      # 标题字体；None = 继承正文无衬线
+    "h2": "editorial",      # seal | numeral | editorial | index
+    "h2_size": "19px",
+    "h2_ls": "1px",
+    "h2_rule": False,       # index 样式：章节上方是否加细线
+    "h2_marker": False,     # index 样式：序号前是否加信号色方块
+    "h3": "bar",            # bar | square | plain
+    "h3_size": "16px",
+    "hr": "· · ·",
+    "hr_style": "glyph",    # glyph | line
+    "quote": "center",      # center | serif | display
+    "lead": "box",          # box | dek
+    "lead_color": None,     # 导读正文颜色；None = muted
+    "callout": "bar",       # bar（左竖线）| soft（圆角色块）
+    "radius": "4px",
+    "bullet": "dot",        # dot | square
+    "ol_font": SERIF,
+    "ol_color": None,       # None = accent
+    "ol_fmt": "{n}.",
+    "table": "tint",        # tint（表头色底）| rule（黑色细线）
+    "mark": None,           # ==高亮== 底色；None = mid
+    "link": None,           # 链接文字色；None = accent
+    "link_line": None,      # 链接下划线；None = mid
+    "code_color": None,     # 行内代码色；None = accent
+    "signal": None,         # 信号色（脚注号、强调下划线、标记）；None = accent
+    "rule": "#EEEEEE",      # 细线颜色
+    "quote_line": None,     # 引用左线；None = mid
+    "warn": "#B0413E",
+    "warn_bg": "#FBF0EF",
+    "end": "— END —",
+    "paper": "#FAF8F3",     # front matter `paper: true` 时的纸张底色
+}
+
 THEMES: dict[str, dict] = {
+    "clay": {
+        "label": "陶土",
+        "desc": "灵感来自 Claude：燕麦纸色、陶土橙、宋体标题、章节进度序号。温暖知性，适合观点、人文、AI 与科技随笔。",
+        "accent": "#C2603E",
+        "soft": "#F4F0E8",
+        "mid": "#E4D9C8",
+        "text": "#3D3A34",
+        "heading": "#1C1B18",
+        "muted": "#8B857A",
+        "code_bg": "#F4F0E8",
+        "head_font": SERIF_CN,
+        "h2": "index",
+        "h2_size": "20px",
+        "h2_ls": "0.5px",
+        "h3": "plain",
+        "h3_size": "17px",
+        "hr": "· · ·",
+        "quote": "serif",
+        "lead": "box",
+        "lead_color": "#5A554C",
+        "callout": "soft",
+        "radius": "12px",
+        "mark": "#F2DDD0",
+        "link_line": "#E3B8A4",
+        "code_color": "#A34E30",
+        "rule": "#ECE6DB",
+        "end": "— 完 —",
+        "paper": "#FAF8F3",
+    },
+    "mono": {
+        "label": "素白",
+        "desc": "灵感来自 OpenAI：黑白灰、细线分隔、大号无衬线金句，外加一点信号橙。理性锐利，适合技术、产品、AI、研究解读。",
+        "accent": "#0D0D0D",
+        "soft": "#F5F5F5",
+        "mid": "#E3E3E3",
+        "text": "#353740",
+        "heading": "#0D0D0D",
+        "muted": "#8E8EA0",
+        "code_bg": "#F7F7F8",
+        "signal": "#F2542D",
+        "h2": "index",
+        "h2_size": "21px",
+        "h2_ls": "0",
+        "h2_rule": True,
+        "h2_marker": True,
+        "h3": "plain",
+        "h3_size": "16.5px",
+        "hr_style": "line",
+        "quote": "display",
+        "lead": "dek",
+        "lead_color": "#353740",
+        "callout": "soft",
+        "radius": "12px",
+        "bullet": "square",
+        "ol_font": MONO,
+        "ol_color": "#8E8EA0",
+        "ol_fmt": "{n:02d}",
+        "table": "rule",
+        "mark": "#FFE3D9",
+        "link": "#0D0D0D",
+        "link_line": "#F2542D",
+        "code_color": "#0D0D0D",
+        "rule": "#E8E8E8",
+        "quote_line": "#D0D0D6",
+        "warn": "#F2542D",
+        "warn_bg": "#FFF3EE",
+        "end": "END",
+        "paper": "#FAFAFA",
+    },
     "ink": {
         "label": "墨印",
         "desc": "宣纸白 + 朱砂印章红。东方留白，适合人文、随笔、观点、品牌故事。",
@@ -58,7 +168,6 @@ THEMES: dict[str, dict] = {
         "code_bg": "#F3F6F5",
         "h2": "numeral",
         "h3": "bar",
-        "hr": "· · ·",
     },
     "amber": {
         "label": "琥珀",
@@ -89,10 +198,7 @@ THEMES: dict[str, dict] = {
         "hr": "/ / /",
     },
 }
-
-FONT = "-apple-system,BlinkMacSystemFont,'PingFang SC','Hiragino Sans GB','Microsoft YaHei','Helvetica Neue',Arial,sans-serif"
-SERIF = "Georgia,'Times New Roman','Songti SC',serif"
-MONO = "Menlo,Monaco,Consolas,'Courier New',monospace"
+DEFAULT_THEME = "clay"
 
 CN_NUM = "零壹贰叁肆伍陆柒捌玖"
 
@@ -118,6 +224,15 @@ CODE_PH = "\x02"   # 行内代码占位符（盘古空格把它当作拉丁字�
 PH = "\x00"        # 其它行内占位符
 
 
+def resolve_theme(name: str) -> dict:
+    t = {**DEFAULTS, **THEMES[name]}
+    for key, fallback in (("mark", "mid"), ("link", "accent"), ("link_line", "mid"), ("code_color", "accent"),
+                          ("signal", "accent"), ("quote_line", "mid"), ("lead_color", "muted"), ("ol_color", "accent")):
+        if t[key] is None:
+            t[key] = t[fallback]
+    return t
+
+
 def count_chars(text: str) -> int:
     """汉字按 1 计，连续的英文单词/数字按 1 计。"""
     return len(RE_CJK.findall(text)) + len(re.findall(r"[A-Za-z0-9]+", text))
@@ -139,23 +254,30 @@ def style(**kw) -> str:
     return ";".join(f"{k.replace('_', '-')}:{v}" for k, v in kw.items() if v is not None)
 
 
+def square(color: str, size: int = 6, gap: str = "8px") -> str:
+    return (
+        f'<span style="{style(display="inline-block", width=f"{size}px", height=f"{size}px", background_color=color, margin_right=gap, vertical_align="middle")}"></span>'
+    )
+
+
 # ──────────────────────────────────────────────────────────────────────────────
 # 渲染器
 # ──────────────────────────────────────────────────────────────────────────────
 class Renderer:
-    def __init__(self, theme: dict, meta: dict):
+    def __init__(self, theme: dict, meta: dict, h2_total: int = 0):
         self.t = theme
         self.meta = meta
         self.numbered = str(meta.get("numbered", "true")).lower() != "false"
         self.use_pangu = str(meta.get("pangu", "true")).lower() != "false"
         self.footnotes: list[tuple[str, str]] = []
         self.h2_index = 0
+        self.h2_total = h2_total
         self.warnings: list[str] = []
         self.chars = 0
         self.images = 0
         self.run = 0          # 连续段落计数
         self.run_start = 0
-        # 段落样式覆盖栈（容器内部字号/颜色不同）
+        # 段落样式覆盖栈（容器内部字号/颜色不同）；以 _ 开头的键是行为开关，不进 style
         self.p_stack: list[dict] = [{}]
 
     # ── 基础样式 ───────────────────────────────────────────────────────────
@@ -198,7 +320,7 @@ class Renderer:
         text = re.sub(
             r"(`+)(.+?)\1",
             lambda m: keep_code(
-                f'<code style="{style(font_family=MONO, font_size="13px", color=t["accent"], background_color=t["soft"], padding="2px 5px", margin="0 2px", border_radius="3px", word_break="break-all")}">'
+                f'<code style="{style(font_family=MONO, font_size="13px", color=t["code_color"], background_color=t["soft"], padding="2px 5px", margin="0 2px", border_radius="4px", word_break="break-all")}">'
                 f"{html.escape(m.group(2).strip())}</code>"
             ),
             text,
@@ -233,7 +355,7 @@ class Renderer:
         )
         text = re.sub(
             r"==(.+?)==",
-            lambda m: f'<span style="{style(background_color=t["mid"], color=t["heading"], padding="1px 3px", border_radius="2px")}">{m.group(1)}</span>',
+            lambda m: f'<span style="{style(background_color=t["mark"], color=t["heading"], padding="1px 3px", border_radius="2px")}">{m.group(1)}</span>',
             text,
         )
         text = re.sub(
@@ -241,10 +363,10 @@ class Renderer:
             lambda m: f'<span style="{style(text_decoration="line-through", color=t["muted"])}">{m.group(1)}</span>',
             text,
         )
-        # 中文不适合斜体：*强调* 渲染为主题色 + 着重下划线
+        # 中文不适合斜体：*强调* 渲染为主题色 + 虚线下划线
         text = re.sub(
             r"(?<![*A-Za-z0-9])\*(?![\s*])(.+?)(?<![\s*])\*(?![*A-Za-z0-9])",
-            lambda m: f'<span style="{style(color=t["accent"], border_bottom="1px dashed " + t["accent"], padding_bottom="1px")}">{m.group(1)}</span>',
+            lambda m: f'<span style="{style(color=t["accent"], border_bottom="1px dashed " + t["signal"], padding_bottom="1px")}">{m.group(1)}</span>',
             text,
         )
         text = text.replace("\x01", "<br/>")
@@ -258,7 +380,7 @@ class Renderer:
         label_html = self.inline(label) if label != url else html.escape(url)
         if "mp.weixin.qq.com" in url:
             return (
-                f'<a href="{html.escape(url)}" style="{style(color=t["accent"], text_decoration="none", border_bottom="1px solid " + t["mid"])}">'
+                f'<a href="{html.escape(url)}" style="{style(color=t["link"], text_decoration="none", border_bottom="1px solid " + t["link_line"])}">'
                 f"{label_html}</a>"
             )
         urls = [u for _, u in self.footnotes]
@@ -267,12 +389,10 @@ class Renderer:
         else:
             self.footnotes.append((label, url))
             n = len(self.footnotes)
+        sup = f'<sup style="{style(font_size="10px", color=t["signal"], line_height="0", margin_left="1px")}">[{n}]</sup>'
         if label == url:  # 裸链接只保留脚注编号
-            return f'<sup style="{style(font_size="10px", color=t["accent"], line_height="0")}">[{n}]</sup>'
-        return (
-            f'<span style="{style(color=t["accent"], border_bottom="1px solid " + t["mid"])}">{label_html}</span>'
-            f'<sup style="{style(font_size="10px", color=t["accent"], line_height="0", margin_left="1px")}">[{n}]</sup>'
-        )
+            return sup
+        return f'<span style="{style(color=t["link"], border_bottom="1px solid " + t["link_line"])}">{label_html}</span>{sup}'
 
     # ── 块级 ───────────────────────────────────────────────────────────────
     def is_block_start(self, line: str, nxt: str | None) -> bool:
@@ -433,6 +553,7 @@ class Renderer:
                 self.warn(self.run_start, f"从此处起连续 {self.run}+ 段纯文字，建议插入小标题 / 图片 / 金句 / 列表")
         return f'<p style="{self.p_style()}">{self.inline(text)}</p>'
 
+    # ── 标题 ───────────────────────────────────────────────────────────────
     def heading(self, level: int, text: str, ln: int) -> str:
         t = self.t
         self.anchor()
@@ -441,7 +562,7 @@ class Renderer:
         body = self.inline(text)
         if level == 1:
             return (
-                f'<p style="{style(margin="8px 0 32px", font_size="22px", font_weight="bold", line_height="1.5", letter_spacing="1px", color=t["heading"], text_align="center")}">{body}</p>'
+                f'<p style="{style(margin="8px 0 32px", font_family=t["head_font"], font_size="22px", font_weight="bold", line_height="1.5", letter_spacing="1px", color=t["heading"], text_align="center")}">{body}</p>'
             )
         if level == 2:
             if c > MAX_H2_CHARS:
@@ -451,20 +572,42 @@ class Renderer:
         if level == 3:
             if c > MAX_H3_CHARS:
                 self.warn(ln, f"三级标题 {c} 字，建议 ≤{MAX_H3_CHARS} 字")
+            mark = ""
             if t["h3"] == "square":
-                mark = f'<span style="{style(display="inline-block", width="7px", height="7px", background_color=t["accent"], margin_right="10px", vertical_align="middle", position=None)}"></span>'
-            else:
+                mark = square(t["accent"], 7, "10px")
+            elif t["h3"] == "bar":
                 mark = f'<span style="{style(display="inline-block", width="3px", height="15px", background_color=t["accent"], margin_right="10px", vertical_align="-2px", border_radius="2px")}"></span>'
+            top = "34px" if t["h3"] == "plain" else "36px"
             return (
-                f'<p style="{style(margin="36px 0 14px", font_size="16px", font_weight="bold", line_height="1.6", letter_spacing="1px", color=t["heading"], text_align="left")}">{mark}{body}</p>'
+                f'<p style="{style(margin=f"{top} 0 12px", font_family=t["head_font"], font_size=t["h3_size"], font_weight="bold", line_height="1.6", letter_spacing="0.5px" if t["h3"] == "plain" else "1px", color=t["heading"], text_align="left")}">{mark}{body}</p>'
             )
         return (
-            f'<p style="{style(margin="28px 0 10px", font_size="15px", font_weight="bold", line_height="1.6", letter_spacing="1px", color=t["accent"], text_align="left")}">{body}</p>'
+            f'<p style="{style(margin="28px 0 10px", font_size="15px", font_weight="bold", line_height="1.6", letter_spacing="1px", color=t["accent"] if t["accent"] != t["heading"] else t["heading"], text_align="left")}">{body}</p>'
         )
 
     def h2(self, body: str, idx: int) -> str:
         t = self.t
         variant = t["h2"]
+        title_style = style(
+            margin="0", font_family=t["head_font"], font_size=t["h2_size"], font_weight="bold", line_height="1.5",
+            letter_spacing=t["h2_ls"], color=t["heading"], text_align="left",
+        )
+        if variant == "index":
+            # 序号写成“当前 / 总数”，读者在手机上随时知道读到了哪里
+            kicker = ""
+            if self.numbered:
+                total = f" / {self.h2_total:02d}" if self.h2_total else ""
+                marker = square(t["signal"]) if t["h2_marker"] else ""
+                num_color = t["heading"] if t["h2_marker"] else t["accent"]
+                kicker = (
+                    f'<p style="{style(margin="0 0 10px", font_family=MONO, font_size="12px", line_height="1.4", letter_spacing="1px", color=t["muted"], text_align="left")}">'
+                    f'{marker}<span style="{style(color=num_color, font_weight="bold")}">{idx:02d}</span>{total}</p>'
+                )
+            sec = style(margin="52px 0 22px", padding_top="20px" if t["h2_rule"] else None,
+                        border_top=f"1px solid {t['rule']}" if t["h2_rule"] else None)
+            return f'<section style="{sec}">{kicker}<p style="{title_style}">{body}</p></section>'
+        center_title = title_style.replace("text-align:left", "text-align:center").replace(
+            f"font-size:{t['h2_size']}", "font-size:18px").replace(f"letter-spacing:{t['h2_ls']}", "letter-spacing:2px")
         if variant == "seal":
             num = ""
             if self.numbered:
@@ -473,14 +616,13 @@ class Renderer:
                     f'<p style="{style(margin="0 0 14px", line_height="1", text_align="center")}">'
                     f'<span style="{style(display="inline-block", width="30px", height="30px", line_height="30px", background_color=t["accent"], color="#FFFFFF", font_family=SERIF, font_size="16px", text_align="center", border_radius="3px", letter_spacing="0")}">{label}</span></p>'
                 )
+            dots = "".join(
+                f'<span style="{style(display="inline-block", width="4px", height="4px", background_color=c, margin="0 3px", border_radius="50%")}"></span>'
+                for c in (t["mid"], t["accent"], t["mid"])
+            )
             return (
-                f'<section style="{style(margin="56px 0 28px", text_align="center")}">{num}'
-                f'<p style="{style(margin="0", font_size="18px", font_weight="bold", line_height="1.6", letter_spacing="2px", color=t["heading"], text_align="center")}">{body}</p>'
-                f'<p style="{style(margin="10px 0 0", line_height="1", font_size="0", text_align="center")}">'
-                f'<span style="{style(display="inline-block", width="4px", height="4px", background_color=t["mid"], margin="0 3px", border_radius="50%")}"></span>'
-                f'<span style="{style(display="inline-block", width="4px", height="4px", background_color=t["accent"], margin="0 3px", border_radius="50%")}"></span>'
-                f'<span style="{style(display="inline-block", width="4px", height="4px", background_color=t["mid"], margin="0 3px", border_radius="50%")}"></span></p>'
-                f"</section>"
+                f'<section style="{style(margin="56px 0 28px", text_align="center")}">{num}<p style="{center_title}">{body}</p>'
+                f'<p style="{style(margin="10px 0 0", line_height="1", font_size="0", text_align="center")}">{dots}</p></section>'
             )
         if variant == "numeral":
             num = ""
@@ -489,11 +631,9 @@ class Renderer:
                     f'<p style="{style(margin="0 0 6px", font_family=SERIF, font_size="34px", font_style="italic", line_height="1.1", color=t["accent"], letter_spacing="2px", text_align="center", opacity="0.9")}">{idx:02d}</p>'
                 )
             return (
-                f'<section style="{style(margin="56px 0 28px", text_align="center")}">{num}'
-                f'<p style="{style(margin="0", font_size="18px", font_weight="bold", line_height="1.6", letter_spacing="2px", color=t["heading"], text_align="center")}">{body}</p>'
+                f'<section style="{style(margin="56px 0 28px", text_align="center")}">{num}<p style="{center_title}">{body}</p>'
                 f'<p style="{style(margin="12px 0 0", line_height="1", font_size="0", text_align="center")}">'
-                f'<span style="{style(display="inline-block", width="28px", height="2px", background_color=t["accent"])}"></span></p>'
-                f"</section>"
+                f'<span style="{style(display="inline-block", width="28px", height="2px", background_color=t["accent"])}"></span></p></section>'
             )
         # editorial
         kicker = ""
@@ -503,13 +643,15 @@ class Renderer:
             )
         return (
             f'<section style="{style(margin="52px 0 24px", padding="0 0 12px", border_bottom="1px solid " + t["mid"])}">{kicker}'
-            f'<p style="{style(margin="0", font_size="19px", font_weight="bold", line_height="1.5", letter_spacing="1px", color=t["heading"], text_align="left")}">{body}</p>'
-            f"</section>"
+            f'<p style="{title_style}">{body}</p></section>'
         )
 
+    # ── 其它块 ─────────────────────────────────────────────────────────────
     def hr(self) -> str:
         self.anchor()
         t = self.t
+        if t["hr_style"] == "line":
+            return f'<p style="{style(margin="40px 0", line_height="0", font_size="0", border_top="1px solid " + t["rule"])}">&nbsp;</p>'
         return (
             f'<p style="{style(margin="40px 0", font_size="12px", line_height="1", letter_spacing="6px", color=t["accent"], text_align="center", opacity="0.75")}">{html.escape(t["hr"])}</p>'
         )
@@ -521,7 +663,7 @@ class Renderer:
         inner = self.blocks(buf, ln)
         self.p_stack.pop()
         return (
-            f'<section style="{style(margin="24px 0", padding="4px 0 4px 16px", border_left="3px solid " + t["mid"])}">{inner}</section>'
+            f'<section style="{style(margin="24px 0", padding="4px 0 4px 16px", border_left="3px solid " + t["quote_line"])}">{inner}</section>'
         )
 
     def figure(self, src: str, caption: str) -> str:
@@ -533,9 +675,10 @@ class Renderer:
             cap = (
                 f'<p style="{style(margin="10px 0 0", font_size="12px", line_height="1.6", letter_spacing="1px", color=t["muted"], text_align="center")}">{self.inline(caption)}</p>'
             )
+        radius = "8px" if t["radius"] == "12px" else "4px"
         return (
             f'<section style="{style(margin="28px 0", text_align="center")}">'
-            f'<img src="{html.escape(src)}" alt="{html.escape(caption)}" style="{style(display="block", width="100%", height="auto", margin="0 auto", border_radius="4px")}"/>'
+            f'<img src="{html.escape(src)}" alt="{html.escape(caption)}" style="{style(display="block", width="100%", height="auto", margin="0 auto", border_radius=radius)}"/>'
             f"{cap}</section>"
         )
 
@@ -552,11 +695,11 @@ class Renderer:
         label = ""
         if lang:
             label = (
-                f'<p style="{style(margin="0", padding="10px 14px 0", font_family=MONO, font_size="11px", line_height="1.4", letter_spacing="1px", color=t["muted"], text_align="left")}">{html.escape(lang.upper())}</p>'
+                f'<p style="{style(margin="0", padding="12px 16px 0", font_family=MONO, font_size="11px", line_height="1.4", letter_spacing="1px", color=t["muted"], text_align="left")}">{html.escape(lang.lower())}</p>'
             )
         return (
-            f'<section style="{style(margin="24px 0", background_color=t["code_bg"], border_radius="6px", border="1px solid " + t["soft"])}">{label}'
-            f'<pre style="{style(margin="0", padding="10px 14px 14px" if lang else "14px", overflow_x="auto", background="transparent")}">'
+            f'<section style="{style(margin="24px 0", background_color=t["code_bg"], border_radius=t["radius"], border="1px solid " + t["soft"])}">{label}'
+            f'<pre style="{style(margin="0", padding="10px 16px 16px" if lang else "16px", overflow_x="auto", background="transparent")}">'
             f'<code style="{style(display="block", font_family=MONO, font_size="12.5px", line_height="1.75", color="#3A3F47", white_space="nowrap", background="transparent")}">'
             + "<br/>".join(rendered)
             + "</code></pre></section>"
@@ -581,28 +724,30 @@ class Renderer:
         counters = [0, 0, 0]
         ps = self.p_stack[-1]
         out = []
+        w = "1.5em"
         for level, ordered, lines in items:
             counters[level] += 1
             for deeper in range(level + 1, 3):
                 counters[deeper] = 0
             text = self.join_lines(lines)
             self.chars += count_chars(text)
-            pad = 1.4 + level * 1.4
+            box = style(display="inline-block", width=w, text_indent="0", vertical_align="middle", line_height="1")
             if ordered:
                 marker = (
-                    f'<span style="{style(display="inline-block", width="1.4em", text_indent="0", font_family=SERIF, font_weight="bold", color=t["accent"])}">{counters[level]}.</span>'
+                    f'<span style="{style(display="inline-block", width=w, text_indent="0", font_family=t["ol_font"], font_size="13px" if t["ol_font"] == MONO else None, font_weight="bold", color=t["ol_color"])}">'
+                    f'{t["ol_fmt"].format(n=counters[level])}</span>'
                 )
             elif level == 0:
+                radius = "0" if t["bullet"] == "square" else "50%"
                 marker = (
-                    f'<span style="{style(display="inline-block", width="1.4em", text_indent="0", vertical_align="middle", line_height="1")}">'
-                    f'<span style="{style(display="inline-block", width="6px", height="6px", border_radius="50%", background_color=t["accent"], vertical_align="middle")}"></span></span>'
+                    f'<span style="{box}"><span style="{style(display="inline-block", width="5px" if t["bullet"] == "square" else "6px", height="5px" if t["bullet"] == "square" else "6px", border_radius=radius, background_color=t["accent"], vertical_align="middle")}"></span></span>'
                 )
             else:
                 marker = (
-                    f'<span style="{style(display="inline-block", width="1.4em", text_indent="0", vertical_align="middle", line_height="1")}">'
-                    f'<span style="{style(display="inline-block", width="5px", height="5px", border_radius="50%", border="1px solid " + t["accent"], vertical_align="middle")}"></span></span>'
+                    f'<span style="{box}"><span style="{style(display="inline-block", width="5px", height="5px", border_radius="0" if t["bullet"] == "square" else "50%", border="1px solid " + t["accent"], vertical_align="middle")}"></span></span>'
                 )
-            p = self.p_style(margin="0 0 10px", padding_left=f"{pad}em", text_indent="-1.4em")
+            pad = f"{1.5 + level * 1.5}em"
+            p = self.p_style(margin="0 0 10px", padding_left=pad, text_indent=f"-{w}")
             out.append(f'<p style="{p}">{marker}{self.inline(text)}</p>')
         self.anchor()
         bottom = ps.get("margin", "0 0 20px").split()[-1] if ps else "20px"
@@ -631,15 +776,16 @@ class Renderer:
                 aligns.append("left")
         if len(heads) > 3:
             self.warn(ln, f"表格 {len(heads)} 列，手机上会拥挤，建议 ≤3 列或改成列表")
+        tint = t["table"] == "tint"
         th = "".join(
-            f'<th style="{style(padding="9px 10px", background_color=t["soft"], color=t["heading"], font_weight="bold", text_align=aligns[k] if k < len(aligns) else "left", border_bottom="1px solid " + t["mid"], white_space="nowrap")}">{self.inline(h)}</th>'
+            f'<th style="{style(padding="9px 10px", background_color=t["soft"] if tint else None, color=t["heading"], font_weight="bold", text_align=aligns[k] if k < len(aligns) else "left", border_bottom="1px solid " + (t["mid"] if tint else t["heading"]), white_space="nowrap")}">{self.inline(h)}</th>'
             for k, h in enumerate(heads)
         )
         trs = []
         for r in rows:
             cs = cells(r)
             tds = "".join(
-                f'<td style="{style(padding="9px 10px", color=t["text"], text_align=aligns[k] if k < len(aligns) else "left", border_bottom="1px solid #EEEEEE")}">{self.inline(c)}</td>'
+                f'<td style="{style(padding="9px 10px", color=t["text"], text_align=aligns[k] if k < len(aligns) else "left", border_bottom="1px solid " + t["rule"])}">{self.inline(c)}</td>'
                 for k, c in enumerate(cs)
             )
             trs.append(f"<tr>{tds}</tr>")
@@ -650,14 +796,17 @@ class Renderer:
         )
 
     # ── 扩展容器 ───────────────────────────────────────────────────────────
-    def label(self, text: str, color: str) -> str:
+    def label(self, text: str, color: str, marker: str | None = None) -> str:
+        m = square(marker, 6, "8px") if marker else ""
         return (
-            f'<p style="{style(margin="0 0 8px", font_size="12px", font_weight="bold", line_height="1.4", letter_spacing="3px", color=color, text_align="left")}">{html.escape(text)}</p>'
+            f'<p style="{style(margin="0 0 8px", font_size="12px", font_weight="bold", line_height="1.4", letter_spacing="2px", color=color, text_align="left")}">{m}{html.escape(text)}</p>'
         )
 
     def container(self, typ: str, arg: str, buf: list[str], ln: int) -> str:
         t = self.t
         self.anchor()
+        # 信号色主题（mono）的标签：黑字 + 橙色小方块；其它主题：主题色字
+        sig = t["signal"] if t["signal"] != t["accent"] else None
 
         def inner(**ps) -> str:
             self.p_stack.append(ps)
@@ -666,49 +815,78 @@ class Renderer:
             return h
 
         if typ == "lead":
-            body = inner(font_size="14px", color=t["muted"], margin="0 0 6px", line_height="1.85")
+            if t["lead"] == "dek":
+                body = inner(font_size="16px", color=t["lead_color"], margin="0 0 8px", line_height="1.85", letter_spacing="0.3px")
+                lab = self.label(arg, t["heading"], sig) if arg else ""
+                return (
+                    f'<section style="{style(margin="4px 0 36px", padding="0 0 24px", border_bottom="1px solid " + t["rule"])}">{lab}{body}</section>'
+                )
+            body = inner(font_size="14px", color=t["lead_color"], margin="0 0 6px", line_height="1.85")
             return (
-                f'<section style="{style(margin="4px 0 36px", padding="18px 20px 12px", background_color=t["soft"], border_radius="2px")}">'
-                f"{self.label(arg or '导读', t['accent'])}{body}</section>"
+                f'<section style="{style(margin="4px 0 36px", padding="18px 20px 12px", background_color=t["soft"], border_radius=t["radius"])}">'
+                f"{self.label(arg or '导读', t['accent'], sig)}{body}</section>"
             )
+
         if typ == "quote":
+            if t["quote"] == "serif":
+                body = inner(font_family=t["head_font"], font_size="18px", color=t["heading"], margin="0 0 6px", line_height="1.75", letter_spacing="0.5px", text_align="left")
+                author = ""
+                if arg:
+                    author = f'<p style="{style(margin="14px 0 0", font_size="13px", line_height="1.5", letter_spacing="1px", color=t["muted"], text_align="left")}">— {self.inline(arg)}</p>'
+                bar = f'<p style="{style(margin="0 0 16px", line_height="0", font_size="0")}"><span style="{style(display="inline-block", width="22px", height="2px", background_color=t["accent"])}"></span></p>'
+                return f'<section style="{style(margin="44px 4px")}">{bar}{body}{author}</section>'
+            if t["quote"] == "display":
+                body = inner(font_size="20px", font_weight="bold", color=t["heading"], margin="0 0 6px", line_height="1.55", letter_spacing="0", text_align="left")
+                author = ""
+                if arg:
+                    author = f'<p style="{style(margin="14px 0 0", font_size="13px", line_height="1.5", letter_spacing="0.5px", color=t["muted"], text_align="left")}">{square(t["signal"])}{self.inline(arg)}</p>'
+                return (
+                    f'<section style="{style(margin="44px 0", padding="2px 0 2px 18px", border_left="3px solid " + t["signal"])}">{body}{author}</section>'
+                )
             body = inner(font_size="17px", color=t["heading"], margin="0 0 6px", line_height="1.8", letter_spacing="1px", text_align="center", font_weight="bold")
             author = ""
             if arg:
-                author = (
-                    f'<p style="{style(margin="12px 0 0", font_size="13px", line_height="1.5", letter_spacing="1px", color=t["muted"], text_align="center")}">—— {self.inline(arg)}</p>'
-                )
+                author = f'<p style="{style(margin="12px 0 0", font_size="13px", line_height="1.5", letter_spacing="1px", color=t["muted"], text_align="center")}">—— {self.inline(arg)}</p>'
             return (
                 f'<section style="{style(margin="44px 12px", text_align="center")}">'
                 f'<p style="{style(margin="0 0 4px", font_family=SERIF, font_size="44px", line_height="1", height="30px", color=t["accent"], text_align="center", opacity="0.85")}">&ldquo;</p>'
                 f"{body}{author}</section>"
             )
+
         if typ in ("tip", "note", "info", "warn", "warning", "danger"):
             is_warn = typ in ("warn", "warning", "danger")
-            color = "#B0413E" if is_warn else t["accent"]
-            bg = "#FBF0EF" if is_warn else t["soft"]
             default = {"tip": "提示", "note": "要点", "info": "说明"}.get(typ, "注意")
             body = inner(font_size="14px", color=t["text"], margin="0 0 6px", line_height="1.85")
+            if t["callout"] == "soft":
+                bg = t["warn_bg"] if is_warn else t["soft"]
+                color = t["warn"] if is_warn else (t["heading"] if sig else t["accent"])
+                marker = (t["warn"] if is_warn else sig) if sig else None
+                return (
+                    f'<section style="{style(margin="24px 0", padding="16px 18px 10px", background_color=bg, border_radius=t["radius"])}">'
+                    f"{self.label(arg or default, color, marker)}{body}</section>"
+                )
+            color = t["warn"] if is_warn else t["accent"]
+            bg = t["warn_bg"] if is_warn else t["soft"]
             return (
                 f'<section style="{style(margin="24px 0", padding="14px 16px 8px", background_color=bg, border_left="3px solid " + color, border_radius="0 4px 4px 0")}">'
                 f"{self.label(arg or default, color)}{body}</section>"
             )
+
         if typ == "card":
             title = ""
             if arg:
-                title = (
-                    f'<p style="{style(margin="0 0 10px", font_size="15px", font_weight="bold", line_height="1.6", color=t["heading"], letter_spacing="1px")}">{self.inline(arg)}</p>'
-                )
+                title = f'<p style="{style(margin="0 0 10px", font_family=t["head_font"], font_size="16px", font_weight="bold", line_height="1.6", color=t["heading"], letter_spacing="0.5px")}">{self.inline(arg)}</p>'
             body = inner(font_size="14px", margin="0 0 8px", line_height="1.85")
+            border = t["rule"] if t["callout"] == "soft" else t["mid"]
             return (
-                f'<section style="{style(margin="24px 0", padding="18px 18px 10px", border="1px solid " + t["mid"], border_radius="6px")}">{title}{body}</section>'
+                f'<section style="{style(margin="28px 0", padding="20px 20px 12px", border="1px solid " + border, border_radius=t["radius"])}">{title}{body}</section>'
             )
         if typ == "center":
             return inner(text_align="center", _breaks=True)
         if typ == "footer":
             body = inner(font_size="13px", color=t["muted"], text_align="center", margin="0 0 6px", line_height="1.8", _breaks=True)
             return (
-                f'<section style="{style(margin="36px 0 0", padding="20px 0 0", border_top="1px solid #EEEEEE", text_align="center")}">{body}</section>'
+                f'<section style="{style(margin="36px 0 0", padding="20px 0 0", border_top="1px solid " + t["rule"], text_align="center")}">{body}</section>'
             )
         # 未知容器：原样渲染内部
         return inner()
@@ -719,18 +897,18 @@ class Renderer:
         out = []
         if str(self.meta.get("end", "true")).lower() != "false":
             out.append(
-                f'<p style="{style(margin="56px 0 8px", font_size="12px", line_height="1", letter_spacing="6px", color=t["muted"], text_align="center")}">— END —</p>'
+                f'<p style="{style(margin="56px 0 8px", font_size="12px", line_height="1", letter_spacing="6px", color=t["muted"], text_align="center")}">{html.escape(t["end"])}</p>'
             )
         if self.footnotes:
             items = "".join(
                 f'<p style="{style(margin="0 0 6px", font_size="12px", line_height="1.7", color=t["muted"], text_align="left", word_break="break-all")}">'
-                f'<span style="{style(color=t["accent"])}">[{k}]</span> '
+                f'<span style="{style(color=t["signal"])}">[{k}]</span> '
                 + ("" if label == url else f"{html.escape(label)}<br/>")
                 + f'<span style="{style(color="#A0A0A0")}">{html.escape(url)}</span></p>'
                 for k, (label, url) in enumerate(self.footnotes, 1)
             )
             out.append(
-                f'<section style="{style(margin="32px 0 0", padding="16px 0 0", border_top="1px solid #EEEEEE")}">'
+                f'<section style="{style(margin="32px 0 0", padding="16px 0 0", border_top="1px solid " + t["rule"])}">'
                 f'<p style="{style(margin="0 0 10px", font_size="12px", font_weight="bold", letter_spacing="3px", color=t["muted"])}">参考资料</p>{items}</section>'
             )
         return "".join(out)
@@ -755,20 +933,37 @@ def parse_front_matter(src: str) -> tuple[dict, str, int]:
     return meta, src, 1
 
 
+def count_h2(body: str) -> int:
+    n, fence = 0, None
+    for line in body.split("\n"):
+        s = line.strip()
+        m = re.match(r"^(```+|~~~+)", s)
+        if m:
+            fence = None if fence and s.startswith(fence) else (fence or m.group(1))
+            continue
+        if not fence and re.match(r"^##\s+\S", s):
+            n += 1
+    return n
+
+
 def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict]:
     meta, body, offset = parse_front_matter(src.replace("\r\n", "\n"))
-    name = theme_name or meta.get("theme") or "ink"
+    name = theme_name or meta.get("theme") or DEFAULT_THEME
     if name not in THEMES:
         raise SystemExit(f"未知主题 {name!r}，可选：{', '.join(THEMES)}")
-    r = Renderer(THEMES[name], meta)
+    t = resolve_theme(name)
+    r = Renderer(t, meta, count_h2(body))
     inner = r.blocks(body.split("\n"), offset)
     inner += r.end_matter()
+    paper = str(meta.get("paper", "false")).lower() == "true"
     root = style(
         margin="0",
-        padding="0 4px",
+        padding="28px 18px" if paper else "0 4px",
+        background_color=t["paper"] if paper else None,
+        border_radius="12px" if paper else None,
         font_family=FONT,
         font_size="15px",
-        color=THEMES[name]["text"],
+        color=t["text"],
         line_height="1.9",
         letter_spacing="0.5px",
         word_wrap="break-word",
@@ -838,8 +1033,12 @@ def build_preview(src: str, default_theme: str, meta: dict, r: Renderer) -> str:
     for name, th in THEMES.items():
         frag, _, _ = render(src, name)
         articles.append(f'<div class="wx-article" data-theme="{name}">{frag}</div>')
+        dot = (
+            f'<span style="display:inline-block;width:6px;height:6px;background:{th["signal"]};margin-left:6px;vertical-align:middle"></span>'
+            if th.get("signal") else ""
+        )
         buttons.append(
-            f'<button data-theme="{name}" style="--c:{th["accent"]}" onclick="pick(\'{name}\')">{th["label"]}</button>'
+            f'<button data-theme="{name}" style="--c:{th["accent"]}" onclick="pick(\'{name}\')">{th["label"]}{dot}</button>'
         )
     minutes = max(1, round(r.chars / READ_SPEED))
     warn = ""
@@ -870,7 +1069,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if a.list_themes:
         for k, v in THEMES.items():
-            print(f"{k:<9} {v['label']}  {v['accent']}  {v['desc']}")
+            mark = " (默认)" if k == DEFAULT_THEME else ""
+            print(f"{k:<9} {v['label']}{mark}  {v.get('signal') or v['accent']}  {v['desc']}")
         return 0
     if not a.input:
         ap.error("需要输入 Markdown 文件")
@@ -878,7 +1078,7 @@ def main(argv: list[str] | None = None) -> int:
     src = Path(a.input).read_text(encoding="utf-8")
     frag, r, meta = render(src, a.theme)
     lint_meta(meta, r)
-    theme = a.theme or meta.get("theme") or "ink"
+    theme = a.theme or meta.get("theme") or DEFAULT_THEME
     minutes = max(1, round(r.chars / READ_SPEED))
 
     if a.json:

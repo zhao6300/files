@@ -31,4 +31,4 @@ python generate_slo_ppt.py
 
 # 微信公众号写作与排版 Skill
 
-见 [`wechat-article-skill/`](wechat-article-skill/)：一个移动端优先的公众号写作 skill，内含 Markdown → 公众号 HTML 排版脚本和四套主题（墨印 / 青瓷 / 琥珀 / 石墨）。
+见 [`wechat-article-skill/`](wechat-article-skill/)：一个移动端优先的公众号写作 skill，内含 Markdown → 公众号 HTML 排版脚本和六套主题（主推陶土 / 素白，分别借鉴 Claude 与 OpenAI 的风格）。

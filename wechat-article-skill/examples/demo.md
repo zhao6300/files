@@ -2,7 +2,7 @@
 title: 手机上的长文，为什么越排越"透气"
 author: 留白编辑部
 date: 2026-09-29
-theme: ink
+theme: clay
 summary: 屏幕只有 6 英寸，读者的耐心只有 3 秒。好的公众号排版不是装饰，而是替读者的眼睛减负。本文拆解 5 个让长文在手机上"读得下去"的排版原则。
 ---
 
@@ -74,7 +74,7 @@ iPhone 的正文区域大约 343pt 宽。按 15px 字号算，一行能放下 **
 公众号编辑器会删掉所有 `<style>` 和 `class`，只保留内联样式。手写既累又容易错，所以我们用脚本一步生成：
 
 ```bash
-python md2wechat.py a.md -t ink
+python md2wechat.py a.md -t clay
 ```
 
 生成的 HTML 在浏览器里打开，点「复制到公众号」，粘贴即可。参考资料里有公众号官方的[运营规范](https://mp.weixin.qq.com/mp/opshowpage?action=newoplaw)，发文前值得读一遍；更多排版研究可以看 [Butterick's Practical Typography](https://practicaltypography.com/)。

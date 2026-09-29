@@ -1,7 +1,7 @@
 ---
 title: 【N 分钟学会 / 从 0 到 1 做出某个东西】
 author: 作者
-theme: graphite
+theme: mono
 summary: 【最终效果 + 所需时间 + 门槛，≤120 字】
 ---
 

@@ -3,11 +3,21 @@
 一个面向 AI 编码助手（Claude Code / Kiro 等支持 `SKILL.md` 的 Agent）的 skill，负责**写**和**排**两件事：
 
 - **写**：按手机阅读习惯写稿。标题 ≤26 字，段落 ≤110 字，每 300–500 字一个视觉锚点。
-- **排**：一条命令把 Markdown 转成全内联样式的 HTML，能直接粘贴进公众号编辑器。提供四套主题，风格各不相同。
+- **排**：一条命令把 Markdown 转成全内联样式的 HTML，能直接粘贴进公众号编辑器。主推两套主题，分别借鉴 Claude 和 OpenAI 的设计风格，另有四套备选主题。
 
-![四套主题](assets/themes-cover.png)
+## 主推主题
 
-![组件](assets/themes-components.png)
+![陶土 clay 与 素白 mono](assets/flagship.png)
+
+| | 陶土 `clay`（默认） | 素白 `mono` |
+|---|---|---|
+| 借鉴 | Claude 的暖调编辑风格 | OpenAI 的极简黑白风格 |
+| 我们的改动 | 陶土橙比 Claude 的珊瑚橙更深；标题用中文宋体；默认白底，只在色块上用燕麦色 | 黑白灰之外加一点信号橙；章节之间用细线分隔；金句用大号无衬线字体 |
+| 共同的标志 | 章节序号写成「01 / 05」，兼作阅读进度 | 同左 |
+
+## 全部六套主题
+
+![六套主题](assets/themes-cover.png)
 
 ## 目录
 
@@ -37,8 +47,8 @@ cp -r wechat-article-skill .kiro/skills/wechat-article         # Kiro（工作�
 ## 单独使用排版脚本
 
 ```bash
-python scripts/md2wechat.py article.md             # → article.html：手机预览 + 四主题切换 + 一键复制
-python scripts/md2wechat.py article.md -t amber    # 指定主题
+python scripts/md2wechat.py article.md             # → article.html：手机预览 + 六主题切换 + 一键复制
+python scripts/md2wechat.py article.md -t mono     # 指定主题
 python scripts/md2wechat.py article.md --check     # 只做可读性检查
 python scripts/md2wechat.py article.md --fragment  # 只输出可粘贴的 HTML 片段
 python scripts/md2wechat.py --list-themes
@@ -50,5 +60,5 @@ python scripts/md2wechat.py --list-themes
 
 - **移动端优先**：正文 15px、行高 1.9、字距 0.5px、两端对齐，每行约 21 个汉字。
 - **全文一个强调色**：主题色只用在序号、标记、重点、链接上。
-- **章节样式各有辨识度**：墨印用朱砂印章汉字序号，青瓷用斜体衬线数字，琥珀和石墨用杂志式 PART 标签。
+- **章节样式各有辨识度**：陶土和素白用「01 / 05」进度序号，墨印用朱砂印章汉字序号，青瓷用斜体衬线数字，琥珀和石墨用杂志式 PART 标签。
 - **符合公众号限制**：全部内联样式；外链自动转成脚注；背景用低饱和浅色，兼容深色模式；中文用弯引号；中英文之间自动加空格。
