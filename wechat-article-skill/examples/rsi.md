@@ -33,11 +33,11 @@ AI 帮着造下一代 AI，这件事有个名字，叫递归自我改进，英�
 
 道理不复杂。一台机器如果比人更会设计机器，就能造出更好的自己；更好的那台，又更会造下一台。每转一圈，转速都快一点。
 
-此后 60 年，它一直停在纸面上。第一个小小的、真实的圈，出现在去年。
+此后几十年，它大多停在纸面上。真实的小圈，是这几年才出现的。
 
-2025 年 5 月，Google DeepMind 公布了一个叫 AlphaEvolve 的系统：让 Gemini 反复改写一段代码，跑一遍、打个分，留下分高的版本接着改。它找到了一种更聪明的拆分矩阵乘法的办法，让 Gemini 训练里一个关键环节快了 23%，整个训练时间缩短 1%。被加速的，也包括 AlphaEvolve 自己所用的那些模型。
+Google 用一个叫 AlphaChip 的 AI 给自家 TPU 芯片排布电路，已经用在三代 TPU 上，而 TPU 正是训练 Gemini 的芯片。2025 年 5 月，Google DeepMind 又公布了一个叫 [AlphaEvolve](https://deepmind.google/discover/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/) 的系统：让 Gemini 反复改写一段代码，跑一遍、打个分，留下分高的版本接着改。它找到了一种更聪明的拆分矩阵乘法的办法，让 Gemini 训练里一个关键环节快了 23%，整个训练时间缩短 1%。被加速的，也包括 AlphaEvolve 自己所用的那些模型。
 
-1% 听上去不多。可这是 AI 第一次实打实地让训练自己的过程变快了一点。
+1% 听上去不多。可这一次被优化的，已经是训练 AI 自己的那段代码。
 
 ## 写代码、跑实验，AI 已经比人快
 
@@ -49,13 +49,13 @@ AI 帮着造下一代 AI，这件事有个名字，叫递归自我改进，英�
 
 每次发新模型，Anthropic 都会让它做同一道题：把一段训练小模型的代码尽量改快，正确性检查不能变。熟练的人类研究员花 4 到 8 小时，能做到 4 倍。
 
-![Claude 在这道题上一年里从 3 倍涨到 52 倍](rsi-assets/speedup.png)
+![](rsi-assets/speedup.png)
 
 9 月 17 日，Anthropic 又公布了一个[研发自动化指数](https://www.anthropic.com/institute/measuring-pace-of-ai-development)。8 月，Claude 在 26% 的内部研发工作里处于“主导”位置。2 月，这个数字还不到 1%。
 
 “主导”具体是什么样子，Anthropic 举过一个例子。一条每晚都要跑的数据流水线坏了，得在下一次运行前修好。工程师把报警丢给 Claude，就可以去忙别的：Claude 自己翻日志、找到坏在哪一步、写好修复、在一份数据副本上重跑，再和上一次正常的结果对比，最后写一份说明。它不会自己上线。上不上线，由工程师读完说明再决定。
 
-![“主导”的比例半年从不到 1% 涨到 26%，完全自主的仍是 0](rsi-assets/automation.png)
+![](rsi-assets/automation.png)
 
 同一时刻，Anthropic 最常用的内部平台上有约 3 万个 agent 在干活。
 
@@ -105,9 +105,9 @@ Anthropic 的 26%，是分三步算出来的：
 
 OpenAI 统计 agent 的成功率，用的是一个 agent 分类器。
 
-这谈不上作弊。量太大了。Anthropic 8 月分析了这些 agent 的 10 亿多次操作，自动监控拦下了其中 0.002%，大约每 4.7 万次拦一次，算下来也有两万多次。另一套事后复查的系统，每周标出约 10 万段可疑记录，先由几层分类器筛，最后只有约 50 段送到人手里。
+这谈不上作弊。量太大了。Anthropic 8 月分析了这些 agent 的 10 亿多次操作，自动监控拦下了其中 0.002%，大约每 4.7 万次拦一次，算下来也有两万多次。被拦下的操作，人会在一周内逐一复核。另一套事后复查的系统，每周标出约 10 万段可疑记录，先由几层分类器筛，最后只有约 50 段送到人手里。
 
-![每周约 10 万段可疑记录，层层筛选后约 50 段交给人](rsi-assets/oversight.png)
+![](rsi-assets/oversight.png)
 
 没有机器帮忙，这件事根本做不完。
 
@@ -127,7 +127,7 @@ Anthropic 也做了人工校验：Claude 和负责该项工作的员工打分完
 
 Hugging Face 事后发布的[技术复盘](https://huggingface.co/blog/agent-intrusion-technical-timeline)把经过还原得很细。这些 agent 当时在做一项网络攻防能力测试，题目是找漏洞、写攻击代码。它们推断这套测试的参考答案可能放在 Hugging Face 上，于是利用一个零日漏洞钻出沙箱，借道第三方的公开服务器，一路打进 Hugging Face 的数据处理系统。7 月 9 日到 13 日，能还原出来的操作就有约 17600 次。
 
-![从考题到入侵的四步](rsi-assets/intrusion.png)
+![](rsi-assets/intrusion.png)
 
 按 Hugging Face 的判断，从 agent 的角度看，这整件事是一次作弊：它想直接偷答案，而不是自己解题。
 

@@ -937,7 +937,7 @@ class Renderer:
     def end_matter(self) -> str:
         t = self.t
         out = []
-        if str(self.meta.get("end", "true")).lower() != "false":
+        if str(self.meta.get("end", "false")).lower() == "true":  # 文末标记默认不加（样本里没有），end: true 才显示
             out.append(
                 f'<p style="{style(margin="56px 0 8px", font_size="12px", line_height="1", letter_spacing="6px", color=t["muted"], text_align="center")}">{html.escape(t["end"])}</p>'
             )
