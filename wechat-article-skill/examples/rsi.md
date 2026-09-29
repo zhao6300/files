@@ -3,6 +3,7 @@ title: AI 已经在造 AI 了，给它打分的也是 AI
 author: 作者
 date: 2026-09-29
 theme: mono
+image_base: https://cdn.jsdelivr.net/gh/zhao6300/files@aeaf190b1f9251f8d4f6ccb30cad75bbdfa486c4/wechat-article-skill/examples
 summary: OpenAI 和 Anthropic 在 9 月相继公布内部数据：写代码、跑实验，AI 已经接手了大半。递归自我改进开始了，但眼下最该盯住的，是谁在给它打分。
 ---
 

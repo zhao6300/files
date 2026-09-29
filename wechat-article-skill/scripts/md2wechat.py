@@ -284,6 +284,10 @@ class Renderer:
         # bold: accent → 加粗句用主题色（刘润 / 晚点式“金句着色”）
         self.strong = theme["signal"] if str(meta.get("bold", "")).lower() == "accent" else theme["heading"]
         self.footnotes: list[tuple[str, str]] = []
+        # 图片：公众号只能转存公网图片。image_base 把相对路径拼成公网地址；preview=True 时预览仍显示本地文件
+        self.image_base = (meta.get("image_base") or "").strip()
+        self.preview = False
+        self.local_images: list[str] = []
         self.h2_index = 0
         self.warnings: list[str] = []
         self.chars = 0
@@ -715,9 +719,16 @@ class Renderer:
                 f'<p style="{style(margin="10px 0 0", font_size="12px", line_height="1.6", letter_spacing="1px", color=t["muted"], text_align="center")}">{self.inline(caption)}</p>'
             )
         radius = "8px" if t["radius"] == "12px" else "4px"
+        remote = src
+        if not re.match(r"^(https?:)?//", src) and not src.startswith("data:"):
+            if self.image_base:
+                remote = self.image_base.rstrip("/") + "/" + src.lstrip("./")
+            else:
+                self.local_images.append(src)
+        attrs = f'src="{html.escape(src)}" data-copy-src="{html.escape(remote)}"' if self.preview and remote != src else f'src="{html.escape(remote)}"'
         return (
             f'<section style="{style(margin="28px 0", text_align="center")}">'
-            f'<img src="{html.escape(src)}" alt="{html.escape(caption)}" style="{style(display="block", width="100%", height="auto", margin="0 auto", border_radius=radius)}"/>'
+            f'<img {attrs} alt="{html.escape(caption)}" style="{style(display="block", width="100%", height="auto", margin="0 auto", border_radius=radius)}"/>'
             f"{cap}</section>"
         )
 
@@ -1089,7 +1100,7 @@ def lint_style(body: str, offset: int, r: Renderer) -> None:
 
 
 
-def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict]:
+def render(src: str, theme_name: str | None = None, preview: bool = False) -> tuple[str, Renderer, dict]:
     meta, body, offset = parse_front_matter(src.replace("\r\n", "\n"))
     body = strip_comments(body)
     name = theme_name or meta.get("theme") or DEFAULT_THEME
@@ -1099,6 +1110,7 @@ def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict
     if meta.get("h2") in ("index", "big", "seal", "numeral", "editorial"):
         t["h2"] = meta["h2"]   # 单篇文章覆盖章节样式
     r = Renderer(t, meta)
+    r.preview = preview
     inner = r.blocks(body.split("\n"), offset)
     inner += r.end_matter()
     if meta.get("byline"):
@@ -1157,6 +1169,8 @@ def lint_meta(meta: dict, r: Renderer) -> None:
         r.warnings.insert(0, f"  META  标题主体 {count_chars(main)} 字，订阅号列表会被截断，建议 ≤{MAX_TITLE_CHARS} 字")
     elif title and count_chars(title) > 40:
         r.warnings.insert(0, f"  META  标题含栏目前缀共 {count_chars(title)} 字，建议 ≤40 字")
+    if r.local_images:
+        r.warnings.append(f"  META  {len(r.local_images)} 张本地图片（{r.local_images[0]} 等）复制到公众号时带不过去：先推到公网（如 GitHub），在 front matter 写 image_base: <图片所在目录的 https 地址>；或粘贴后在编辑器里手动上传")
     summary = meta.get("summary", "")
     if not summary:
         r.warnings.insert(0, "  META  缺少 summary（摘要），分享卡片会自动截取正文开头")
@@ -1198,10 +1212,13 @@ __WARN__
 function pick(name){document.querySelectorAll('.wx-article').forEach(e=>e.classList.toggle('on',e.dataset.theme===name));
 document.querySelectorAll('.bar button[data-theme]').forEach(b=>b.classList.toggle('on',b.dataset.theme===name));}
 async function copyArticle(){
-  const el=document.querySelector('.wx-article.on'); const html=el.innerHTML;
+  const src=document.querySelector('.wx-article.on'); const el=src.cloneNode(true); let local=0;
+  // 图片换成公网地址（公众号只会转存 http/https 图片）；本地图片带不过去，只能提示手动上传
+  el.querySelectorAll('img').forEach((img,i)=>{ const u=img.getAttribute('data-copy-src')||src.querySelectorAll('img')[i].src; img.setAttribute('src',u); img.removeAttribute('data-copy-src'); if(!/^https?:/.test(u)) local++; });
+  el.style.cssText='position:fixed;left:-9999px;top:0'; document.body.appendChild(el); const html=el.innerHTML;
   try{await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([el.innerText],{type:'text/plain'})})]);}
   catch(e){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);document.execCommand('copy');s.removeAllRanges();}
-  const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1600);
+  el.remove(); const t=document.getElementById('toast'); t.textContent = local ? `已复制。${local} 张本地图片带不过去，请在编辑器里手动上传（或设置 image_base）` : '已复制，去公众号编辑器粘贴即可'; t.classList.add('show');setTimeout(()=>t.classList.remove('show'), local ? 4000 : 1600);
 }
 pick('__DEFAULT__');
 </script>
@@ -1212,7 +1229,7 @@ pick('__DEFAULT__');
 def build_preview(src: str, default_theme: str, meta: dict, r: Renderer) -> str:
     articles, buttons = [], []
     for name, th in THEMES.items():
-        frag, _, _ = render(src, name)
+        frag, _, _ = render(src, name, preview=True)
         articles.append(f'<div class="wx-article" data-theme="{name}">{frag}</div>')
         dot = (
             f'<span style="display:inline-block;width:6px;height:6px;background:{th["signal"]};margin-left:6px;vertical-align:middle"></span>'
@@ -1244,6 +1261,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("-t", "--theme", choices=list(THEMES), help="主题（覆盖 front matter）")
     ap.add_argument("--fragment", action="store_true", help="只输出可粘贴的 HTML 片段，不含预览外壳")
     ap.add_argument("--check", action="store_true", help="只做可读性检查，不写文件")
+    ap.add_argument("--image-base", help="图片相对路径的公网前缀（覆盖 front matter 的 image_base）")
     ap.add_argument("--no-style", action="store_true", help="跳过文风检查（套话 / 模糊信源 / 感叹号），只查排版")
     ap.add_argument("--json", action="store_true", help="以 JSON 输出统计与警告")
     ap.add_argument("--list-themes", action="store_true", help="列出主题")
@@ -1258,6 +1276,9 @@ def main(argv: list[str] | None = None) -> int:
         ap.error("需要输入 Markdown 文件")
 
     src = Path(a.input).read_text(encoding="utf-8")
+    if a.image_base:  # 命令行覆盖 front matter：插到 front matter 最后，后写的键生效
+        src = re.sub(r"^(---\s*\n.*?)(\n---)", lambda m: f"{m.group(1)}\nimage_base: {a.image_base}{m.group(2)}", src, count=1, flags=re.S) \
+            if src.startswith("---") else f"---\nimage_base: {a.image_base}\n---\n{src}"
     frag, r, meta = render(src, a.theme)
     lint_meta(meta, r)
     lint_output(frag, r)
