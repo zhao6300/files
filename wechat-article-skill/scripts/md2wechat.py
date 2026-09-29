@@ -79,7 +79,7 @@ DEFAULTS: dict = {
 THEMES: dict[str, dict] = {
     "clay": {
         "label": "陶土",
-        "desc": "灵感来自 Claude：燕麦纸色、陶土橙、宋体标题、章节进度序号。温暖知性，适合观点、人文、AI 与科技随笔。",
+        "desc": "灵感来自 Claude：燕麦纸色、陶土橙、宋体标题、章节序号。温暖知性，适合观点、人文、AI 与科技随笔。",
         "accent": "#C2603E",
         "soft": "#F4F0E8",
         "mid": "#E4D9C8",
@@ -175,7 +175,7 @@ THEMES: dict[str, dict] = {
     },
     "amber": {
         "label": "琥珀",
-        "desc": "暖琥珀 + 杂志式 PART 标签。有温度的深度长文、商业分析、人物稿。",
+        "desc": "暖琥珀 + 杂志式小序号。有温度的深度长文、商业分析、人物稿。",
         "accent": "#A8651E",
         "soft": "#FAF4EB",
         "mid": "#EAD4B6",
@@ -207,7 +207,7 @@ DEFAULT_THEME = "clay"
 CN_NUM = "零壹贰叁肆伍陆柒捌玖"
 
 # 可读性阈值（按 375pt 屏宽、15px 字号 ≈ 每行 21~22 个汉字 估算）
-MAX_PARA_CHARS = 110      # ≈ 5 行
+MAX_PARA_CHARS = 150      # ≈ 7 行；头部账号段落中位数 76–123 字，90 分位 118–192 字（benchmarks.md）
 MAX_H2_CHARS = 20        # 观点句式小标题（晚点式）可到两行；短语式建议 6–12 字
 MAX_H3_CHARS = 20
 MAX_RUN_PARAS = 6         # 连续纯文字段落数
@@ -268,7 +268,7 @@ def square(color: str, size: int = 6, gap: str = "8px") -> str:
 # 渲染器
 # ──────────────────────────────────────────────────────────────────────────────
 class Renderer:
-    def __init__(self, theme: dict, meta: dict, h2_total: int = 0):
+    def __init__(self, theme: dict, meta: dict):
         self.t = theme
         self.meta = meta
         self.numbered = str(meta.get("numbered", "true")).lower() != "false"
@@ -279,7 +279,6 @@ class Renderer:
         self.strong = theme["signal"] if str(meta.get("bold", "")).lower() == "accent" else theme["heading"]
         self.footnotes: list[tuple[str, str]] = []
         self.h2_index = 0
-        self.h2_total = h2_total
         self.warnings: list[str] = []
         self.chars = 0
         self.images = 0
@@ -400,7 +399,11 @@ class Renderer:
         sup = f'<sup style="{style(font_size="10px", color=t["signal"], line_height="0", margin_left="1px")}">[{n}]</sup>'
         if label == url:  # 裸链接只保留脚注编号
             return sup
-        return f'<span style="{style(color=t["link"], border_bottom="1px solid " + t["link_line"])}">{label_html}</span>{sup}'
+        # 书名号、引号放到下划线外面：包在 span 里时，浏览器不在“《”前换行，整段书名被挤到下一行，上一行两端对齐后字距拉得很开
+        m = re.match(r"^([《「『“（]?)(.+?)([》」』”）]?)$", label, re.S)
+        pre, core, post = m.groups() if m else ("", label, "")
+        core_html = self.inline(core) if (pre or post) else label_html
+        return f'{pre}<span style="{style(color=t["link"], border_bottom="1px solid " + t["link_line"])}">{core_html}</span>{post}{sup}'
 
     # ── 块级 ───────────────────────────────────────────────────────────────
     def is_block_start(self, line: str, nxt: str | None) -> bool:
@@ -553,12 +556,12 @@ class Renderer:
         self.chars += c
         if len(self.p_stack) == 1:
             if c > MAX_PARA_CHARS:
-                self.warn(ln, f"段落约 {c} 字（手机上 ≈{c // 21 + 1} 行），建议拆成 ≤{MAX_PARA_CHARS} 字的短段")
+                self.warn(ln, f"段落约 {c} 字（手机上 ≈{c // 21 + 1} 行），按意思拆开（多数段落 60–110 字即可）")
             if self.run == 0:
                 self.run_start = ln
             self.run += 1
             if self.run == MAX_RUN_PARAS + 1:
-                self.warn(self.run_start, f"从此处起连续 {self.run}+ 段纯文字，建议插入小标题 / 图片 / 金句 / 列表")
+                self.warn(self.run_start, f"从此处起连续 {self.run}+ 段纯文字，优先插入配图或图表；不要为此把正文改成列表")
         qa = self.p_stack[-1].get("_qa")
         if qa:
             m = re.match(r"^(?:\*\*)?([^：:*\s]{1,12})(?:\*\*)?[：:]\s*(.*)$", text, re.S)
@@ -624,15 +627,14 @@ class Renderer:
                 )
             return f'<section style="{style(margin="52px 0 22px")}">{num}<p style="{title_style}">{body}</p></section>'
         if variant == "index":
-            # 序号写成“当前 / 总数”，读者在手机上随时知道读到了哪里
+            # 只写序号，不加“/ 总数”“PART”这类标签（头部账号实测均不使用，见 benchmarks.md）
             kicker = ""
             if self.numbered:
-                total = f" / {self.h2_total:02d}" if self.h2_total else ""
                 marker = square(t["signal"]) if t["h2_marker"] else ""
                 num_color = t["heading"] if t["h2_marker"] else t["accent"]
                 kicker = (
                     f'<p style="{style(margin="0 0 10px", font_family=MONO, font_size="12px", line_height="1.4", letter_spacing="1px", color=t["muted"], text_align="left")}">'
-                    f'{marker}<span style="{style(color=num_color, font_weight="bold")}">{idx:02d}</span>{total}</p>'
+                    f'{marker}<span style="{style(color=num_color, font_weight="bold")}">{idx:02d}</span></p>'
                 )
             sec = style(margin="52px 0 22px", padding_top="20px" if t["h2_rule"] else None,
                         border_top=f"1px solid {t['rule']}" if t["h2_rule"] else None)
@@ -670,7 +672,7 @@ class Renderer:
         kicker = ""
         if self.numbered:
             kicker = (
-                f'<p style="{style(margin="0 0 6px", font_family=SERIF, font_size="12px", font_weight="bold", line_height="1.4", letter_spacing="3px", color=t["accent"], text_align="left")}">PART {idx:02d}</p>'
+                f'<p style="{style(margin="0 0 6px", font_family=SERIF, font_size="12px", font_weight="bold", line_height="1.4", letter_spacing="3px", color=t["accent"], text_align="left")}">{idx:02d}</p>'
             )
         return (
             f'<section style="{style(margin="52px 0 24px", padding="0 0 12px", border_bottom="1px solid " + t["mid"])}">{kicker}'
@@ -855,7 +857,7 @@ class Renderer:
             body = inner(font_size="14px", color=t["lead_color"], margin="0 0 6px", line_height="1.85")
             return (
                 f'<section style="{style(margin="4px 0 36px", padding="18px 20px 12px", background_color=t["soft"], border_radius=t["radius"])}">'
-                f"{self.label(arg or '导读', t['accent'], sig)}{body}</section>"
+                f"{self.label(arg, t['accent'], sig) if arg else ''}{body}</section>"
             )
 
         if typ == "quote":
@@ -1079,17 +1081,6 @@ def lint_style(body: str, offset: int, r: Renderer) -> None:
     r.warnings.extend(hits)
 
 
-def count_h2(body: str) -> int:
-    n, fence = 0, None
-    for line in body.split("\n"):
-        s = line.strip()
-        m = re.match(r"^(```+|~~~+)", s)
-        if m:
-            fence = None if fence and s.startswith(fence) else (fence or m.group(1))
-            continue
-        if not fence and re.match(r"^##\s+\S", s):
-            n += 1
-    return n
 
 
 def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict]:
@@ -1101,7 +1092,7 @@ def render(src: str, theme_name: str | None = None) -> tuple[str, Renderer, dict
     t = resolve_theme(name)
     if meta.get("h2") in ("index", "big", "seal", "numeral", "editorial"):
         t["h2"] = meta["h2"]   # 单篇文章覆盖章节样式
-    r = Renderer(t, meta, count_h2(body))
+    r = Renderer(t, meta)
     inner = r.blocks(body.split("\n"), offset)
     inner += r.end_matter()
     if meta.get("byline"):
