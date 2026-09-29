@@ -214,7 +214,7 @@ CN_NUM = "零壹贰叁肆伍陆柒捌玖"
 MAX_PARA_CHARS = 150      # ≈ 7 行；头部账号段落中位数 76–123 字，90 分位 118–192 字（benchmarks.md）
 MAX_H2_CHARS = 20        # 观点句式小标题（晚点式）可到两行；短语式建议 6–12 字
 MAX_H3_CHARS = 20
-MAX_RUN_PARAS = 6         # 连续纯文字段落数
+MAX_RUN_PARAS = 9         # 连续纯文字段落数（≈3 屏）；头部账号 15–20 段连续很常见，6 段时警告多为误报（R14）
 MAX_TITLE_CHARS = 26      # 订阅号消息列表两行内
 MAX_SUMMARY_CHARS = 120   # 公众号摘要上限
 MAX_CODE_LINE = 40        # 12.5px 等宽字体在手机上一行约 40 字符，超过会横向滚动
@@ -1185,6 +1185,9 @@ def lint_meta(meta: dict, r: Renderer) -> None:
     ext = [u for u in dict.fromkeys(r.all_images) if "mmbiz.qpic.cn" not in r.image_map.get(u, u)]
     if ext:
         r.warnings.append(f"  META  {len(ext)} 张图片不在公众号图床上：复制时会换成占位行，粘贴后插入本地图片；或用 --wechat-draft 直接存进草稿箱")
+    author = str(meta.get("author", "")).strip()
+    if author in ("", "作者", "author", "【作者】", "作者名"):
+        r.warnings.append("  META  author 还是占位（“作者”）：发表前填上真实作者名，或在编辑器里填")
     summary = meta.get("summary", "")
     if not summary:
         r.warnings.insert(0, "  META  缺少 summary（摘要），分享卡片会自动截取正文开头")

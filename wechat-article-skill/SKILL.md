@@ -141,7 +141,7 @@ python scripts/md2wechat.py article.md --fragment  # 只输出可粘贴的 HTML 
    **发表路径**（图片和封面必须在公众号自己的图床上，外链图发表时会提示“图片转存失败”）：
    - **首选**：用户提供 AppID / AppSecret（环境变量 `WECHAT_APPID` / `WECHAT_APPSECRET`，运行机器的出口 IP 要加入公众号 IP 白名单），front matter 写 `cover:`，然后运行 `--wechat-draft`。图片、封面、正文一次性存进草稿箱，用户去“草稿箱”预览、发表，不用复制粘贴。
    - **没有凭证**：点“复制到公众号”。不在公众号图床上的图会换成“【在这里插入图 N：文件名】”占位行；粘贴后在占位处插入本地图片，删掉占位行，再在“封面”处本地上传封面。
-   - 封面随稿交付（2.35:1，文字放在中间的正方形里）。
+   - 封面随稿交付：`scripts/wxcharts.py` 的 `cover()` 生成 2.35:1 封面，文字在中间的正方形里；配图用同一文件的 `bars()` / `steps()`（需要 matplotlib 和中文字体）。
    - 粘贴后编辑器如果弹出排版检查提示，请用户把原文发回来，按提示修脚本本身，不要只改这一篇（记录到 `EVOLUTION.md`）。
    - 用户拿不到本地文件时（比如在网页端，或者文件在 GitHub 上），给一个能直接打开的链接。GitHub 上的 `.html` 默认只显示源码，要用 `https://htmlpreview.github.io/?https://github.com/{owner}/{repo}/blob/{branch}/{path}.html` 打开（仓库必须是公开的）。
 
