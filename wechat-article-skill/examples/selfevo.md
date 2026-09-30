@@ -3,7 +3,7 @@ title: 17 篇论文丨花 4 美元 Agent 就能改好自己，难的是判断该
 author: 作者
 date: 2026-09-30
 theme: mono
-image_base: https://cdn.jsdelivr.net/gh/zhao6300/files@702d6d05911dfcc62ca0986829296ceccab28f5c/wechat-article-skill/examples
+image_base: https://cdn.jsdelivr.net/gh/zhao6300/files@4edf248f42d07599a2de0fc7fcced14ce3636fdb/wechat-article-skill/examples
 cover: selfevo-assets/cover.png
 summary: arXiv 一天出了 17 篇自我进化 Agent 论文。让 Agent 改自己已经很便宜：4 美元的搜索，就能换来一个追平 Codex 的 harness。可按平均分放行改动，会把 Agent 原本会做的题改错三分之一以上。
 ---
@@ -17,6 +17,8 @@ summary: arXiv 一天出了 17 篇自我进化 Agent 论文。让 Agent 改自�
 读者收获：做 Agent 产品的团队，允许 Agent 改自己之前，先把“逐题回归检查”搭起来。
 改动说明：原文“搜索成本 4.03 美元”对应的是 82.0% 那个结果，不是 11.2 个百分点；SAGE 的对象是技能文档；B-OPSD 的 27.50→41.30 限定在 rollout-privileged 设置。均已按摘要改正。
 -->
+
+![](selfevo-assets/hero.png)
 
 4.03 美元能买到什么？在 SelfSearch 这篇论文里，能买到一个新的 Agent。
 
