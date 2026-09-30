@@ -1,0 +1,293 @@
+{
+  "aegis": [
+    "网络安全"
+  ],
+  "air": [
+    "Agent/AI应用"
+  ],
+  "aiuc": [
+    "Agent/AI应用"
+  ],
+  "anacardio": [
+    "医疗健康/生物"
+  ],
+  "ando": [
+    "Agent/AI应用"
+  ],
+  "anduril": [
+    "国防/航天"
+  ],
+  "anthropic": [
+    "基础模型"
+  ],
+  "arcade": [
+    "Agent/AI应用"
+  ],
+  "augustus": [
+    "金融科技"
+  ],
+  "autoheal": [
+    "Agent/AI应用"
+  ],
+  "avoca": [
+    "能源/气候"
+  ],
+  "baselayer": [
+    "Agent/AI应用",
+    "网络安全"
+  ],
+  "blue origin": [
+    "国防/航天"
+  ],
+  "botdojo": [
+    "Agent/AI应用"
+  ],
+  "breye": [
+    "医疗健康/生物"
+  ],
+  "breye therapeutics": [
+    "医疗健康/生物"
+  ],
+  "cognition": [
+    "AI编程/开发者"
+  ],
+  "commure": [
+    "医疗健康/生物"
+  ],
+  "corgi": [
+    "金融科技"
+  ],
+  "crux analytics": [
+    "企业软件"
+  ],
+  "cursor": [
+    "AI编程/开发者"
+  ],
+  "databricks": [
+    "AI基础设施/算力",
+    "企业软件"
+  ],
+  "deepseek": [
+    "基础模型"
+  ],
+  "dextr": [
+    "Agent/AI应用"
+  ],
+  "dokai": [
+    "Agent/AI应用"
+  ],
+  "eliseai": [
+    "医疗健康/生物"
+  ],
+  "ema": [
+    "企业软件",
+    "Agent/AI应用"
+  ],
+  "enveda": [
+    "医疗健康/生物"
+  ],
+  "etched": [
+    "芯片/半导体",
+    "AI基础设施/算力"
+  ],
+  "eve security": [
+    "Agent/AI应用",
+    "网络安全"
+  ],
+  "fortem": [
+    "国防/航天"
+  ],
+  "generalist": [
+    "机器人/具身"
+  ],
+  "harvey": [
+    "企业软件"
+  ],
+  "hifi": [
+    "金融科技"
+  ],
+  "higgsfield": [
+    "媒体/内容"
+  ],
+  "hubble network": [
+    "国防/航天"
+  ],
+  "humanoid": [
+    "机器人/具身"
+  ],
+  "instinct": [
+    "Agent/AI应用"
+  ],
+  "island": [
+    "网络安全",
+    "企业软件"
+  ],
+  "jeeves": [
+    "金融科技"
+  ],
+  "kalshi": [
+    "金融科技"
+  ],
+  "legora": [
+    "企业软件"
+  ],
+  "lovable": [
+    "AI编程/开发者"
+  ],
+  "marble": [
+    "网络安全"
+  ],
+  "mercury": [
+    "金融科技"
+  ],
+  "minimax": [
+    "基础模型"
+  ],
+  "mistral": [
+    "基础模型"
+  ],
+  "modal labs": [
+    "AI基础设施/算力"
+  ],
+  "modulate": [
+    "媒体/内容"
+  ],
+  "moonshot": [
+    "基础模型"
+  ],
+  "natural": [
+    "Agent/AI应用",
+    "金融科技"
+  ],
+  "novele": [
+    "能源/气候"
+  ],
+  "openai": [
+    "Agent/AI应用"
+  ],
+  "oura": [
+    "消费/电商"
+  ],
+  "outersignal": [
+    "媒体/内容",
+    "Agent/AI应用"
+  ],
+  "outmarket": [
+    "金融科技"
+  ],
+  "parallel": [
+    "Agent/AI应用"
+  ],
+  "paymob": [
+    "金融科技"
+  ],
+  "picojool": [
+    "AI基础设施/算力"
+  ],
+  "polymarket": [
+    "金融科技"
+  ],
+  "project prometheus": [
+    "机器人/具身"
+  ],
+  "prometheus": [
+    "机器人/具身"
+  ],
+  "pudu robotics": [
+    "机器人/具身"
+  ],
+  "ramp": [
+    "金融科技"
+  ],
+  "rayon": [
+    "媒体/内容"
+  ],
+  "reco": [
+    "Agent/AI应用"
+  ],
+  "restate": [
+    "Agent/AI应用"
+  ],
+  "revolut": [
+    "金融科技"
+  ],
+  "rillet": [
+    "企业软件"
+  ],
+  "sanyark space": [
+    "国防/航天"
+  ],
+  "simaai": [
+    "机器人/具身"
+  ],
+  "simple energy": [
+    "能源/气候"
+  ],
+  "snorkel": [
+    "AI数据"
+  ],
+  "spacex": [
+    "国防/航天"
+  ],
+  "ssi": [
+    "基础模型"
+  ],
+  "stark": [
+    "国防/航天"
+  ],
+  "tekever": [
+    "国防/航天"
+  ],
+  "thinking machines lab": [
+    "基础模型"
+  ],
+  "tiny health": [
+    "医疗健康/生物"
+  ],
+  "varda": [
+    "国防/航天",
+    "医疗健康/生物"
+  ],
+  "varda space industries": [
+    "国防/航天"
+  ],
+  "world labs": [
+    "基础模型"
+  ],
+  "xai": [
+    "基础模型"
+  ],
+  "zhipu": [
+    "基础模型"
+  ],
+  "九章云极": [
+    "AI基础设施/算力"
+  ],
+  "京新药业": [
+    "医疗健康/生物"
+  ],
+  "京新药业二次": [
+    "医疗健康/生物"
+  ],
+  "利德健康": [
+    "医疗健康/生物"
+  ],
+  "力诺药包": [
+    "医疗健康/生物"
+  ],
+  "吾拾微电子": [
+    "芯片/半导体"
+  ],
+  "引航生物": [
+    "医疗健康/生物"
+  ],
+  "执宇航天": [
+    "国防/航天"
+  ],
+  "索格智算": [
+    "AI基础设施/算力"
+  ],
+  "蓝虫具身": [
+    "机器人/具身"
+  ]
+}

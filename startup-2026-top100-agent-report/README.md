@@ -56,3 +56,7 @@ python3 tools/gn.py "annualized revenue ARR fastest growing startup after:2026-1
 - 每次查询最多返回约100条结果。
 - 结果只有标题和日期，没有正文。
 - Crunchbase News 的 RSS 被 Cloudflare 拦截，无法直接抓取，所以改用 Google News 聚合。
+
+## 持续追踪
+
+本目录是一次性的调研结果。持续更新请使用产品化后的工具 [`../funding-tracker`](../funding-tracker/README.md)：每周自动采集新闻、抽取交易事件、生成报告，并在运行中自我改进。

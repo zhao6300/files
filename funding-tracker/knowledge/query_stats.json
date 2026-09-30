@@ -1,0 +1,301 @@
+{
+  "en:raises billion valuation": {
+    "runs": 1,
+    "fetched": 100,
+    "new": 39,
+    "deal_new": 34,
+    "ema": 34,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 100,
+      "new": 39,
+      "deal_new": 34
+    }
+  },
+  "en:raises Series A": {
+    "runs": 1,
+    "fetched": 100,
+    "new": 84,
+    "deal_new": 70,
+    "ema": 70,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 100,
+      "new": 84,
+      "deal_new": 70
+    }
+  },
+  "en:raises Series B": {
+    "runs": 1,
+    "fetched": 100,
+    "new": 73,
+    "deal_new": 68,
+    "ema": 68,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 100,
+      "new": 73,
+      "deal_new": 68
+    }
+  },
+  "en:raises Series C OR \"Series D\"": {
+    "runs": 1,
+    "fetched": 100,
+    "new": 66,
+    "deal_new": 60,
+    "ema": 60,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 100,
+      "new": 66,
+      "deal_new": 60
+    }
+  },
+  "en:seed round raises million": {
+    "runs": 1,
+    "fetched": 95,
+    "new": 85,
+    "deal_new": 67,
+    "ema": 67,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 95,
+      "new": 85,
+      "deal_new": 67
+    }
+  },
+  "en:in talks to raise valuation": {
+    "runs": 1,
+    "fetched": 61,
+    "new": 44,
+    "deal_new": 22,
+    "ema": 22,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 61,
+      "new": 44,
+      "deal_new": 22
+    }
+  },
+  "en:hits unicorn valuation": {
+    "runs": 1,
+    "fetched": 19,
+    "new": 15,
+    "deal_new": 4,
+    "ema": 4,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 19,
+      "new": 15,
+      "deal_new": 4
+    }
+  },
+  "en:IPO debut shares": {
+    "runs": 1,
+    "fetched": 100,
+    "new": 98,
+    "deal_new": 72,
+    "ema": 72,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 100,
+      "new": 98,
+      "deal_new": 72
+    }
+  },
+  "en:files for IPO startup": {
+    "runs": 1,
+    "fetched": 43,
+    "new": 42,
+    "deal_new": 20,
+    "ema": 20,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 43,
+      "new": 42,
+      "deal_new": 20
+    }
+  },
+  "en:to acquire startup billion": {
+    "runs": 1,
+    "fetched": 51,
+    "new": 45,
+    "deal_new": 17,
+    "ema": 17,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 51,
+      "new": 45,
+      "deal_new": 17
+    }
+  },
+  "en:acquires AI startup": {
+    "runs": 1,
+    "fetched": 58,
+    "new": 31,
+    "deal_new": 22,
+    "ema": 22,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 58,
+      "new": 31,
+      "deal_new": 22
+    }
+  },
+  "en:annualized revenue run rate startup": {
+    "runs": 1,
+    "fetched": 31,
+    "new": 25,
+    "deal_new": 16,
+    "ema": 16,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 31,
+      "new": 25,
+      "deal_new": 16
+    }
+  },
+  "en:biggest funding rounds week": {
+    "runs": 1,
+    "fetched": 21,
+    "new": 20,
+    "deal_new": 3,
+    "ema": 3,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 21,
+      "new": 20,
+      "deal_new": 3
+    }
+  },
+  "zh:融资 估值 亿美元": {
+    "runs": 1,
+    "fetched": 100,
+    "new": 98,
+    "deal_new": 59,
+    "ema": 59,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 100,
+      "new": 98,
+      "deal_new": 59
+    }
+  },
+  "zh:完成 亿元 融资": {
+    "runs": 1,
+    "fetched": 58,
+    "new": 55,
+    "deal_new": 42,
+    "ema": 42,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 58,
+      "new": 55,
+      "deal_new": 42
+    }
+  },
+  "zh:天使轮 融资": {
+    "runs": 1,
+    "fetched": 37,
+    "new": 32,
+    "deal_new": 25,
+    "ema": 25,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 37,
+      "new": 32,
+      "deal_new": 25
+    }
+  },
+  "zh:A轮 融资": {
+    "runs": 1,
+    "fetched": 100,
+    "new": 66,
+    "deal_new": 50,
+    "ema": 50,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 100,
+      "new": 66,
+      "deal_new": 50
+    }
+  },
+  "zh:上市 首日 涨": {
+    "runs": 1,
+    "fetched": 73,
+    "new": 58,
+    "deal_new": 29,
+    "ema": 29,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 73,
+      "new": 58,
+      "deal_new": 29
+    }
+  },
+  "zh:递表 港交所": {
+    "runs": 1,
+    "fetched": 73,
+    "new": 62,
+    "deal_new": 50,
+    "ema": 50,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 73,
+      "new": 62,
+      "deal_new": 50
+    }
+  },
+  "zh:收购 AI 公司 亿": {
+    "runs": 1,
+    "fetched": 100,
+    "new": 81,
+    "deal_new": 58,
+    "ema": 58,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 100,
+      "new": 81,
+      "deal_new": 58
+    }
+  },
+  "rss:TechCrunch Venture": {
+    "runs": 1,
+    "fetched": 20,
+    "new": 17,
+    "deal_new": 2,
+    "ema": 2,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 20,
+      "new": 17,
+      "deal_new": 2
+    }
+  },
+  "rss:36氪": {
+    "runs": 1,
+    "fetched": 30,
+    "new": 30,
+    "deal_new": 5,
+    "ema": 5,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 30,
+      "new": 30,
+      "deal_new": 5
+    }
+  },
+  "rss:Sifted": {
+    "runs": 1,
+    "fetched": 24,
+    "new": 24,
+    "deal_new": 2,
+    "ema": 2,
+    "last_run": "2026-09-30",
+    "last": {
+      "fetched": 24,
+      "new": 24,
+      "deal_new": 2
+    }
+  }
+}

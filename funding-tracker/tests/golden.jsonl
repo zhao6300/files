@@ -1,0 +1,123 @@
+{"title": "Viral AI agent Instinct raises $1B Series C at a $10B valuation", "expect": {"company": "Instinct", "event": "funding", "status": "closed", "amount_usd": 1000000000.0, "valuation_usd": 10000000000.0, "round": "Series C"}}
+{"title": "Anthropic raises $65B in Series H funding at $965B post-money valuation", "expect": {"company": "Anthropic", "event": "funding", "status": "closed", "amount_usd": 65000000000.0, "valuation_usd": 965000000000.0, "round": "Series H"}}
+{"title": "Cognition Raises Over $1 Billion At A $26 Billion Valuation As Devin Adoption Accelerates Across Enterprises", "expect": {"company": "Cognition", "event": "funding", "amount_usd": 1000000000.0, "valuation_usd": 26000000000.0}}
+{"title": "AI chip startup Etched raises $300 million at $10.3 billion valuation", "expect": {"company": "Etched", "event": "funding", "status": "closed", "amount_usd": 300000000.0, "valuation_usd": 10300000000.0}}
+{"title": "Mistral AI in talks to raise €3 billion at €20 billion value", "expect": {"company": "Mistral AI", "event": "funding", "status": "rumored", "amount_usd": 3300000000.0, "valuation_usd": 22000000000.0}}
+{"title": "Polymarket in Talks to Raise $400M at $15B Valuation: Report", "expect": {"company": "Polymarket", "event": "funding", "status": "rumored", "amount_usd": 400000000.0, "valuation_usd": 15000000000.0}}
+{"title": "Hightouch: $150 Million Series D At $2.75 Billion Valuation Raised To Power Agentic Marketing Platform", "expect": {"company": "Hightouch", "event": "funding", "amount_usd": 150000000.0, "valuation_usd": 2750000000.0, "round": "Series D"}}
+{"title": "Cyber startup Island raises $400 million, hits $6.4 billion valuation", "expect": {"company": "Island", "event": "funding", "amount_usd": 400000000.0, "valuation_usd": 6400000000.0}}
+{"title": "Nvidia agrees to buy Hugging Face for $12.9 billion, report says", "expect": {"company": "Hugging Face", "event": "mna", "acquirer": "Nvidia", "amount_usd": 12900000000.0}}
+{"title": "AMD buys software firm World Labs founded by 'godmother of AI' for $8.2 bn", "expect": {"company": "World Labs", "event": "mna", "acquirer": "AMD", "amount_usd": 8199999999.999999}}
+{"title": "Stripe is acquiring AI model gateway startup OpenRouter in a $7 billion-plus deal", "expect": {"company": "OpenRouter", "event": "mna", "acquirer": "Stripe", "amount_usd": 7000000000.0}}
+{"title": "SpaceX completes acquisition of Anysphere in $60 billion all-stock deal", "expect": {"company": "Cursor", "event": "mna", "acquirer": "SpaceX", "status": "closed", "amount_usd": 60000000000.0}}
+{"title": "Cerebras pops 68% in Nasdaq debut, pushing the AI chipmaker's market cap to $95 billion", "expect": {"company": "Cerebras", "event": "ipo", "valuation_usd": 95000000000.0}}
+{"title": "Nvidia-Backed Cloud Startup Nscale Files for IPO", "expect": {"company": "Nscale", "event": "ipo"}}
+{"title": "Lovable says it has hit $500M in annualized revenue, with 1 million new projects a week", "expect": {"company": "Lovable", "event": "arr", "arr_usd": 500000000.0}}
+{"title": "Higgsfield Raises $400 Million Series B Financing at $5.4 Billion Valuation with Annualized Revenue Reaching $700 Million", "expect": {"company": "Higgsfield", "event": "funding", "amount_usd": 400000000.0, "valuation_usd": 5400000000.0, "arr_usd": 700000000.0, "round": "Series B"}}
+{"title": "Tencent, Alibaba in talks to invest in DeepSeek at over $20 billion valuation, The Information reports", "expect": {"company": "DeepSeek", "event": "funding", "status": "rumored", "valuation_usd": 20000000000.0}}
+{"title": "Sequoia Backs Drone Startup Stark at €3.2 Billion Valuation", "expect": {"company": "Stark", "event": "funding", "valuation_usd": 3520000000.0}}
+{"title": "Former Google DeepMind researcher's AI startup raises record $1.1 billion seed funding to pursue superintelligence", "expect": {"company": null, "event": "funding", "amount_usd": 1100000000.0, "round": "Seed"}}
+{"title": "Ineffable Intelligence: $1.1 Billion Seed Funding At $5.1 Billion Valuation Raised For Reinforcement Learning AI", "expect": {"company": "Ineffable Intelligence", "event": "funding", "amount_usd": 1100000000.0, "valuation_usd": 5100000000.0, "round": "Seed"}}
+{"title": "OpenAI seeks to raise $30 billion in new funding round at $1.4 trillion valuation", "expect": {"company": "OpenAI", "event": "funding", "status": "rumored", "amount_usd": 30000000000.0, "valuation_usd": 1400000000000.0}}
+{"title": "Anduril in talks to raise funding at about $100 billion valuation", "expect": {"company": "Anduril", "event": "funding", "status": "rumored", "valuation_usd": 100000000000.0}}
+{"title": "Kalshi in talks with Sequoia, Wellington for $750 million fund raise at $40 billion valuation", "expect": {"company": "Kalshi", "event": "funding", "status": "rumored", "amount_usd": 750000000.0, "valuation_usd": 40000000000.0}}
+{"title": "Crusoe closes $3.9bn Series F round, reaching $30.9bn valuation", "expect": {"company": "Crusoe", "event": "funding", "status": "closed", "amount_usd": 3900000000.0, "valuation_usd": 30900000000.0, "round": "Series F"}}
+{"title": "Unitree Robotics Prices Shanghai IPO at 61 Billion Yuan Valuation", "expect": {"company": "Unitree", "event": "ipo", "valuation_usd": 8540000000.000001}}
+{"title": "Shares in Chinese humanoid robot maker Unitree soar in its Shanghai trading debut", "expect": {"company": "Unitree", "event": "ipo"}}
+{"title": "AI data startup Micro1 reaches $500M gross run rate amid AI training boom", "expect": {"company": "micro1", "event": "arr", "arr_usd": 500000000.0}}
+{"title": "Salesforce in talks to acquire AI startup Listen Labs for $2 billion", "expect": {"company": "Listen Labs", "event": "mna", "status": "rumored", "acquirer": "Salesforce", "amount_usd": 2000000000.0}}
+{"title": "Nscale to Buy Computing Software Firm Anyscale for $1.65 Billion", "expect": {"company": "Anyscale", "event": "mna", "acquirer": "Nscale", "amount_usd": 1650000000.0}}
+{"title": "Dynatrace to Acquire AI Observability Leader Arize", "expect": {"company": "Arize", "event": "mna", "acquirer": "Dynatrace"}}
+{"title": "EliseAI Raises $350 Million at $4 Billion Valuation", "expect": {"company": "EliseAI", "event": "funding", "amount_usd": 350000000.0, "valuation_usd": 4000000000.0}}
+{"title": "SiMa.ai获1.5亿美元C轮融资，估值达14.5亿美元跻身独角兽", "expect": {"company": "SiMa.ai", "event": "funding", "status": "closed", "amount_usd": 150000000.0, "valuation_usd": 1450000000.0, "round": "Series C"}}
+{"title": "光联芯科完成近10亿元A+轮融资 跻身国内OIO赛道首家独角兽", "expect": {"company": "光联芯科", "event": "funding", "amount_usd": 140000000.0, "round": "Series A+"}}
+{"title": "小鹏机器人首轮融资超9亿美元，估值超63亿美元", "expect": {"company": "XPeng Robotics", "event": "funding", "amount_usd": 900000000.0, "valuation_usd": 6300000000.0, "round": "First Round"}}
+{"title": "AI编程独角兽Cognition新轮融资近10亿美元，估值飙升至470亿美元", "expect": {"company": "Cognition", "event": "funding", "amount_usd": 1000000000.0, "valuation_usd": 47000000000.0}}
+{"title": "消息称Manus即将完成5亿美元融资，估值40亿美元", "expect": {"company": "Manus", "event": "funding", "status": "rumored", "amount_usd": 500000000.0, "valuation_usd": 4000000000.0}}
+{"title": "燧原科技上市首日高开188.37%，市值超过摩尔线程", "expect": {"company": "Enflame", "event": "ipo"}}
+{"title": "AMD以82亿美元收购李飞飞创立的AI公司World Labs", "expect": {"company": "World Labs", "event": "mna", "acquirer": "AMD", "amount_usd": 8199999999.999999}}
+{"title": "Manus新一轮融资估值料倍增至40亿美元 成内地AI Agent最有价值公司", "expect": {"company": "Manus", "event": "funding", "status": "rumored", "valuation_usd": 4000000000.0}}
+{"title": "Snorkel AI triples valuation to $3.5B as demand for AI training data booms", "expect": {"company": "Snorkel AI", "event": "funding", "valuation_usd": 3500000000.0}}
+{"title": "Legal AI startup Harvey reaches $15.5 billion valuation in new funding round", "expect": {"company": "Harvey", "event": "funding", "valuation_usd": 15500000000.0}}
+{"title": "Oura Delays Nasdaq IPO a Day Before Planned Listing", "expect": {"company": "Oura", "event": "ipo"}}
+{"title": "Anthropic eyes $900 billion valuation: Here's what you need to know", "expect": {"company": "Anthropic", "event": "funding", "status": "rumored", "valuation_usd": 900000000000.0}}
+{"title": "Cyera to acquire Israeli identity security startup Oasis for about $1 billion", "expect": {"company": "Oasis", "event": "mna", "acquirer": "Cyera", "amount_usd": 1000000000.0}}
+{"title": "OpenEvidence reportedly raises $250M at $15B valuation", "expect": {"company": "OpenEvidence", "event": "funding", "status": "rumored", "amount_usd": 250000000.0, "valuation_usd": 15000000000.0}}
+{"title": "Modal Labs in talks to raise funds at $15 billion valuation, Bloomberg News reports", "expect": {"company": "Modal Labs", "event": "funding", "status": "rumored", "valuation_usd": 15000000000.0}}
+{"title": "India's Sarvam AI raises $234 million funding at $1.5 billion valuation; looks to challenge China, US", "expect": {"company": "Sarvam AI", "event": "funding", "amount_usd": 234000000.0, "valuation_usd": 1500000000.0}}
+{"title": "Rillet raises $100M Series C at $1B valuation to automate accounting", "expect": {"company": "Rillet", "event": "funding", "amount_usd": 100000000.0, "valuation_usd": 1000000000.0, "round": "Series C"}}
+{"title": "Physical AI startup SiMa.ai raises $150 million in Series C funding at $1.45 billion valuation", "expect": {"company": "SiMa.ai", "event": "funding", "amount_usd": 150000000.0, "valuation_usd": 1450000000.0, "round": "Series C"}}
+{"title": "DeepSeek Raises More Than $7 Billion, Valuation Surpasses $50 Billion", "expect": {"company": "DeepSeek", "event": "funding", "amount_usd": 7000000000.0, "valuation_usd": 50000000000.0}}
+{"title": "Humanoid Raises $152 Million at $1.35 Billion Post-Money Valuation, Becoming Europe's First Pure-Play Humanoid Robotics Unicorn", "expect": {"company": "Humanoid", "event": "funding", "amount_usd": 152000000.0, "valuation_usd": 1350000000.0}}
+{"title": "Ramp targets $1B raise at $60B valuation, up from $44B in June", "expect": {"company": "Ramp", "event": "funding", "status": "rumored", "amount_usd": 1000000000.0, "valuation_usd": 60000000000.0}}
+{"title": "Bezos-Led Prometheus Raises $12 Billion At $41 Billion Valuation", "expect": {"company": "Prometheus", "event": "funding", "amount_usd": 12000000000.0, "valuation_usd": 41000000000.0}}
+{"title": "Anthropic's valuation surges to $965 billion, surpassing OpenAI", "expect": {"company": "Anthropic", "event": "funding", "valuation_usd": 965000000000.0}}
+{"title": "Whatnot is in talks to raise a new funding round at a $20 billion valuation", "expect": {"company": "Whatnot", "event": "funding", "status": "rumored", "valuation_usd": 20000000000.0}}
+{"title": "Brahma AI raises $150 million at $2 billion valuation, Multiples invests $100 million", "expect": {"company": "Brahma AI", "event": "funding", "amount_usd": 150000000.0, "valuation_usd": 2000000000.0}}
+{"title": "Miro被收购：4年估值暴跌90%，从175亿美元降至17.9亿美元", "expect": {"company": "Miro", "event": "mna"}}
+{"title": "Anduril Announces $5B Series H Raise", "expect": {"company": "Anduril", "event": "funding", "amount_usd": 5000000000.0, "round": "Series H"}}
+{"title": "Hark's New AI Agent Claims to Beat Anthropic and OpenAI at Browsing the Web", "expect": {"event": null}}
+{"title": "SpaceX stock closes below its IPO price for the first time since it went public", "expect": {"company": "SpaceX", "event": "ipo"}}
+{"title": "Anthropic weighs new funding round at valuation exceeding $900 billion, Bloomberg News reports", "expect": {"company": "Anthropic", "event": "funding", "status": "rumored", "amount_usd": null, "valuation_usd": 900000000000.0}}
+{"title": "Anthropic Could Aim to Raise $100 Billion in Blockbuster I.P.O.", "expect": {"company": "Anthropic", "event": "ipo", "status": "rumored", "amount_usd": 100000000000.0}}
+{"title": "Anthropic Set To Raise Additional $30 Billion For $900 Billion Valuation: Report", "expect": {"company": "Anthropic", "event": "funding", "status": "rumored", "amount_usd": 30000000000.0, "valuation_usd": 900000000000.0}}
+{"title": "Watch Anthropic Raises at $965 Billion Valuation, Eclipsing OpenAI", "expect": {"company": "Anthropic", "valuation_usd": 965000000000.0}}
+{"title": "Valuation Surges $10B in Under a Month: Jev Creator Claims ChatGPT Has Led AI Down the Wrong Path", "expect": {"company": null}}
+{"title": "Anthropic closing in on $30B raise that would top OpenAI's valuation", "expect": {"company": "Anthropic", "amount_usd": 30000000000.0}}
+{"title": "Modal Labs 和 Baseten 洽谈融资：估值或分别升至 150 亿和 260 亿美元", "expect": {"company": null}}
+{"title": "Higgsfield's valuation soars fourfold to $5.4 billion in six months on AI content demand", "expect": {"company": "Higgsfield", "amount_usd": null, "valuation_usd": 5400000000.0}}
+{"title": "Etched’s valuation doubles to $21B in a month", "expect": {"company": "Etched", "amount_usd": null, "valuation_usd": 21000000000.0}}
+{"title": "Databricks in talks to raise funds at over $165 billion, The Information reports", "expect": {"company": "Databricks", "status": "rumored", "amount_usd": null, "valuation_usd": 165000000000.0}}
+{"title": "SOURCES: Poolside Strikes $6 Billion Licensing Deal with Nvidia & Raises $1 Billion for Remaining Company at $12 Billion Valuation", "expect": {"company": null}}
+{"title": "US Prediction Market Kalshi in Talks to Raise $1 Billion at $40 Billion Valuation", "expect": {"company": "Kalshi", "status": "rumored", "amount_usd": 1000000000.0, "valuation_usd": 40000000000.0}}
+{"title": "Scoop: Accel in talks to lead Modal raise at $15B valuation", "expect": {"company": "Modal Labs", "status": "rumored", "valuation_usd": 15000000000.0}}
+{"title": "Sequoia and Nvidia Back Ex-DeepMind Researcher’s New AI Startup at $5.1 Billion Value", "expect": {"company": null, "valuation_usd": 5100000000.0}}
+{"title": "OpenAI最新估值有望达1.4万亿美元 计划筹资300亿美元", "expect": {"company": "OpenAI", "event": "funding", "amount_usd": 30000000000.0, "valuation_usd": 1400000000000.0}}
+{"title": "突发：据报道，OpenAI计划以1.4万亿美元估值融资300亿美元", "expect": {"company": "OpenAI", "status": "rumored", "amount_usd": 30000000000.0, "valuation_usd": 1400000000000.0}}
+{"title": "蓝色起源按1400亿美元估值融资100亿美元", "expect": {"company": "Blue Origin", "amount_usd": 10000000000.0, "valuation_usd": 140000000000.0}}
+{"title": "AI代理初创公司Instinct以100亿美元估值完成了10亿美元的融资", "expect": {"company": "Instinct", "amount_usd": 1000000000.0, "valuation_usd": 10000000000.0}}
+{"title": "AI音乐独角兽估值冲上54亿美元 “互联网女皇”基金领投最新融资", "expect": {"company": null, "valuation_usd": 5400000000.0}}
+{"title": "不到 1 个月估值暴涨 100 亿美元，Jev 创造者：ChatGPT 把 AI 带歪了", "expect": {"company": null}}
+{"title": "SoftBank raises $11.1 billion in world's biggest high-yield corporate bond sale", "expect": {"company": "SoftBank", "event": "funding"}}
+{"title": "Media: Kalshi Plans to Raise $1B at a $40B Valuation", "expect": {"company": "Kalshi", "status": "rumored", "amount_usd": 1000000000.0, "valuation_usd": 40000000000.0}}
+{"title": "OpenAI发布AI助手Dots并寻求融资300亿美元，目标估值1.4万亿美元", "expect": {"company": "OpenAI", "status": "rumored", "amount_usd": 30000000000.0, "valuation_usd": 1400000000000.0}}
+{"title": "OpenAI拟以1万4000亿美元估值筹资300亿美元", "expect": {"company": "OpenAI", "status": "rumored", "amount_usd": 30000000000.0, "valuation_usd": 1400000000000.0}}
+{"title": "OpenAI sparked Hugging Face bids with early investment offer ahead of Nvidia's $13 billion deal", "expect": {"amount_usd": null}}
+{"title": "EXCLUSIVE: Tiger Global, Dragoneer in talks to invest in Kalshi's new $1 billion fundraise", "expect": {"company": "Kalshi", "status": "rumored", "amount_usd": 1000000000.0}}
+{"title": "ICYMI: TEKEVER Raises $580M Series D at a $6.4B Valuation", "expect": {"company": "TEKEVER", "amount_usd": 580000000.0, "valuation_usd": 6400000000.0, "round": "Series D"}}
+{"title": "GPU云服务商GMI获英伟达等投资方6.68亿美元融资", "expect": {"company": "GMI", "amount_usd": 668000000.0}}
+{"title": "Hubble Network raises $200M to reach $1.6B valuation as startup expands satellite Bluetooth network", "expect": {"company": "Hubble Network", "amount_usd": 200000000.0, "valuation_usd": 1600000000.0}}
+{"title": "【投融资动态】同泰怡A轮融资，投资方为深创投", "expect": {"company": "同泰怡", "round": "Series A"}}
+{"title": "Peak XV lifts Surge seed cap to $5M, backs 18-startup cohort", "expect": {}}
+{"title": "AMD斥资82亿美元收购李飞飞创办World Labs", "expect": {"company": "World Labs", "event": "mna", "amount_usd": 8199999999.999999}}
+{"title": "成立一年完成5轮融资，诺因智能再获数亿元，累计超10 亿元", "expect": {"company": "诺因智能"}}
+{"title": "合肥产投集团旗下中科离子公司完成首轮6亿元融资", "expect": {"company": "中科离子", "amount_usd": 84000000.00000001}}
+{"title": "从智驾延伸至机器人 横跨“三大赛道”的寅家科技递表港交所", "expect": {"company": "寅家科技", "event": "ipo"}}
+{"title": "AMD to acquire AI pioneer's San Francisco startup for $8.2 billion", "expect": {"company": null, "event": "mna"}}
+{"title": "NSE IPO: Stock lists at Rs 1,800 versus issue price of Rs 1,785 on BSE with 0.8% premium", "expect": {"company": "NSE", "event": "ipo"}}
+{"title": "Hong Kong’s IPO revival faces test as 3 new stocks stumble on debut", "expect": {"company": null}}
+{"title": "India's Elevate Campuses debuts at discount, valued at $625 million", "expect": {"company": "Elevate Campuses", "event": "ipo", "valuation_usd": 625000000.0}}
+{"title": "OuterSignal Raises $22 Million in Series A Funding Round: NYSE Content Update", "expect": {"company": "OuterSignal", "event": "funding", "round": "Series A"}}
+{"title": "AI音乐独角兽估值冲上54亿美元", "expect": {"company": null}}
+{"title": "文娱传媒领域投融资日报（9月28日）：世子播播完成7500万人民币A轮融资", "expect": {"company": "世子播播", "round": "Series A"}}
+{"title": "$GB BOND HOLDINGS BERHAD (0475.MY)$ 希望上市首日至少能涨30%", "expect": {"company": null}}
+{"title": "AMD Buys AI Startup For $8.2B It Backed Just Seven Months Earlier", "expect": {"company": null, "event": "mna", "amount_usd": 8199999999.999999}}
+{"title": "上海“小巨人”寅家电子递表港交所：三年半累计亏损约2.85亿元，并购上海宇宙增收", "expect": {"company": "寅家电子", "event": "ipo"}}
+{"title": "Anthropic's IPO filing shows $4.6 billion in revenue and a $42 billion loss", "expect": {"company": "Anthropic", "event": "ipo", "amount_usd": null}}
+{"title": "Three AI Supply Chain Stocks Debut Below Issue Price in Hong Kong on Same Day", "expect": {"company": null}}
+{"title": "卫星蓝牙初创公司Hubble Network以16亿美元估值完成2亿美元融资", "expect": {"company": "Hubble Network", "amount_usd": 200000000.0, "valuation_usd": 1600000000.0}}
+{"title": "欢创科技港股上市首日收涨超265%，去年刚扭亏为盈", "expect": {"company": "欢创科技", "event": "ipo"}}
+{"title": "Chip Maker AMD Acquires 'Godmother Of AI' Fei-Fei Li's Startup", "expect": {"company": null, "event": "mna"}}
+{"title": "把人形机器人拆开卖，蓝虫具身拿下数千万元天使轮融资", "expect": {"company": "蓝虫具身", "round": "Angel"}}
+{"title": "AMD 82 亿美元收购李飞飞AI 创业公司；Manus 推出个人AI 助手 CUE；今年低价手机将减少2.3 亿部｜极客早知道", "expect": {"company": null, "event": "mna"}}
+{"title": "AI情感智能珠宝Shakespeare完成数千万元天使轮融资", "expect": {"company": "Shakespeare"}}
+{"title": "意大利Dialybrid公司宣布完成1500万欧元A轮融资丨医疗器械行业日报", "expect": {"company": "Dialybrid", "round": "Series A"}}
+{"title": "一图解码：京新药业二次递表港交所 手握失眠创新药 上半年营利双降", "expect": {"company": "京新药业", "event": "ipo"}}
+{"title": "4万亿美元，美国AI三巨头集体上市“抢钱”，华尔街流动性恐遭“抽血”", "expect": {"company": null}}
+{"title": "智冉医疗获超6亿元融资丨医疗器械行业周报", "expect": {"company": "智冉医疗"}}
+{"title": "9月29日外盘头条：特朗普宣布150亿美元钢厂计划 SpaceX星舰进入地球轨道 AMD收购李飞飞World Labs AI公司", "expect": {"event": "mna", "amount_usd": null}}
+{"title": "Anthropic IPO Filing Reveals $42 Billion Net Loss in 2025, Reuters Reports", "expect": {"company": "Anthropic", "event": "ipo", "amount_usd": null}}
+{"title": "Metaview Raises $60M Series C to Lead the Shift to Agentic Recruiting", "expect": {"company": "Metaview", "amount_usd": 60000000.0, "round": "Series C"}}
+{"title": "餐饮企业赴港IPO为何集体“卡壳”", "expect": {"company": null}}
+{"title": "文石信息二度递表港交所，全球墨水屏“第二”的隐与显", "expect": {"company": "文石信息", "event": "ipo"}}
+{"title": "OpenAI在英伟达130亿美元交易前以早期投资提议引发对Hugging Face的竞购", "expect": {"amount_usd": null}}

@@ -1,0 +1,121 @@
+[
+  {
+    "q": "\"OpenAI\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "openai"
+  },
+  {
+    "q": "\"Instinct\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "instinct"
+  },
+  {
+    "q": "\"Anthropic\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "anthropic"
+  },
+  {
+    "q": "\"Modal Labs\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "modal labs"
+  },
+  {
+    "q": "\"shares list\" startup raises",
+    "lang": "en",
+    "status": "retired",
+    "origin": "rising_term",
+    "added": "2026-09-30",
+    "changed": "2026-09-30"
+  },
+  {
+    "q": "\"run rate\" startup raises",
+    "lang": "en",
+    "status": "trial",
+    "origin": "rising_term",
+    "added": "2026-09-30"
+  },
+  {
+    "q": "\"DeepSeek\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "deepseek"
+  },
+  {
+    "q": "\"Cognition\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "cognition"
+  },
+  {
+    "q": "\"Kalshi\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "kalshi"
+  },
+  {
+    "q": "\"Blue Origin\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "blue origin"
+  },
+  {
+    "q": "\"World Labs\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "world labs"
+  },
+  {
+    "q": "\"Oura\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "oura"
+  },
+  {
+    "q": "\"Databricks\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "databricks"
+  },
+  {
+    "q": "\"Island\" valuation OR raises OR IPO",
+    "lang": "en",
+    "status": "trial",
+    "origin": "watchlist",
+    "added": "2026-09-30",
+    "company_key": "island"
+  },
+  {
+    "q": "\"today check\" startup raises",
+    "lang": "en",
+    "status": "retired",
+    "origin": "rising_term",
+    "added": "2026-09-30",
+    "changed": "2026-09-30"
+  }
+]

@@ -1,0 +1,33 @@
+{"ts": "2026-09-30T16:37:07", "kind": "query_added", "query": "\"OpenAI\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=10.9, max_val=1400000000000.0, growth=1.6431924882629108"}
+{"ts": "2026-09-30T16:37:07", "kind": "query_added", "query": "\"Instinct\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=9.8, max_val=10000000000.0, growth=4.0"}
+{"ts": "2026-09-30T16:37:07", "kind": "query_added", "query": "\"Anthropic\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=8.6, max_val=965000000000.0, growth=1.0722222222222222"}
+{"ts": "2026-09-30T16:37:07", "kind": "query_added", "query": "\"Modal Labs\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=7.9, max_val=15375000000.0, growth=3.306451612903226"}
+{"ts": "2026-09-30T16:37:07", "kind": "query_added", "query": "\"shares list\" startup raises", "lang": "en", "origin": "rising_term", "why": "recent=8, prior=0"}
+{"ts": "2026-09-30T16:37:07", "kind": "query_added", "query": "\"run rate\" startup raises", "lang": "en", "origin": "rising_term", "why": "recent=8, prior=0"}
+{"ts": "2026-09-30T16:37:07", "kind": "descriptor_learned", "descriptor": "adroit", "companies": ["adroit industries", "adroit industries ipo listing", "adroit industries ipo makes strong"], "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:37:07", "kind": "sector_memory", "companies_updated": 66}
+{"ts": "2026-09-30T16:37:07", "kind": "alias_learned", "alias": "Stark Defence", "canonical": "Stark", "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:37:08", "kind": "alias_learned", "alias": "Operations Platform Fravity", "canonical": "Fravity", "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:37:08", "kind": "alias_learned", "alias": "Breye Therapeutics", "canonical": "Breye", "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:37:08", "kind": "alias_learned", "alias": "BigHat Biosciences", "canonical": "BigHat", "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:37:08", "kind": "alias_learned", "alias": "Varda Space Industries", "canonical": "Varda", "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:37:08", "kind": "alias_learned", "alias": "Aptadir Therapeutics", "canonical": "Aptadir", "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:37:08", "kind": "alias_learned", "alias": "Rayon Design", "canonical": "Rayon", "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:37:08", "kind": "alias_learned", "alias": "World Model Startup", "canonical": "World", "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:37:39", "kind": "manual_revert", "reason": "learning bugs fixed in code (descriptor from one company's noisy names; alias from role-noun name; stop-word bigram query)", "reverted": ["descriptor:adroit", "alias:World Model Startup", "query:\"shares list\" startup raises"]}
+{"ts": "2026-09-30T16:40:15", "kind": "query_added", "query": "\"DeepSeek\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=8.3, max_val=50000000000.0, growth=2.5"}
+{"ts": "2026-09-30T16:40:15", "kind": "query_added", "query": "\"Cognition\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=7.7, max_val=47000000000.0, growth=1.88"}
+{"ts": "2026-09-30T16:40:15", "kind": "query_added", "query": "\"Kalshi\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=7.4, max_val=40000000000.0, growth=None"}
+{"ts": "2026-09-30T16:40:15", "kind": "query_added", "query": "\"Blue Origin\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=6.5, max_val=140000000000.0, growth=None"}
+{"ts": "2026-09-30T16:40:15", "kind": "sector_memory", "companies_updated": 3}
+{"ts": "2026-09-30T16:40:16", "kind": "alias_learned", "alias": "Hubble Network", "canonical": "Network", "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:40:16", "kind": "company_memory", "added": 162, "sample": ["AIR", "AIUC", "Accelevation", "Adroit Industries", "Aegis", "Airwallex", "Alan", "Alive App", "Amaani", "AnaCardio"], "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:41:13", "kind": "manual_revert", "reason": "alias onto common word; alias learner now rejects common-word targets and unlabeled suffix matches", "reverted": ["alias:Hubble Network->Network"]}
+{"ts": "2026-09-30T16:47:02", "kind": "query_added", "query": "\"World Labs\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=6.8, max_val=None, growth=None"}
+{"ts": "2026-09-30T16:47:02", "kind": "query_added", "query": "\"Oura\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=6.5, max_val=16000000000.0, growth=None"}
+{"ts": "2026-09-30T16:47:02", "kind": "query_added", "query": "\"Databricks\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=6.1, max_val=190000000000.0, growth=1.1176470588235294"}
+{"ts": "2026-09-30T16:47:02", "kind": "query_added", "query": "\"Island\" valuation OR raises OR IPO", "lang": "en", "origin": "watchlist", "why": "score=5.7, max_val=6400000000.0, growth=None"}
+{"ts": "2026-09-30T16:47:02", "kind": "query_added", "query": "\"today check\" startup raises", "lang": "en", "origin": "rising_term", "why": "recent=5, prior=0"}
+{"ts": "2026-09-30T16:47:03", "kind": "sector_memory", "companies_updated": 1}
+{"ts": "2026-09-30T16:47:03", "kind": "company_memory", "added": 6, "sample": ["Erad", "京新药业", "文石信息", "斯莱普泰", "景旺电子", "李飞飞"], "golden_before": 1.0, "golden_after": 1.0}
+{"ts": "2026-09-30T16:47:23", "kind": "manual_revert", "reason": "rising-term miner picked IPO boilerplate; now funding-only with extra stop words", "reverted": ["query:\"today check\" startup raises"]}

@@ -1,0 +1,17 @@
+[
+  {
+    "name": "TechCrunch Venture",
+    "url": "https://techcrunch.com/category/venture/feed/",
+    "enabled": true
+  },
+  {
+    "name": "36氪",
+    "url": "https://www.36kr.com/feed",
+    "enabled": true
+  },
+  {
+    "name": "Sifted",
+    "url": "https://sifted.eu/feed",
+    "enabled": true
+  }
+]

@@ -1,0 +1,106 @@
+{
+  "CN": [
+    "chinese",
+    "china",
+    "beijing",
+    "shanghai",
+    "shenzhen",
+    "hangzhou",
+    "中国",
+    "国内",
+    "国产",
+    "北京",
+    "上海",
+    "深圳",
+    "杭州",
+    "科创板",
+    "港股",
+    "港交所",
+    "a股"
+  ],
+  "US": [
+    "u.s.",
+    "american",
+    "silicon valley",
+    "san francisco",
+    "new york",
+    "nyc",
+    "seattle",
+    "美国",
+    "硅谷"
+  ],
+  "UK": [
+    "uk",
+    "british",
+    "london",
+    "英国"
+  ],
+  "EU": [
+    "europe",
+    "european",
+    "欧洲"
+  ],
+  "FR": [
+    "french",
+    "france",
+    "paris",
+    "法国"
+  ],
+  "DE": [
+    "german",
+    "germany",
+    "berlin",
+    "munich",
+    "德国"
+  ],
+  "IL": [
+    "israeli",
+    "israel",
+    "tel aviv",
+    "以色列"
+  ],
+  "IN": [
+    "indian",
+    "india",
+    "bengaluru",
+    "bangalore",
+    "mumbai",
+    "印度"
+  ],
+  "JP": [
+    "japanese",
+    "japan",
+    "tokyo",
+    "日本"
+  ],
+  "KR": [
+    "korean",
+    "korea",
+    "seoul",
+    "韩国"
+  ],
+  "SEA": [
+    "singapore",
+    "indonesia",
+    "vietnam",
+    "southeast asia",
+    "新加坡",
+    "东南亚"
+  ],
+  "LATAM": [
+    "latin america",
+    "brazil",
+    "mexico",
+    "拉美"
+  ],
+  "MEA": [
+    "saudi",
+    "uae",
+    "dubai",
+    "africa",
+    "nigeria",
+    "egypt",
+    "中东",
+    "沙特"
+  ]
+}

@@ -1,0 +1,50 @@
+name: funding-tracker weekly
+
+on:
+  schedule:
+    - cron: "0 1 * * 1"   # every Monday 01:00 UTC (09:00 Beijing)
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "Collection window in days"
+        default: "7"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: funding-tracker
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Regression gate (before)
+        run: python ft.py test --min 0.95
+
+      - name: Collect → evolve → report
+        env:
+          FT_LLM_API_KEY: ${{ secrets.FT_LLM_API_KEY }}
+          FT_LLM_BASE_URL: ${{ secrets.FT_LLM_BASE_URL }}
+          FT_LLM_MODEL: ${{ secrets.FT_LLM_MODEL }}
+        run: |
+          LLM_FLAG=""
+          if [ -n "$FT_LLM_API_KEY" ]; then LLM_FLAG="--llm"; fi
+          python ft.py run --days "${{ github.event.inputs.days || '7' }}" $LLM_FLAG
+
+      - name: Regression gate (after evolution)
+        run: python ft.py test --min 0.95 && python -m unittest discover -s tests
+
+      - name: Commit results
+        working-directory: .
+        run: |
+          git config user.name "funding-tracker-bot"
+          git config user.email "funding-tracker-bot@users.noreply.github.com"
+          git add funding-tracker/data funding-tracker/knowledge funding-tracker/reports funding-tracker/tests
+          git diff --cached --quiet || git commit -m "funding-tracker: weekly run $(date -u +%F)"
+          git push
