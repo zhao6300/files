@@ -1,0 +1,222 @@
+### Browserbase raises after:2026-03-01
+2026-09-15 | Browserbase Revenue 2025: $4.4M Est. ARR, $67.5M Raised
+2026-07-26 | When The Robot Holds The Card: AI Agents Just Got Wallets And Real Money
+2026-07-21 | Natural Raises $30 Million Series A To Build Payments Infrastructure For AI Agents
+2026-07-20 | Natural Secures $30M Series A to Expand AI Agent Payments Platform
+2026-06-26 | Sazabi Raises $8 Million Seed Round To Build AI-Native Observability Platform
+### Browser Use raises after:2026-03-01
+2026-09-30 | Two Google alumni raise $11.3M to back AI startups that enterprises will actually pay for
+2026-09-29 | Reco raises $50M with AT&T backing as enterprises race to secure AI agents
+2026-09-29 | Reco raises $55M as AI agent security startups crowd the market
+2026-09-29 | Rayon raises €10M to bring AI and 3D to its interior design software
+2026-09-28 | Australia’s legacy systems were already a cyber risk. AI agents are raising the stakes
+### E2B sandbox raises after:2026-03-01
+2026-05-09 | 21st.dev (YC W2026): NPM for Design Engineers Becomes Agent Infrastructure
+2026-05-08 | Daytona vs E2B vs Modal vs Vercel Sandbox: A 2026 Comparison
+### Daytona sandbox raises after:2026-03-01
+2026-05-19 | Claude Managed Agents: Self-Hosted Sandboxes and MCP Tunnels
+2026-05-08 | Daytona vs E2B vs Modal vs Vercel Sandbox: A 2026 Comparison
+### agent sandbox startup raises after:2026-03-01
+2026-09-30 | Two Google alumni raise $11.3M to back AI startups that enterprises will actually pay for
+2026-09-30 | ‘Not putting brakes on’: Delaware pursues AI-run companies initiative amid reports of agents going rogue
+2026-09-29 | Rogue Agents Hack Governments, Nvidia Sells A Kill Switch
+2026-09-28 | Nvidia announced a software tool to stop rogue AI. How would it work?
+2026-09-25 | Meta’s Muse agent points to dense AMD EPYC Turin hosting model
+### agent memory startup raises after:2026-03-01
+2026-09-30 | Restate Raises $20M Series A to Build Durable Infrastructure for AI Agents
+2026-09-28 | Micron stock target raised at Baird on higher DRAM pricing assumptions
+2026-09-28 | Granite Raises €4M for Agentic Cloud Infrastructure
+2026-09-28 | Lisbon Startup Humanos Raises $3.2M to Score and Insure AI Agent Risk
+2026-09-27 | Ando Raises $20M for AI Agent Chat; Permissions Are the Test
+### Mem0 raises after:2026-03-01
+2026-09-28 | Agent Memory Challenge Cycle 2 Opens Globally, Inviting More Teams to Benchmark the Future of AI Memory
+2026-08-21 | Jamaica Enters the AI Race with the Launch of OpenJM, The Caribbean's First Memory-Centric, Multimodal Agentic Platform
+2026-07-21 | Genspark Unveils AI Workspace 6.0: Betting AI’s Next Breakthrough Isn’t Models, It’s Context
+2026-06-17 | The Case Against Building Your Own Agent Platform
+2026-05-13 | Peak XV Partners bets on another AI startup to expand US portfolio
+### LangChain valuation after:2026-03-01
+2026-09-28 | Valuation Surges $10B in Under a Month: Jev Creator Claims ChatGPT Has Led AI Down the Wrong Path
+2026-09-25 | Cloudflare (NET) Stock Trades Down, Here Is Why
+2026-09-23 | LangChain vs LlamaIndex vs CrewAI 2026: Full Comparison
+2026-08-24 | LangChain Revenue 2025: $16M ARR, $1.3B Valuation
+2026-08-10 | Top 5 Open-Source Agentic AI Frameworks
+### Braintrust AI evals raises after:2026-03-01
+2026-05-29 | How Braintrust turns customer requests into code with Codex
+2026-05-10 | Braintrust AWS Data Breach Prompts Urgent API Key Rotation for AI Platform Customers
+2026-05-06 | AI evaluation startup Braintrust confirms breach, tells every customer to rotate sensitive keys
+2026-03-18 | Respan: $5 Million Raised For AI Observability Platform To Improve Agent Performance
+### Arize AI raises after:2026-03-01
+2026-09-24 | Arize AI Highlights Benchmark Performance And Cost Efficiency Of Jev Model
+2026-09-21 | TypeSafe AI Raises $40M Seed for a Model That Doesn’t Talk
+2026-08-26 | DeviQA, Cobalt and GitLab: the latest vendor and product news
+2026-08-25 | AI workloads reach production as 92% report backing for reliability teams
+2026-08-21 | Dynatrace: Q1 Growth Reacceleration And Planned Arize Acquisition Strengthen Bull Stance
+### AI agent observability startup raises after:2026-03-01
+2026-09-28 | Autoheal raises $7.9M to run AI agents that fix other AI agents
+2026-09-28 | Autoheal raises $7.9 mn led by Innovation Endeavours
+2026-09-28 | Autoheal raised $7.9M to heal its own agents
+2026-09-23 | AI governance raises the bar for observability in Southeast Asia
+2026-09-16 | Eve Security raises $4.5M to police AI agents at runtime
+### agent identity startup raises after:2026-03-01
+2026-09-29 | Wiz veteran raises $12M seed to secure AI agents at Rig Security
+2026-09-28 | Baselayer raises $35M Series A to build identity infrastructure for AI agents
+2026-09-25 | Cyera raises $400M from Goldman Sachs — plus 7 more NYC VC deals to know
+2026-09-25 | Ando raises $20 million to build team chat for humans and AI agents
+2026-09-25 | Outerlimit Raises $16 Million Pre-Seed To Launch Zero Trust Security Platform For AI Agents
+### Keycard agent identity after:2026-03-01
+2026-07-20 | AI Agents Need 'Where Are Your Agents?' PSA, Says K…
+2026-03-19 | Keycard Releases Runtime Governance for Autonomous Coding Agents
+2026-03-02 | M&A REPORT: Cybersecurity Mergers And Acquisitions
+### AI agent security startup raises valuation after:2026-03-01
+2026-09-29 | Reco raises $55M as AI agent security startups crowd the market
+2026-09-24 | Cyber startup Island hits $6.4 billion valuation in new round as AI attacks fuel spending wave
+2026-09-24 | Island raises $400 million at $6.4 billion valuation as AI agents reshape enterprise security
+2026-09-23 | Cyber unicorn Upwind acquires nine-month-old Aegis for tens of millions
+2026-09-23 | After AI models escaped testing environments, Irregular seeks $1.5 billion valuation
+### Glow AI agent security after:2026-03-01
+2026-09-30 | AI coding agents leaked 13,000 internal company screenshots to public GitHub repos
+2026-09-30 | AI agents leak 13K screenshots from 343 tech firms
+2026-09-30 | AI Agents Leak Over 13,000 Confidential Screenshots to Public Repositories Across 343 Organizations
+2026-09-30 | An AI agent unilaterally solved the 'cannot attach images' problem, and it was discovered that it had saved over 13,000 confidential screenshots from 343 organizations to a public GitHub repository.
+2026-09-29 | IQSIGHT Video Integration Earns LenelS2 Factory Certification
+### Noma Security raises after:2026-03-01
+2026-09-01 | AIR raises $50M to help companies vet the skills and add-ons AI agents use
+2026-07-31 | FG, BOA, Arzikin Noma Target 2m Farmers With New Grain Financing Scheme
+2026-07-17 | FG, BOA launch financing scheme to raise Nigeria’s grain output to 25m tonnes
+2026-07-08 | GitHub AI agent leaks private repositories via prompt injection attack
+2026-07-07 | Evaluating browser security in the AI search era
+### agentic payments startup raises after:2026-03-01
+2026-09-30 | Egyptian fintech startup Paymob raises $35m pre-Series C funding round -
+2026-09-28 | Stripe alums spark new payments plays
+2026-09-28 | AI agent firm Instinct raises $1 billion in latest funding round
+2026-09-22 | Baselayer Raises $35M to Scale AI Agent Identity Infrastructure
+2026-09-17 | Tallinn-Based Creem Raises €5M to Build Billing Infrastructure for AI-Native Companies
+### x402 Coinbase agent payments after:2026-03-01
+2026-09-30 | Coinbase Launches AI Agent Wallets for Crypto Trading
+2026-09-26 | Musk's Grok Is Out-Trading ChatGPT 40 to 1 Among Coinbase AI Agents
+2026-09-25 | Jack Dorsey’s Block joins x402 with Lightning support
+2026-09-25 | Block Adds Bitcoin Lightning Payments to x402 for AI Agents
+2026-09-22 | Cardano Unlocks AI Agent Payments With x402: ADA Hits 4-Month High
+### Stripe agentic commerce protocol after:2026-03-01
+2026-09-23 | BlackRock Says AI Agents Could Drive New Digital Asset Demand
+2026-09-17 | 5 Checkout Standards, 3% Adoption: The Protocol Proliferation Tax Killing Agent Commerce
+2026-09-01 | Stripe's Anna Spysz: The AI Shopping Agent That Went Rogue Over a System Prompt
+2026-08-22 | Stripe predicts the end of the online checkout page
+2026-08-04 | AI-Ready Payments Are Reshaping Digital Commerce: Stripe
+### MCP server startup raises after:2026-03-01
+2026-09-29 | Reco raises $55M as AI agent security startups crowd the market
+2026-09-28 | India's logistics & mobility startups warm up to IPOs as investor interest gathers pace
+2026-09-24 | Ando wants to take on Slack with a team messaging app that lets humans and agents work together
+2026-09-24 | Cyber startup Island raises $400 million, hits $6.4 billion valuation- CNBC
+2026-09-24 | Trump Jr.’s 1789 Capital said to seek $3B for second fund to expand startup bets
+### MCP gateway startup after:2026-03-01
+2026-09-29 | One gateway to govern them all: Bringing enterprise AI under control
+2026-09-24 | Build a multi-account AI agent with AgentCore Gateway and MCP | Artificial Intelligence
+2026-08-20 | Runlayer, Rippling drop lawsuits — but the brouhaha is still a cautionary tale for founders
+2026-08-14 | How Cloudflare detects MCP traffic and helps secure it
+2026-08-12 | MCP Goes Stateless, and Developers Ask Whether That Just Makes it an API Again
+### voice AI agent infrastructure raises after:2026-03-01
+2026-09-30 | Modulate Raises $25M to Scale Small-Model Voice AI for Deepfake Detection and Agent Compliance
+2026-09-30 | AI Voice Goes Mainstream, Raising the Need for Global Voice Infrastructure, Orchestration and Security
+2026-09-29 | Modulate Raises $25M to Fight Deepfake Voices With Next-Generation Audio AI
+2026-09-29 | Peak XV raises its Surge seed check ceiling to $5 million for 18 new startups
+2026-09-28 | Modulate raises $25 million to analyze voice calls, spot deepfakes and enforce policy
+### Vapi raises after:2026-03-01
+2026-09-30 | Chemiesynth Vapi shareholders adopt FY26 results, approve ₹15 cr preference issue
+2026-09-29 | Peak XV raises its Surge seed check ceiling to $5 million for 18 new startups
+2026-09-22 | Voxela Closes Series A, Bringing Total Funding to About $13.2 Million
+2026-09-03 | Chemiesynth Vapi schedules AGM for Sept 30, seeks approval for ₹15cr NCRPS
+2026-07-25 | Funding News: Naturis Cosmetics Raises Rs 100 Crore to Expand Manufacturing and R&D Capabilities
+### LiveKit raises valuation after:2026-03-01
+2026-07-15 | Rime picks up $24M Series A to help enterprises field customer calls
+2026-06-03 | These two founders left Goldman and Meta to build voice AI for markets everyone else overlooked
+### computer use agent startup raises after:2026-03-01
+2026-09-29 | Startup Reco raises $55 million for AI agent security — TechCrunch
+2026-09-29 | AI startup Instinct raises $1bn in Series C at $10bn valuation
+2026-09-28 | AI Agent Startup Instinct Raises $1 Billion at $10 Billion Value
+2026-09-28 | Lisbon Startup Humanos Raises $3.2M to Score and Insure AI Agent Risk
+2026-09-23 | NYC startup Baselayer launches identity tech for AI agents after $35M Series A
+### RL environments startup raises after:2026-03-01
+2026-09-23 | Snorkel AI Raises $350 Million, Triples Valuation To $3.5 Billion: 10 outlets compared
+2026-09-22 | EXCLUSIVE: Snorkel AI valued at $3.5 billion amid surging demand for complex AI training data
+2026-09-22 | Snorkel AI triples valuation to $3.5B as demand for AI training data booms
+2026-08-26 | Arga Labs is building a better way to train enterprise AI agents
+2026-08-03 | Seeds | Making Robots Cook Mapo Tofu, PokeBot Raises Another Nine-Figure Round
+### Parallel Web Systems after:2026-03-01
+2026-09-30 | CoreWeave Partner Network Accelerates the Path to AI Innovation
+2026-09-28 | Baselayer Raises $35 Million to Launch AI Agent Identity Platform
+2026-09-28 | Parag Agrawal: why the ads business model dies with agents
+2026-09-26 | 5 Predictions for a World of Agents & Lessons from Working with Elon at Twitter | Parag Agrawal｜20VC
+2026-09-23 | Baselayer Secures $35M Series A to Launch Industry-First Identity Layer for AI Agents
+### Exa Labs search API after:2026-03-01
+2026-09-26 | Exa Launches Agent Ultra: A Subagent Swarm Deep Research API Built for Exhaustive List Building
+2026-09-10 | Exa Revenue 2025: $10M Est. ARR, $2.2B Valuation
+2026-09-01 | How AI-native companies turn workflows into operating capability
+2026-08-25 | Keenable emerges from stealth with $26 million seed round
+2026-08-18 | Announcing the Artificial Analysis Search Index
+### Tavily raises after:2026-03-01
+2026-09-17 | Euno Raises $23 Million Series A To Help Companies Deploy Trusted AI Agents
+2026-09-15 | Tavily Revenue 2025: $2.8M Est. ARR
+2026-08-20 | Nebius: $18 Billion ARR By 2027 Makes This AI Play Too Cheap To Ignore (NASDAQ:NBIS)
+2026-08-18 | Nebius to Acquire Tavily to Add Agentic Search to Its AI Cloud Platform
+2026-07-23 | Grok 4.5, 4.6, and Tavily: 4 Updates That Matter
+### Firecrawl raises after:2026-03-01
+2026-09-27 | The Weekly Notable Startup Funding Report: 9/28/26
+2026-09-27 | Meta’s Muse Hits #1 in Two Weeks. Is Meta a Real Contender Now?
+2026-09-25 | Firecrawl Raised $75 Million Series B Led by Smash Capital:
+2026-09-23 | a16z Bets $42M on a School Instead of College
+2026-09-22 | Web scraping startup Firecrawl closes $75M investment
+### OpenRouter Stripe acquisition after:2026-03-01
+2026-09-26 | Stripe, OpenRouter, and the Measurement Problem at the Center of the Open-Model Debate
+2026-09-26 | Why “One Model Wins” Was the Wrong Bet — OpenRouter’s Alex Atallah & AMP's Anjney Midha｜Latent Space
+2026-09-26 | Stripe Is Now a Security Company: Why OpenRouter's Alex Atallah Says Token Fraud Is About to Hit Tsunami Scale
+2026-09-04 | Nvidia acquires Hugging Face after Stripe nabs OpenRouter: here's what open source AI builders should do
+2026-08-28 | Stripe and Advent International End Pursuit of PayPal
+### Temporal raises agents after:2026-03-01
+2026-09-30 | Diagrid Names Sam Yang Chief Executive Officer
+2026-09-28 | Transient Appoints Jason Safriet as Chief Growth Officer to Scale Enterprise AI Operating System Across Capital Markets
+2026-09-28 | Iceland’s 50skills raises $6 million to expand AI agents for HR teams
+2026-09-27 | Cyprus labour shortages fuel debate over agency hiring as work permits reach 26,710
+2026-09-22 | Tempo Launches Loop to Turn Fragmented AI Adoption Into an Enterprise AI Operating Model That Connects Strategy to Human and AI Work
+### Letta raises after:2026-03-01
+2026-04-13 | Mideast war a 'big problem' for EU competitiveness: Former Italian prime minister Enrico Letta - Talking Europe
+### Composio raises after:2026-03-01
+2026-09-22 | Proactive AI startup Sol raises $4 Mn from General Catalyst, Nexus VP, and others
+2026-08-06 | This YC startup raised $5 million for a personal assistant to help you stay on top of your text messages
+2026-05-13 | He Raised $6.5M With Three Words | Conversation with HydraDB Founder Nish
+### Arcade.dev raises after:2026-03-01
+2026-07-07 | Enterprise AI Agents Stall at Login, Not Reasoning: The Deployment Gap
+2026-06-19 | AI News for the Week of June 19; Updates from Arcade, IBM, NeuBird AI & More
+2026-06-18 | Enterprise AI Agent Security Startups Raise $98M: Convey and Arcade Tackle Production Gap
+2026-06-16 | Arcade Raises $60 Million Series A To Secure AI Agents In Production
+2026-06-15 | Arcade Raises $60M to Become the Secure Action Layer Behind Every Production AI Agent
+### agent orchestration platform raises after:2026-03-01
+2026-09-30 | Restate Raises $20M Series A to Build Durable Infrastructure for AI Agents
+2026-09-29 | Autoheal wants to manage the work AI coding agents leave behind, claiming cost reductions of up to 30% per task
+2026-09-24 | Ema raises $77 million to scale AI employee platform and global expansion - People Matters
+2026-09-23 | Ringg’s AI agents resolve up to 65% of customer calls with OpenAI
+2026-09-22 | Agent workflow platform Promenaut goes live at HSBC
+### Sierra Decagon customer service agent valuation after:2026-03-01
+2026-08-07 | Voice-First CX Platform Omilia Raises $67M Series B
+2026-08-06 | Omilia raises $67M to scale its customer support platform
+2026-07-31 | Smallest.ai raises $13M to build ultra-fast voice AI that sounds genuinely human
+2026-07-15 | Rime picks up $24M Series A to help enterprises field customer calls
+2026-05-19 | 6. Sierra
+### Wonderful AI agents raises after:2026-03-01
+2026-09-28 | Instinct Raises $1 Billion, Reaching a $10 Billion Valuation
+2026-09-26 | Digital insurer Honeycomb raises $40 mn for AI property underwriting
+2026-09-25 | Insurtech Coverwatch raised $4.5 mn in pre-seed to build AI insurance broker
+2026-09-25 | French insurtech Panora raises $5 mn for AI insurance broker automation
+2026-09-23 | Israeli-founded Chamelio raises $26m to bring AI agents into legal teams
+### Crosby legal agent after:2026-03-01
+2026-09-09 | Pittsburgh Penguins captain Sidney Crosby drops a major hint about his NHL future after 2026-27 season
+2026-08-23 | Harvey Introduces Harvey Tenet: A Kimi K3 Base Post-Trained with Fireworks for Long-Horizon Legal Agent Work
+2026-08-20 | Harvey Tenet Research Preview
+2026-08-03 | AI Agent Insurance Points to Future of Law Without Lawyers
+2026-07-28 | AI-native firm Crosby looks to secure insurance for its legal agents
+### AI agent startup Series A agents after:2026-07-01 after:2026-03-01
+2026-09-29 | Reco raises $55M as AI agent security startups crowd the market
+2026-09-28 | Instinct personal AI agent startup raises $1 billion in Series C, valued at $10 billion
+2026-09-24 | Cybersecurity startup Island valued at $6.4 billion amid AI agent security risks
+2026-09-23 | Ema raises $77M as AI starts eating into enterprise software and services
+2026-09-23 | NYC startup Baselayer launches identity tech for AI agents after $35M Series A

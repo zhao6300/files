@@ -1,0 +1,372 @@
+### raises billion valuation after:2026-04-01 before:2026-05-01
+2026-05-01 | Founders Fund raises $6B after burning through $4.6B in under a year on Anthropic, Anduril, and OpenAI - The Next Web
+2026-05-01 | Anthropic Seeks $900 Billion Valuation in New Raise - WinBuzzer
+2026-04-30 | Anthropic eyes a $900 billion valuation - Techzine Global
+2026-04-30 | Starcloud in Talks for $2.2 Billion Valuation as SpaceX Stirs Interest - theinformation.com
+2026-04-30 | Anthropic is eyeing a funding round that could make it bigger than OpenAI - qz.com
+2026-04-30 | Sources: Anthropic potential $900B+ valuation round could happen within 2 weeks - TechCrunch
+2026-04-30 | Anthropic Reportedly In Talks To Raise Funds At $900 Billion Valuation, Surpassing OpenAI - Pulse 2.0
+2026-04-30 | Anthropic eyes $900 billion valuation: Here's what you need to know - CNBC
+2026-04-30 | Anthropic eyes a $900b valuation in a potential $50b round - The Next Web
+2026-04-30 | Anthropic Weighs $50 Billion Raise at $900 Billion Valuation - Unite.AI
+2026-04-30 | Intel’s Record $475B Valuation Raises One Big Question - Yahoo Finance
+2026-04-29 | Anthropic in talks with investors to raise funds at $900 billion valuation, higher than OpenAI - CNBC
+2026-04-29 | Anthropic weighs new funding round at valuation exceeding $900 billion, Bloomberg News reports - Reuters
+2026-04-29 | Parallel Raises at $2 Billion Valuation to Scale Web Infrastructure for Agents - Yahoo Finance
+2026-04-29 | Startup Bringing Brains to AI Aims for $2.5 Billion Valuation - bloomberg.com
+2026-04-29 | Parallel Web Systems: $100 Million Series B At $2 Billion Valuation Raised To Scale AI Agent Web Infrastructure - Pulse 2.0
+2026-04-29 | Hightouch Raises $150 Million Series D at $2.75 Billion Valuation - citybiz
+2026-04-29 | Hightouch: $150 Million Series D At $2.75 Billion Valuation Raised To Power Agentic Marketing Platform - Pulse 2.0
+2026-04-29 | OpenAI raises record $122B round at $852B valuation as it builds toward IPO - Dealroom.co
+2026-04-28 | True Anomaly raises $650 million, reaching $2.2 billion valuation - SpaceNews
+2026-04-28 | Ex-Twitter CEO’s AI Startup Raises Funds at $2 Billion Valuation - WSJ
+2026-04-28 | Ineffable Intelligence: $1.1 Billion Seed Funding At $5.1 Billion Valuation Raised For Reinforcement Learning AI - Pulse 2.0
+2026-04-27 | Former Google DeepMind researcher's AI startup raises record $1.1 billion seed funding to pursue superintelligence - CNBC
+2026-04-27 | Sequoia and Nvidia Back Ex-DeepMind Researcher’s New AI Startup at $5.1 Billion Value - bloomberg.com
+2026-04-27 | Avoca Raises $125M+ at $1B Valuation to Power America's Services Economy With AI - PR Newswire
+2026-04-27 | UK-based AI startup Ineffable raises $1.1 billion in Europe's largest seed financing - Reuters
+2026-04-27 | Avoca Raises More Than $125 Million at $1 Billion Valuation to Power AI for U.S. Services Economy - citybiz
+2026-04-27 | Avoca: $125+ Million Raised At $1 Billion Valuation To Power Services Economy With AI - Pulse 2.0
+2026-04-24 | Cognition AI Seeks Funding At $25 Billion Valuation Amid AI Coding Surge - Yahoo Finance
+2026-04-24 | Stanford Professor Targets $1 Billion Valuation For AI-for-Physiology Startup - bloomberg.com
+2026-04-24 | AI software engineer Devin propels Cognition toward a $25 billion valuation - Techzine Global
+2026-04-24 | Cognition: AI Coding Startup In Funding Talks At $25 Billion Valuation - Pulse 2.0
+2026-04-24 | Project Prometheus Reportedly Closes $10 Billion Funding Round At $38 Billion Valuation - Pulse 2.0
+2026-04-23 | Pudu Robotics Raises Nearly USD 150 Million, Exceeds USD 1.5 Billion Valuation - PR Newswire
+2026-04-23 | AI Coding Firm Cognition in Funding Talks at $25 Billion Value - bloomberg.com
+2026-04-23 | Omni: $120 Million Series C Raised At $1.5 Billion Valuation For AI Analytics Platform - Pulse 2.0
+2026-04-23 | Cognition, creator of the AI software engineer Devin, in talks to raise 'hundreds of millions' at $25B valuation - SiliconANGLE
+2026-04-23 | Pudu Robotics: $150 Million At $1.5 Billion Valuation Raised For Commercial Service Robotics Expansion - Pulse 2.0
+2026-04-23 | VAST Data announces $1 billion Series F fund raise, tripling AI tech company's valuation to $30 billion - retailtechinnovationhub.com
+2026-04-22 | Vast Data’s valuation soars to $30 billion, raising $1 billion amid AI buildout boom - calcalistech.com
+2026-04-22 | Vast Data raises $1B at $30B valuation as AI infrastructure demand accelerates - SiliconANGLE
+2026-04-22 | Nvidia backs AI company Vast Data at $30 billion valuation - CNBC
+2026-04-22 | Vast Data ties Wiz record with $1 billion funding round - calcalistech.com
+2026-04-22 | Tencent, Alibaba in talks to invest in DeepSeek at over $20 billion valuation, The Information reports - Reuters
+2026-04-22 | Tencent, Alibaba in Talks to Invest in DeepSeek at $20 Billion-Plus Valuation - theinformation.com
+2026-04-21 | SpaceX Alum’s Startup Nears $1 Billion Valuation in Pursuit of Uncrewed Flights - bloomberg.com
+2026-04-21 | Slash Financial: $100 Million Series C At $1.4 Billion Valuation Raised To Fuel AI Expansion - Pulse 2.0
+2026-04-21 | Jeff Bezos’s Secretive AI Startup Just Hit a $38 Billion Valuation - inc.com
+2026-04-21 | Jeff Bezos’ physical AI lab is close to raising $10 billion at a $38 billion valuation - The Next Web
+2026-04-20 | Polymarket In Talks For New Investment At $15 Billion Valuation - bloomberg.com
+2026-04-20 | Jeff Bezos' AI lab nears $38 billion valuation in funding deal, FT reports - Reuters
+2026-04-20 | Polymarket in Talks to Raise $400M at $15B Valuation: Report - Yahoo Finance
+2026-04-20 | Polymarket Is Reportedly in Talks to Raise $400 Million at a $15 Billion Valuation - Yahoo Finance
+2026-04-20 | WHOOP Raises $575 Million at $10.1 Billion Valuation | Insight Health Raises $11M Series A Led by Standard Capital - Healthcare IT Today
+2026-04-20 | Polymarket Eyes $400M Raise at $15B Valuation - Bitbo
+2026-04-20 | Cursor Scores Another $5 Billion in New Raise - Yahoo Finance
+2026-04-20 | Polymarket Seeks $400M as Prediction Markets Boom - Bitcoin Foundation
+2026-04-19 | Alloy Therapeutics: $40 Million Series E At $1 Billion Valuation Raised To Scale AI-Driven Biotech Infrastructure - Pulse 2.0
+2026-04-19 | Q1 2026 Venture Capital Hits $297B: AI Captures 81% of Record Funding - tech-insider.org
+2026-04-19 | Polymarket in talks to raise $400M at a $15B valuation: Report - TradingView
+
+### raises billion valuation after:2026-05-01 before:2026-06-01
+2026-06-01 | Anthropic confidentially files for IPO after raising $65 billion in a funding round at a $965 billion valuation - Fortune
+2026-06-01 | Anthropic Hits $965 Billion Valuation In Latest Funding Round, Surpassing OpenAI - Yahoo Finance
+2026-06-01 | DriveNets raises $410 million as AI boom pushes valuation to $8.5 billion - calcalistech.com
+2026-06-01 | Anthropic passes OpenAI to become the biggest AI startup in the world - qz.com
+2026-06-01 | 'Disrupted or dead': AI is crushing a generation of startups built before ChatGPT - CNBC
+2026-05-31 | Cognition Raises Over $1 Billion At A $26 Billion Valuation As Devin Adoption Accelerates Across Enterprises - Pulse 2.0
+2026-05-29 | Anthropic's valuation surges to $965 billion, surpassing OpenAI - Reuters
+2026-05-29 | Anthropic raises $65B, surpasses OpenAI in valuation - MobiHealthNews
+2026-05-29 | Watch Anthropic Raises at $965 Billion Valuation, Eclipsing OpenAI - bloomberg.com
+2026-05-29 | Anthropic leapfrogs OpenAI with a record $965 billion valuation, says Mythos is coming in weeks - Fortune
+2026-05-29 | Anthropic Soars to a $965 Billion Valuation, Overtaking OpenAI in the AI Funding Race - inc.com
+2026-05-29 | Anthropic Raises US$65 Billion, Becomes Most Valuable AI Startup - Mexico Business News
+2026-05-28 | Anthropic raises $65B in Series H funding at $965B post-money valuation - Anthropic
+2026-05-28 | Anthropic secures $965 billion valuation after raising $65 billion - NBC News
+2026-05-28 | Anthropic raises $65 billion, nears $1T valuation ahead of IPO - TechCrunch
+2026-05-28 | Anthropic tops OpenAI as most valuable AI startup, nears $1 trillion valuation in latest round - CNBC
+2026-05-28 | Anthropic vaults to a $965 billion valuation with new funding as Claude demand surges - AP News
+2026-05-28 | Base Power in Talks to Raise Funds at $12 Billion Valuation - theinformation.com
+2026-05-28 | Anthropic Tops OpenAI to Become the World’s Most Valuable A.I. Start-Up - The New York Times
+2026-05-28 | Anthropic raises $65 billion at a $965 billion valuation, releases a more “honest” Claude Opus 4.8 - Sherwood News
+2026-05-28 | Anthropic Nears $1T Valuation And Leapfrogs OpenAI On Unicorn Board With Massive Funding Round - Crunchbase News
+2026-05-28 | Anthropic Rockets to $965 Billion Valuation, Topping OpenAI in AI Showdown - WSJ
+2026-05-28 | Anthropic Nears $1 Trillion Valuation, Topping OpenAI After Fresh $65 Billion Raise - Yahoo Finance
+2026-05-28 | Anthropic closes colossal $65 billion funding round at $900 billion valuation - calcalistech.com
+2026-05-28 | Cognition Raises Over $1 Billion in Funding at $26 Billion Post-Money Valuation - finsmes.com
+2026-05-28 | Anthropic Nears $1-Trillion Valuation After Massive $65B Funding Round — Edges Past OpenAI - Yahoo Finance
+2026-05-27 | AI Coding Startup Cognition Raises $1 Billion at $26 Billion Value - bloomberg.com
+2026-05-27 | Inference Firm Baseten Eyes Funding Round at $11 Billion Valuation - PYMNTS.com
+2026-05-27 | AI coding startup Cognition raises $1B at $25B pre-money valuation - TechCrunch
+2026-05-27 | Fireworks AI Eyes $15 Billion Valuation In New Funding Talks - Yahoo Finance
+2026-05-26 | Fireworks AI in Talks for Funding at $15 Billion Valuation - bloomberg.com
+2026-05-26 | Stord: $250 Million Series F Raised At $3 Billion Valuation To Advance Physical Intelligence Layer For Commerce - Pulse 2.0
+2026-05-26 | Exa Labs Raises $250M in Series C Funding at $2.2 Billion Valuation - finsmes.com
+2026-05-26 | Amazon fulfillment competitor Stord raises $250M at $3B valuation - TechCrunch
+2026-05-26 | Hark's $6 Billion Valuation With No Product Actually Makes Sense - Forbes
+2026-05-25 | Anthropic Reportedly Raising Over $30 Billion At $900+ Billion Valuation - Pulse 2.0
+2026-05-25 | AI Search Startup Exa Labs Raises $250M At $2.2 Billion Valuation, Led By Andreessen Horowitz - Yahoo Finance
+2026-05-24 | Anthropic Eyes $900 Billion Valuation as Quarterly Revenue Doubles - PYMNTS.com
+2026-05-24 | Modal Labs: $355 Million Raised At $4.65 Billion Valuation For AI Infrastructure Platform - Pulse 2.0
+2026-05-23 | Mercury: $200 Million Series D Raised At $5.2 Billion Valuation For AI-Native Banking Platform - Pulse 2.0
+2026-05-22 | Anthropic set to close $30 billion funding at over $900 billion valuation - Yahoo Finance
+2026-05-22 | Anthropic Set To Raise Additional $30 Billion For $900 Billion Valuation: Report - International Business Times
+2026-05-21 | Socket Raises $60 Million at $1 Billion Valuation - SecurityWeek
+2026-05-21 | EXCLUSIVE: Modal Labs valued at $4.65 billion as AI coding takes off - Reuters
+2026-05-20 | Fintech firm Mercury hits $5.2 billion valuation after funding round, up 49% in 14 months - CNBC
+2026-05-19 | Commure raises $70M, boosting post-money valuation to $7B - MobiHealthNews
+2026-05-19 | AI company Commure banks $70M funding round, hits $7B valuation - Fierce Healthcare
+2026-05-19 | Israeli AI firm Decart raises $300 million at $4 billion valuation - Israel & Jewish News - JNS.org
+2026-05-19 | Healthcare AI startup Commure is raising $70 million at a $7 billion valuation - qz.com
+2026-05-19 | Healthcare AI firm Commure valued at $7 billion, raises $70 million - Reuters
+2026-05-18 | Sigma Raises $80 Million Series E, Doubles Valuation to $3 Billion - Business Wire
+2026-05-15 | Anthropic Raising $30 Billion More as AI Labs Absorb Majority of VC Funding - WSJ
+2026-05-15 | Anthropic closes in on $30 billion fundraising round - Yahoo Finance
+2026-05-15 | Multiverse: $70 Million Raised At $2.1 Billion Valuation To Expand AI Upskilling Platform Across Europe - Pulse 2.0
+2026-05-15 | Anthropic closing in on $30B raise that would top OpenAI's valuation - Yahoo! Finance Canada
+2026-05-14 | Cerebras Raises $5.55 Billion IPO at $40 Billion Valuation - Yahoo Finance
+2026-05-13 | Anduril Announces $5B Series H Raise - Anduril
+2026-05-13 | US defense firm Anduril raises $5 billion, doubling its valuation to $61 billion - Reuters
+2026-05-13 | Startup Modal in Talks to Raise at $4.5 Billion Valuation After Revenue Surges - theinformation.com
+2026-05-13 | Anduril Raises $5 Billion, as Push to Modernize the Military Accelerates - The New York Times
+
+### raises billion valuation after:2026-06-01 before:2026-07-01
+2026-07-01 | Together AI raises $800 million at $8.3 billion valuation - Yahoo Finance
+2026-07-01 | Together AI Raises $800 Million at $8.3 Billion Valuation to Make Frontier AI Accessible to All - Business Wire
+2026-07-01 | Together AI raises $800 million at $8.3 billion valuation - Reuters
+2026-07-01 | Together AI Raises $800 Million Series C At $8.3 Billion Valuation - Pulse 2.0
+2026-06-29 | AI Video Startup in Talks to Quadruple Valuation to $5 Billion - theinformation.com
+2026-06-29 | Alan Raises €480M in Funding at €5.5 Billion Valuation - finsmes.com
+2026-06-26 | Airwallex hits $11 billion valuation with $320 million raise as fintech pushes into finance run by AI agents - CNBC
+2026-06-26 | Redo Raises $81 Million Series B At $1.25 Billion Valuation - Pulse 2.0
+2026-06-25 | Stark Defence Reportedly Raises €500 Million At €3.5 Billion Valuation - Pulse 2.0
+2026-06-25 | Kalshi Seeks $40B Valuation Weeks After $1B Raise: FT - Yahoo Finance
+2026-06-25 | Kalshi Targets $40 Billion Valuation Ahead Of IPO - Yahoo Finance
+2026-06-25 | 🦄 Alan raises €480 million at a €5.5 billion valuation - Coverager
+2026-06-25 | DeepSeek Looks to Double Workforce as Fresh Funding Fuels Growth - WSJ
+2026-06-25 | Airwallex Raises $320 Million Series H At $11 Billion Valuation - Pulse 2.0
+2026-06-23 | Peregrine Technologies Raises $250 Million Series D at $6.8 Billion Valuation - PR Newswire
+2026-06-23 | Sequoia Backs Drone Startup Stark at €3.2 Billion Valuation - bloomberg.com
+2026-06-22 | DeepSeek Reportedly Raises $7.4 Billion At More Than $50 Billion Valuation - Pulse 2.0
+2026-06-22 | Upscale AI raises $190 million Series A-1 at $2 billion valuation - Yahoo Finance
+2026-06-22 | Chipmaking tool firm Nearfield Instruments raises $380 million at $1.6 billion valuation - Reuters
+2026-06-22 | AI startup Baseten hits $13 billion valuation as Australia's Blackbird makes record bet - Reuters
+2026-06-22 | Baseten Raises $1.5 Billion Series F at Up to $13 Billion Valuation - citybiz
+2026-06-22 | AppsFlyer raises over $1 billion from Google, Meta, Unity and Moloco at a $2.7 billion valuation - calcalistech.com
+2026-06-22 | Upscale AI Raises $190 Million Series A-1 At $2 Billion Valuation For AI Networking Infrastructure - Pulse 2.0
+2026-06-22 | Nearfield Instruments Raises $380 Million Series D At $1.6 Billion Valuation - Pulse 2.0
+2026-06-18 | Dream Raises $260 Million at $3 Billion Valuation - SecurityWeek
+2026-06-18 | Odyssey Raises $310M in Series B Funding at $1.45 Billion Valuation - finsmes.com
+2026-06-18 | Israel AI Company Dream Triples Value to $3 Billion in Funding Round - bloomberg.com
+2026-06-17 | America's First VC-Backed Cyber Warfare Startup Raises $100M Series B at $1B Valuation - PR Newswire
+2026-06-16 | DeepSeek Raises More Than $7 Billion, Valuation Surpasses $50 Billion - citybiz
+2026-06-13 | nesto Raises C$302 Million Series E At C$1.47 Billion Valuation To Expand AI-Powered Lending Platform - Pulse 2.0
+2026-06-12 | France’s Mistral in Funding Talks at About €20 Billion Valuation - bloomberg.com
+2026-06-12 | Current Raises $80 Million Series E At $1.5 Billion Valuation As Growth Exceeds 70% For Third Consecutive Year - Pulse 2.0
+2026-06-12 | Mistral is rumored to be raising €3B at €20B valuation - TechCrunch
+2026-06-12 | Mistral AI in talks to raise €3 billion at €20 billion value - Yahoo Finance UK
+2026-06-11 | Bezos-Led Prometheus Raises $12 Billion At $41 Billion Valuation - Yahoo Finance
+2026-06-11 | Current Secures $80 Million Series E at $1.5 Billion Valuation Following Third Consecutive Year of 70%+ Growth - Yahoo Finance
+2026-06-11 | Bezos’s Prometheus raises $12 billion at $41 billion valuation to build AI that engineers physical products - The Next Web
+2026-06-11 | /C O R R E C T I O N -- Standard Bots/ - PR Newswire
+2026-06-11 | Current Raises $80 Million Series E at $1.5 Billion Valuation as Growth Surpasses 70% for Third Straight Year - citybiz
+2026-06-11 | KOHO Raises C$130 Million At C$1.33 Billion Valuation To Support Growth And Banking License Pursuit - Pulse 2.0
+2026-06-10 | Cyera Raises $600 Million at $12 Billion Valuation - SecurityWeek
+2026-06-10 | Cambridge Aerospace in Talks to Raise at $3.5 Billion Valuation - bloomberg.com
+2026-06-10 | Ant International aims to raise $1 billion in private funding round, source says - Reuters
+2026-06-10 | Cyera raises $600M at $12B valuation amid flurry of cybersecurity investments - SiliconANGLE
+2026-06-10 | Cyera Raises $600 Million at $12 Billion Valuation to Continue Building the Trust Layer for the AI Era - Yahoo Finance
+2026-06-10 | Cyera raises $600 million at $12 billion valuation, up fourfold in 18 months - calcalistech.com
+2026-06-10 | Cyera Raises $600 Million at $12 Billion Valuation to Continue Building the Trust Layer for the AI Era - Business Wire
+2026-06-10 | Cyera Raises $600 Million Series G At $12 Billion Valuation To Expand Enterprise AI Trust Layer - Pulse 2.0
+2026-06-09 | OpenAI Files for IPO After Raising $122 Billion at $852 Billion Valuation - Yahoo Finance
+2026-06-09 | Iconiq-Backed IT Startup NinjaOne Hits $12.3 Billion Valuation - bloomberg.com
+2026-06-09 | Iceye’s Valuation Soars to 10 Billion Euro With New Raise - Via Satellite
+2026-06-09 | NinjaOne raises $400M at $12.3B valuation - The Business Journals
+2026-06-09 | Databricks in talks to raise at up to $175bn valuation - The Next Web
+2026-06-09 | Databricks Targets $165 Billion Valuation in New Funding Round - PYMNTS.com
+2026-06-09 | Rylo raises $85 million at $500 million valuation, targets $1 billion revenue by 2028 - calcalistech.com
+2026-06-09 | Databricks Is Eyeing a $175 Billion Valuation. Its CRO Says They're Building a Trillion-Dollar Company - inc.com
+2026-06-09 | Databricks valued at up to $175 billion in new funding round - Techzine Global
+2026-06-08 | Supabase Raises $500 Million at $10.5 Billion Valuation to Accelerate Lead in Agentic Infrastructure - orrick.com
+2026-06-08 | Databricks in talks to raise funds at over $165 billion, The Information reports - Reuters
+2026-06-08 | Databricks in Talks for Valuation of at Least $165 Billion - theinformation.com
+
+### raises billion valuation after:2026-07-01 before:2026-08-01
+2026-07-31 | Xsight Labs Raises More Than $300 Million At $2.8 Billion Valuation To Power Next-Generation AI And Cloud Networks - Pulse 2.0
+2026-07-30 | K2 Space Raises $500M Series D at $6.8B Valuation to Scale Large, High-Power Satellites - PR Newswire
+2026-07-30 | Moonshot AI’s $3.5 Billion Round Tripled Its Valuation in Six Months — and Beijing’s Fingerprints Are All Over It - Yahoo Finance
+2026-07-30 | Xsight Labs Raises More than $300 Million at $2.8 Billion Valuation to Power Next-Generation AI and Cloud Networks - PR Newswire
+2026-07-30 | Simile Raises $200M in Series B Funding at $2 Billion Valuation - finsmes.com
+2026-07-30 | Simile Raises Over $200 Million In Series B At A $2 Billion Valuation - Pulse 2.0
+2026-07-30 | Synthetic-user startup Simile raises $200M at $2B valuation 5 months after $100M Series A - TechCrunch
+2026-07-29 | Eliyan raises $145 million at $1 billion valuation to ease AI chip data bottlenecks - Reuters
+2026-07-29 | Robotics startup Generalist AI is in talks to raise a new funding round at a $3 billion valuation - Business Insider
+2026-07-29 | Moonshot AI Surpasses Funding Goal to Hit $35 Billion Value - bloomberg.com
+2026-07-29 | Whatnot is in talks to raise a new funding round at a $20 billion valuation - Business Insider
+2026-07-29 | Robotics startup Generalist AI is in talks to raise a new funding round at a $3 billion valuation - africa.businessinsider.com
+2026-07-29 | CAIS Raises $170 Million Series D Led by Vista Equity Partners at Over $2 Billion Valuation - citybiz
+2026-07-29 | Generalist AI seeks funding at $3 billion valuation - Business Insider - Investing.com
+2026-07-28 | Cathedral Reportedly Raises $160 Million At $1.4 Billion Valuation For AI-Powered Military Cyber Operations - Pulse 2.0
+2026-07-27 | Insurtech Corgi hits $4 billion valuation on latest raise - Finextra Research
+2026-07-26 | Databricks raises at a $188 billion valuation to push multi-AI governance and agentic infrastructure - MarketScale
+2026-07-26 | Blue Origin Raised $10 Billion at a $130 Billion Valuation Under Jeff Bezos - Yahoo Finance
+2026-07-26 | Anduril is chasing a $100 billion valuation before its last round has even settled - Startup Fortune
+2026-07-26 | Genesis AI is in talks to raise $500 million at a $3 billion valuation just a year after emerging from stealth - Startup Fortune
+2026-07-26 | Blue Origin Raised $10 Billion at a $130 Billion Valuation Under Jeff Bezos - The Motley Fool
+2026-07-25 | Elon Musk’s Boring Company reportedly raising funding at a $20B valuation - Yahoo Finance
+2026-07-24 | EXCLUSIVE: Defense tech company Anduril in talks to raise funding at about $100 billion valuation - Reuters
+2026-07-24 | Anduril in talks to raise funding at about $100 billion valuation - Yahoo Finance
+2026-07-24 | Anduril targets $100 billion valuation in new funding talks - calcalistech.com
+2026-07-24 | Corgi Reportedly Raises Third Funding Round in Eight Weeks at $4 Billion Valuation - Program Business
+2026-07-24 | Exclusive | Elon Musk’s Boring Company Eyes $20 Billion Valuation in New Funding Round - WSJ
+2026-07-24 | Anduril In Talks To Raise Funding At Roughly $100 Billion Valuation, Says Report - Pulse 2.0
+2026-07-24 | Anduril reportedly in talks to raise funding at $100B valuation, more than 3x last year’s mark - Yahoo Finance
+2026-07-24 | AI Insurance Startup Corgi Hits $4B Valuation After Third Funding Round in Eight Weeks - MLQ.ai
+2026-07-24 | Anduril is in talks to raise money at a $100 billion valuation and the deal structure is unlike anything private markets have seen - Startup Fortune
+2026-07-23 | AI chip startup Etched raises $300 million at $10.3 billion valuation - Yahoo Finance
+2026-07-23 | Humanoid Raises $152 Million at $1.35 Billion Post-Money Valuation, Becoming Europe's First Pure-Play Humanoid Robotics Unicorn - Business Wire
+2026-07-23 | Etched Raises $300 Million At $10.3 Billion Valuation To Scale AI Inference Hardware - Pulse 2.0
+2026-07-23 | China’s PsiBot Becomes Latest AI Startup to Hit $1 Billion Value - bloomberg.com
+2026-07-23 | Etched raises $300M at a $10.3B Valuation to Scale Production of Frontier Scale Inference Hardware - GlobeNewswire
+2026-07-23 | Humanoid Raises $152 Million at $1.35 Billion Post-Money Valuation, Becoming Europe's First Pure-Play Humanoid Robotics Unicorn - afp.com
+2026-07-23 | AI chip startup Etched defies skeptics, hits $10.3B valuation from big-name investors - TechCrunch
+2026-07-22 | AI Startup Corgi Of Seven-Day Work Week Fame Raises Yet Again At $4 Billion Valuation - Forbes
+2026-07-22 | EXCLUSIVE: DOGE alumni launch military cyber startup with $1.4 billion valuation - Reuters
+2026-07-22 | Augustus Raises $180 Million Series B At $1 Billion Valuation To Expand Global Dollar Banking Platform - Pulse 2.0
+2026-07-22 | Humanoid Raises $152 Million Series A At $1.35 Billion Valuation To Scale Industrial Robots - Pulse 2.0
+2026-07-22 | Glow raises $180 million at a $1.2 billion valuation to secure the AI agents that CrowdStrike wasn't built to see - Startup Fortune
+2026-07-22 | Humanoid raises $152m Series A at $1.35bn valuation - Yahoo Finance
+2026-07-22 | Colossal reportedly raising more funding at up to $30 billion valuation - The Business Journals
+2026-07-21 | Meshy Raises Nearly $400 Million at a $1.5 Billion Valuation, the Largest Round to Date in AI 3D - PR Newswire
+2026-07-21 | Meshy raises $400 million Series B at $1.5 billion valuation - VoxelMatters
+2026-07-21 | China's Moonshot AI is seeking a $50 billion valuation in pre-IPO funding talks - qz.com
+2026-07-21 | Robotics startup Humanoid raises $152 million Series A round at $1.35 billion valuation - Yahoo Finance
+2026-07-21 | Humanoid Raises $152 Million At $1.35 Billion Valuation: Europe’s Newest Robot Unicorn - Forbes
+2026-07-21 | Twenty Raises Additional $30 Million From Khosla Ventures At $1.2 Billion Valuation - Pulse 2.0
+2026-07-21 | Exclusive: Twin sisters built GlossGenius into the latest female-founded unicorn. Now they’re debuting AI for small businesses far beyond beauty - Fortune
+2026-07-21 | Moonshot AI eyes $50 billion valuation, Hong Kong IPO after Kimi K3 breakthrough - Yahoo Finance
+2026-07-21 | China’s Moonshot in Talks on Pre-IPO Funds at $50 Billion Value - bloomberg.com
+2026-07-21 | Augustus Announces $180M Series B at $1B Valuation to Give International Fintechs and Banks Access to the US Dollar - PR Newswire
+2026-07-21 | Augustus raises $180 million Series B at $1 billion valuation to build the 'Global Dollar Bank' - The Block
+2026-07-20 | CuspAI Raises $450 Million Series B At $2.6 Billion Valuation To Discover New Materials - Pulse 2.0
+2026-07-20 | CuspAI Raises $450 Million at $2.6 Billion Valuation in Series B Funding Round - Moomoo
+2026-07-20 | America's First VC-Backed Cyber Warfare Startup Raises Additional $30M from Khosla Ventures at $1.2B Valuation - PR Newswire
+2026-07-20 | Colossal Biosciences reportedly in talks to raise new capital at $20B–$30B valuation - TechCrunch
+
+### raises billion valuation after:2026-08-01 before:2026-09-01
+2026-09-01 | AI Startup Cognition Set to Raise Around $1 Billion at a $47 Billion Value - Yahoo! Finance Canada
+2026-09-01 | AI Startup Cognition Set to Raise Around $1 Billion at a $47 Billion Value - bloomberg.com
+2026-09-01 | Polymarket valuation hits $21bn as Trump Jr's firm leads $1bn round - Yahoo Finance
+2026-08-31 | Polymarket Reportedly Raises $1 Billion At $21 Billion Valuation In 1789 Capital-Led Round - Pulse 2.0
+2026-08-31 | Polymarket Funding Led by 1789 Values Firm at $21 Billion - bloomberg.com
+2026-08-29 | Personal Assistants Are Suddenly Venture Capital’s New Obsession. Startup Town Is Closing In on a $1 Billion Valuation - inc.com
+2026-08-28 | Owner Raises $240M Led by Goldman Sachs Alternatives to Build the AI-Native Platform for Every Local Business - PR Newswire
+2026-08-27 | AI Startup DeepSeek Poised to Reach $74 Billion Valuation - WSJ
+2026-08-27 | Amid Personal Assistant Investor Frenzy, Town Nears $1 Billion Valuation in Round Led by Instinct-Backer Index Ventures - Newcomer | Substack
+2026-08-27 | Instinct AI assistant raises $250 million Series B at $2.5B valuation - Yahoo Finance
+2026-08-27 | Instinct Raises $250 Million At $2.5 Billion Valuation As AI Assistant Goes Viral In Silicon Valley - Pulse 2.0
+2026-08-27 | Socure Announces Strategic Growth Investment at $5.2B Valuation and Acquires Agentic Operations Platform Fravity - Summit Partners
+2026-08-27 | Socure valued at $5.2 billion in latest funding, buys Fravity - Reuters
+2026-08-26 | Viral AI startup Instinct has raised $350M at a $2.5B valuation - TechCrunch
+2026-08-25 | Robotics startup Generalist reaches $3B valuation, sources say - TechCrunch
+2026-08-25 | Emerald AI Raises $150 Million Series A at $1.05 Billion Valuation to Scale Power-Flexible AI Data Centers - Business Wire
+2026-08-25 | Oura smart ring IPO could raise $3 billion at $16 billion valuation - Yahoo Finance
+2026-08-25 | AI Security Startup Working With Anthropic and Google Raises $140 Million - bloomberg.com
+2026-08-25 | XPENG Robotics Raises US$900M for Humanoid Robots - XPENG
+2026-08-24 | Fasset Hits $1B Valuation as SBI Group Leads $68M Series C to Scale AI-Powered Stablecoin Neobanking - Business Wire
+2026-08-24 | Shein Targets $27 Billion Valuation in Long-Awaited Hong Kong IPO - WSJ
+2026-08-24 | Valor, Point72 back General Intuition at $6B valuation as AI startup pushes into robotics - TechCrunch
+2026-08-21 | Devoted Health is raising a new round of funding at a $25 billion valuation - Business Insider
+2026-08-21 | Starcloud Raises $250 Million at $2.3 Billion Valuation to Scale AI with Orbital Data Centers - Business Wire
+2026-08-21 | Starcloud Raises $250 Million At $2.3 Billion Valuation To Build 20-Gigawatt Orbital AI Data Center Network - Pulse 2.0
+2026-08-21 | Anthropic Could Aim to Raise $100 Billion in Blockbuster I.P.O. - The New York Times
+2026-08-20 | Colossal spinout Astromech raises $20M at $3.8B valuation - Dealroom.co
+2026-08-20 | Castelion raises $1 billion Series C for hypersonic missiles - qz.com
+2026-08-20 | SOURCES: Poolside Strikes $6 Billion Licensing Deal with Nvidia & Raises $1 Billion for Remaining Company at $12 Billion Valuation - Newcomer | Substack
+2026-08-20 | Anthropic IPO May Top SpaceX Record: Will It Raise $100 Billion? - Yahoo Finance
+2026-08-19 | Rillet raises $100M Series C at $1B valuation to automate accounting - Dealroom.co
+2026-08-19 | Etched Raises $700 Million At $21 Billion Valuation As Customer Contracts Top $1 Billion And Jane Street Deploys First Rack - Pulse 2.0
+2026-08-19 | Rillet raises $100M Series C at $1B valuation — 2 years after emerging from stealth - TechCrunch
+2026-08-19 | Rillet Raises $100M Series C at $1B Valuation to Build Accounting Superintelligence - Business Wire
+2026-08-19 | Indian fintech Navi to raise $100 million ahead of planned IPO - Reuters
+2026-08-18 | AI Startup Temporal in Talks for a Valuation of at Least $12 Billion - bloomberg.com
+2026-08-18 | Higgsfield Just Raised $400 Million at a $5.4 Billion Valuation. 1 Key Shift Explains Why - inc.com
+2026-08-18 | AI chip startup Etched doubles valuation to $21 billion in under a month - Reuters
+2026-08-18 | Etched’s valuation doubles to $21B in a month - TechCrunch
+2026-08-18 | Etched Raises $700M at a $21B Valuation and Completes First Customer Delivery to Jane Street - Yahoo Finance
+2026-08-18 | Exclusive: Accounting AI startup Rillet reaches unicorn status with $1 billion valuation. Its founder says he wants to give CFOs back their weekends - Fortune
+2026-08-18 | Velaura AI Raises $110 Million Series A to Advance the Next Generation of Ultra-Low-Power AI Compute Infrastructure - Business Wire
+2026-08-17 | Higgsfield Raises $400 Million Series B Financing at $5.4 Billion Valuation with Annualized Revenue Reaching $700 Million - PR Newswire
+2026-08-17 | AI proptech startup EliseAI is in talks to raise a new round of funding at a $3.7 billion valuation - Business Insider
+2026-08-17 | Higgsfield raises $400 million Series B at $5.4 billion valuation - Yahoo Finance
+2026-08-17 | Groq Valued at $3.5 Billion in Funding Round After Nvidia Deal - bloomberg.com
+2026-08-17 | Higgsfield's valuation soars fourfold to $5.4 billion in six months on AI content demand - Reuters
+2026-08-17 | Higgsfield Hits $5.4 Billion Valuation: Is AI Video Back? - Yahoo Finance
+2026-08-17 | Wispr talks its way to a $2 billion valuation. The company says dictation’s only the beginning - Fortune
+2026-08-17 | Wispr Flow raises $280 million at $2 billion valuation, Peak XV joins new round - The Economic Times
+2026-08-14 | Kalshi Eyes $40B Valuation in Yet Another New Raise - Yahoo Finance
+2026-08-14 | Databricks Closes $5 Billion Funding Round At $190 Billion Valuation: how 10 outlets framed it - NewsCord
+2026-08-14 | CAIS lands $170-million from Vista Equity at $2-billion valuation, double the last raise, but amount rekindles questions about whether private equity firms pay premium for 'alts platforms' with preferred-distribution payback in mind - RIABiz
+2026-08-13 | Databricks Raises $5 Billion at a $190 Billion Valuation - bloomberg.com
+2026-08-13 | Databricks raises $5 billion at $190 billion valuation in 2026 - Yahoo Finance
+2026-08-13 | Databricks Hits $190 Billion Valuation As CEO Ali Ghodsi Claims AGI Has Already Arrived - Forbes
+2026-08-13 | Databricks Grows >80% YoY, Surpasses $7B Revenue Run-Rate, Scales Lakebase, Genie, and Unity AI Gateway - Databricks
+2026-08-13 | Kalshi In Talks To Raise Money At $40 Billion Valuation - Yahoo Finance
+2026-08-13 | Kalshi in talks with Sequoia, Wellington for $750 million fund raise at $40 billion valuation - CoinDesk
+2026-08-13 | Kalshi's Valuation Could Nearly Double to $40 Billion After Reports Suggest It Could Raise Another $750 Million. Here's What's Driving the Prediction Market Boom. - Yahoo Finance
+
+### raises billion valuation after:2026-09-01 before:2026-09-30
+2026-09-29 | US Prediction Market Kalshi in Talks to Raise $1 Billion at $40 Billion Valuation - finance.biggo.com
+2026-09-29 | EliseAI Raises $350 Million at a $4 Billion Valuation - Межа. Новини України.
+2026-09-29 | OpenAI seeks to raise $30 billion in new funding round at $1.4 trillion valuation - CNBC
+2026-09-29 | EliseAI Raises $350 Million At $4 Billion Valuation To Expand AI Across Housing And Healthcare - Pulse 2.0
+2026-09-29 | OpenAI reportedly in talks to raise $30B round at $1.4T valuation - TechCrunch
+2026-09-29 | Kalshi in Final Talks to Raise $1 Billion at $40 Billion Valuation - bloomingbit
+2026-09-29 | OpenAI targets $30 billion funding at $1.4 trillion valuation, Bloomberg News reports - Reuters
+2026-09-29 | OpenAI in talks to raise $30 billion at $1.4 trillion valuation - calcalistech.com
+2026-09-29 | EliseAI raises $350M at $4B valuation to expand healthcare AI automation - MobiHealthNews
+2026-09-29 | EliseAI Raises USD350M in Series F Funding at a USD 4 Billion Valuation - finsmes.com
+2026-09-29 | EliseAI Raises $350 Million at $4 Billion Valuation - PropTech Connect
+2026-09-29 | EliseAI Raises $350 Million at a $4 Billion Valuation - FourWeekMBA
+2026-09-29 | EliseAI Raises $350M at $4B Valuation for Housing AI - Yahoo Finance
+2026-09-29 | EliseAI Raises $350 Million at $4 Billion Valuation to Bring AI Deeper Into Housing and Healthcare Operations - GlobeNewswire
+2026-09-29 | EliseAI Raises $350 Million at $4 Billion Valuation to Bring AI Deeper Into Housing and Healthcare Operations - Yahoo Finance
+2026-09-29 | Exclusive: AI housing unicorn EliseAI hits $4 billion valuation in new funding round led by a16z and Bessemer - Fortune
+2026-09-29 | SiMa.ai raises US$ 150 million in Series C at US$ 1.45 billion valuation - W.Media
+2026-09-29 | Precision Neuroscience Raised $250 Million Series D at About a $1 Billion Valuation: - HedgeCo.Net
+2026-09-28 | Source: Inference provider Modal Labs closing in on $750M round at $15.75B valuation - TechCrunch
+2026-09-28 | Instinct Raises $1 Billion Series C At $10 Billion Valuation To Expand Personal AI Agent - Pulse 2.0
+2026-09-28 | SiMa.ai Raises $150 Million Series C At $1.45 Billion Valuation To Scale Physical AI Platform - Pulse 2.0
+2026-09-28 | AI agent startup Instinct hits $10 billion valuation following $1 billion round - Yahoo Finance
+2026-09-28 | Instinct Raises $1 Billion at $10 Billion Valuation With 14 Employees - citybiz
+2026-09-28 | Instinct Raises $1 Billion Series C at $10 Billion Valuation for Personal AI Agents - konsulteer.com
+2026-09-28 | SiMa.ai Raises $150 Million Series C at $1.45 Billion Valuation - citybiz
+2026-09-28 | Instinct Nets $1B at $10B for Personal AI - briefs.co
+2026-09-28 | AI Agent Startup Instinct Raises $1 Billion at $10 Billion Value - bloomberg.com
+2026-09-28 | Instinct Raises $1 Billion, Reaching a $10 Billion Valuation - Межа. Новини України.
+2026-09-28 | AI agent firm Instinct raises $1 billion in latest funding round - Reuters
+2026-09-28 | AI agent firm Instinct raises $1 billion in latest funding round - wncy.com
+2026-09-28 | Viral AI agent Instinct raises $1B Series C at a $10B valuation - TechCrunch
+2026-09-28 | Instinct Raises $1 Billion Series C at $10 Billion Valuation - citybiz
+2026-09-28 | Physical AI custom chip startup SiMa.ai raises $150M at $1.45B valuation - SiliconANGLE
+2026-09-28 | Instinct Raises $1 Billion in Series C Funding from Sequoia, Benchmark and Coatue at $10 Billion Valuation - Yahoo Finance
+2026-09-28 | Exein raises $270 million, becoming Italian unicorn with $1.7 billion valuation - Leaders League
+2026-09-25 | Island Raises $400 Million, Ups Valuation to $6.4 Billion - D Magazine
+2026-09-25 | OpenEvidence reportedly raises $250M at $15B valuation - Axios
+2026-09-25 | Blue Origin raises $10 billion in first outside funding - Yahoo Finance
+2026-09-25 | Enterprise browser startup Island raises $400m at $6.4bn valuation - Yahoo Finance
+2026-09-25 | Blue Origin Raises $10 Billion at $140 Billion Valuation as Bezos Funds SpaceX Challenge - citybiz
+2026-09-25 | Startup Founded by ex-Tesla Dojo Leaders Nears $10 Billion Valuation - theinformation.com
+2026-09-24 | Blue Origin Raises $10 Billion in First Outside Funding Round, Valuation Soars to $140 Billion - finance.biggo.com
+2026-09-24 | Blue Origin raises $10B as Bezos’ total investment hits $32B - WSJ - Yahoo Finance
+2026-09-24 | Island Raises $400 Million Series F At $6.4 Billion Valuation To Expand Enterprise AI Security Platform - Pulse 2.0
+2026-09-24 | The 'ChatGPT for doctors,' OpenEvidence, was valued at $15 billion in a new funding round - Business Insider
+2026-09-24 | Island raises huge funding round at $6.4 billion valuation - The Business Journals
+2026-09-24 | Scoop: Accel in talks to lead Modal raise at $15B valuation - Axios
+2026-09-24 | Brahma AI raised $150 million at a $2 billion valuation for its enterprise video platform - qz.com
+2026-09-24 | Island Raises $400M at $6.4B Valuation - briefs.co
+2026-09-24 | Island Announces $400 Million Series F, Bringing Valuation to $6.4 Billion - GlobeNewswire
+2026-09-24 | Cyber startup Island raises $400 million, hits $6.4 billion valuation- CNBC - TradingView
+2026-09-24 | Island raises $400 million at $6.4 billion valuation as AI agents reshape enterprise security - calcalistech.com
+2026-09-24 | Indian AI firm backed by Dune and Odyssey visual effects studio valued at $2 billion in fundraise - CNBC
+2026-09-24 | How much is Kalshi really worth? A detailed report says as much as $42 billion—if everything goes right - Fortune
+2026-09-23 | Satellite Bluetooth startup Hubble Network raises $200 million at $1.6 billion valuation - Classic Rock 103.5 WIMZ
+2026-09-23 | Modal Labs in talks to raise funds at $15 billion valuation, Bloomberg News reports - Reuters
+2026-09-23 | Seattle space startup hits $1.6 billion valuation with latest funding round - The Business Journals
+2026-09-23 | Satellite Bluetooth startup Hubble Network raises $200 million at $1.6 billion valuation - Yahoo Finance
+2026-09-23 | TEKEVER Raises $580 Million Series D At $6.4 Billion Valuation Led By UC Investments And Baillie Gifford - Pulse 2.0
+2026-09-23 | Snorkel AI Raises $350 Million At $3.5 Billion Valuation To Expand Agentic Data Factory - Pulse 2.0
+

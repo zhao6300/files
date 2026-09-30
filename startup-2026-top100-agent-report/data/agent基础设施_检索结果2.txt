@@ -1,0 +1,160 @@
+### Claude Managed Agents launch after:2026-03-01
+2026-09-25 | Amazon Opens Its Seller Backend to AI Agents, Starting With Anthropic’s Claude
+2026-09-17 | Claude Code relaunches Projects to manage multiple AI agents in the cloud
+2026-09-08 | Claude Managed Agents Setup: 12 Steps, $0.08/Hr [2026]
+2026-07-29 | Amex GBT launches AI-powered business travel booking through Claude integration
+2026-06-23 | Anthropic launches Claude Tag for Slack
+### OpenAI agent platform enterprise Frontier after:2026-03-01
+2026-09-30 | OpenAI, Red Hat, and NVIDIA Back an Open-Source Agent Control Plane — While OpenAI Ships a Proprietary One
+2026-09-30 | OpenAI launches Dots to fight Meta for the enterprise AI market
+2026-09-29 | OpenAI DevDay 2026: AI Models Hacked Hugging Face; Promised Shutdown Controls Unbuilt
+2026-09-29 | Here’s why OpenAI is absent from Nvidia’s industry-wide effort to end rogue AI agents
+2026-09-29 | CrowdStrike Brings the Falcon Platform to the OpenAI Marketplace
+### AWS AgentCore after:2026-03-01
+2026-09-29 | Amazon Bedrock AgentCore Flaws Could Expose AWS Credentials
+2026-09-24 | Build a multi-account AI agent with AgentCore Gateway and MCP | Artificial Intelligence
+2026-09-24 | AWS AgentCore v2 Cuts Cold Starts 93% [2026]
+2026-09-21 | Unit 42 reveals a poisoned ticket can steal AWS AgentCore credentials
+2026-09-21 | AWS Ships AgentCore Runtime V2 — and the Cloud Agent Infrastructure Layer Is Now Complete
+### Google agent platform Gemini Enterprise agents after:2026-03-01
+2026-09-30 | OpenAI Dots Enters 3-Way Fight as Instinct Nets $1B [2026]
+2026-09-29 | Thales and Google Cloud secure AI agents on the Gemini platform
+2026-09-28 | Meta Bets Its Future on an Enterprise Platform That Does Not Exist Yet
+2026-09-28 | BNP Paribas Signs 5-Year Google Cloud Gemini Deal [2026]
+2026-09-24 | AI agent security moves deeper into runtime
+### Cloudflare agents MCP after:2026-03-01
+2026-09-30 | Simplifying domains for people and agents
+2026-09-29 | Cloudflare Ships Worker Previews for Per-Branch Isolation
+2026-08-28 | WebMCP Connects AI Agents To Actions Inside Websites
+2026-08-28 | Kitesurf Browser: Everything You Need to Know about AI Agent Browsing
+2026-08-17 | Cloudflare Gives AI Agents a Wallet: 20+ Launches [2026]
+### Dynatrace acquire Arize after:2026-03-01
+2026-08-27 | What Is Dynatrace (DT) Signaling With Its AI Reliability Study And Observability Deal?
+2026-08-21 | Dynatrace: Q1 Growth Reacceleration And Planned Arize Acquisition Strengthen Bull Stance
+2026-08-14 | Dynatrace's Arize Acquisition Seen to Accelerate Organic Growth, RBC Capital Markets Says
+2026-08-14 | Dynatrace Falls as Investors Weigh $915 Million Arize Deal | DT Stock News
+2026-08-14 | Dynatrace to Acquire AI Observability Leader Arize
+### Nebius Tavily acquisition price after:2026-03-01
+2026-09-09 | Pure-Play AI Cloud vs. Energy-Driven Infrastructure: Nebius Scale Meets IREN Limited's Efficiency
+2026-09-06 | What Is Nebius? Complete NBIS Company Guide
+2026-08-20 | Nebius: $18 Billion ARR By 2027 Makes This AI Play Too Cheap To Ignore (NASDAQ:NBIS)
+2026-08-11 | CoreWeave’s Record Q2 Supercharges Nebius Stock Ahead Of Earnings — What Does Wall Street Expect Amid Cloud Boom?
+2026-07-20 | Nebius vs. C3.ai: Which AI Growth Stock is the Better Buy?
+### Upwind acquires Aegis after:2026-03-01
+2026-09-28 | Tech M&A deals: Microchip, Upwind, Nomios, Eftsure
+2026-09-24 | New Zealand’s NCSC names China as top state-backed cyber threat
+2026-09-24 | Unicorn Upwind acquires Aegis and launches AI Labs for Cybersecurity
+2026-09-24 | News from Israel and the Jewish world in Spanish
+2026-09-23 | Upwind acquires Israeli AI security startup Aegis, launches new cyber research lab
+### Runlayer MCP after:2026-03-01
+2026-08-20 | Runlayer, Rippling drop lawsuits — but the brouhaha is still a cautionary tale for founders
+2026-08-10 | Rippling hits back at NYC AI startup’s trade secret lawsuit in messy legal battle
+2026-08-10 | Rippling Sues AI Startup Runlayer Over Patents Days After Being Sued First
+2026-08-10 | Now Rippling is counter-suing tiny startup Runlayer
+2026-07-30 | The First MCP Lawsuit: Runlayer v. Rippling Signals a Maturing Agent Economy
+### AIR raises agent skills after:2026-03-01
+2026-09-27 | Plugin4Shell Bypasses Hash Pinning—Audit Every Agent Plugin Path
+2026-09-15 | AIR Security’s $50M Seed Signals a $435M Agent-Security Category Is Forming While Platforms Ship at Full Speed
+2026-09-15 | India's Air Travel Growth To Outpace China: Airbus Raises Forecast To 9.3%
+2026-09-09 | Enterprise AI Agent Funding Surges to $435M in Five Months — Security and Governance Lead
+2026-09-01 | Air raises $50M seed to build a firewall for AI agents
+### AI agent insurance AIUC after:2026-03-01
+2026-09-16 | AIUC lands $40M Series A to insure AI agents
+2026-09-16 | AIUC Raises $40M to Build the Certification and Insurance Layer That Makes Agent Governance Auditable
+2026-09-16 | Rune Kvist Says AI Labs Can't Audit Themselves — And He's Building the Lloyd's-Backed Alternative
+2026-09-16 | OpenAI admits its AI models have learned to cheat, hide their own mistakes
+2026-09-15 | AIUC raises $40M Series A from Ribbit & First Harmonic to build confidence infrastructure for frontier AI
+### Visa Mastercard agentic commerce agent pay after:2026-03-01
+2026-09-29 | Going Rogue and Getting a Wallet: The $53 Billion AI Commerce Crisis No One Is Ready For
+2026-09-27 | Cloudflare AI Wallets Put Agentic Commerce Trust Frameworks to the Test
+2026-09-23 | Can Mastercard’s Fee Model Survive the Agentic Commerce It’s Building For?
+2026-09-23 | Baselayer Raises $35M to Build the ‘Know Your Agent’ Layer Agentic Commerce Needs
+2026-09-21 | Mastercard, Flybits and Rogers establish benchmark for secure, consumer-controlled agentic commerce in Canada
+### Google AP2 agent payments protocol after:2026-03-01
+2026-09-23 | Checkout.com Is Building Its Own Agent Infrastructure While Backing Three Rival Protocols
+2026-09-21 | The 402 Protocol Is Finally Doing What HTTP Always Promised: Letting Machines Pay for Things
+2026-09-17 | 5 Checkout Standards, 3% Adoption: The Protocol Proliferation Tax Killing Agent Commerce
+2026-08-24 | Google can track exactly how your agent spends your money — but it's no help when it buys something you didn't approve
+2026-07-17 | Industry-Backed x402 Foundation Is Aimed at Agentic Commerce Gaps
+### Natural agent payments after:2026-03-01
+2026-09-30 | Pharos unveils an Agent Native upgrade at Korea Blockchain Week
+2026-09-30 | Pharos Network introduces Agent Native upgrade to power onchain AI agent economy
+2026-09-30 | ENGLISH SECTION: Payments in the Age of AI Agents
+2026-09-28 | Shopify Extends WebMCP Support to Checkout for Browser Agents
+2026-09-28 | AI agents may need crypto more than humans ever did
+### Browserbase valuation after:2026-03-01
+2026-09-15 | Browserbase Revenue 2025: $4.4M Est. ARR, $67.5M Raised
+2026-09-07 | Is Browserbase AI Worth It? An Honest Look at Web Automation for AI Agents
+2026-04-17 | Agentic Web: World ID with Okta, Vercel | World
+2026-04-09 | While VCs burn cash, Perceptron built AI infrastructure with 700,000 users
+### Braintrust valuation after:2026-03-01
+2026-09-28 | Aig-Imoukhuede: Building Africa’s public sector brain trust
+2026-07-17 | The 10 Coolest AI Observability And Governance Tools Of 2026 (So Far)
+2026-06-17 | Kelowna kinesiologist running around the clock for brain health awareness
+2026-06-10 | Datadog veterans launch AI coding startup Niteshift on a bet against Big AI lock-in
+2026-05-12 | Brain Trust: 2026 Favorite Rookie Landing Spots
+### fal.ai valuation after:2026-03-01
+2026-09-28 | Source: Inference provider Modal Labs closing in on $750M round at $15.75B valuation
+2026-09-26 | OpenAI discloses dozens of AI agent incidents, including leak of 53 user images
+2026-09-25 | Fal and Fireworks AI explore new funding rounds as AI inference valuations soar
+2026-09-25 | Fal Seeks New Funding At Over $15 Billion Valuation - The Information
+2026-09-22 | Snorkel AI triples valuation to $3.5B as demand for AI training data booms
+### Delaware AI-run companies after:2026-03-01
+2026-09-30 | ‘Not putting brakes on’: Delaware pursues AI-run companies initiative amid reports of agents going rogue
+2026-09-29 | Explainer-What is a public benefit corporation, the Anthropic legal structure?
+2026-09-29 | Opinion: AI might run companies soon. Corporate boards beware
+2026-09-28 | Sixers’ new sponsor Bloom Energy was long a money-loser and now soars with AI data center orders
+2026-09-28 | Oracle vs. Salesforce: Which Enterprise AI Stock Has More Room to Run?
+### rogue AI agents incident Nvidia kill switch after:2026-03-01
+2026-09-30 | OpenAI Excluded from Nvidia's Attempt to Stop Rogue AI Agents
+2026-09-29 | Amid AI Agents Going Rogue, Nvidia Launches New Security 'Kill Switch'
+2026-09-29 | AI: Governments Frozen in the AI Headlights. AI-RTZ #1224 (Part 2)
+2026-09-29 | Nvidia unveils safety product after rogue AI incidents
+2026-09-28 | Nvidia Built a Kill Switch for AI Agents Because They Keep Getting Out
+### agent security startups acquired 2026 after:2026-03-01
+2026-09-25 | Databricks acquisition itch still unsatisfied - buys Row Zero
+2026-09-24 | Databricks buys Row Zero and is scouting for more startups to acquire
+2026-09-24 | News from Israel and the Jewish world in Spanish
+2026-09-23 | Upwind acquires Israeli AI security startup Aegis - Globes
+2026-09-23 | Cyber unicorn Upwind acquires nine-month-old Aegis for tens of millions
+### Meta Muse agent after:2026-03-01
+2026-09-30 | Meta's Muse AI agent accused of accessing sensitive user data on iPhone and Mac without permission — agent shocks reporter by referring to confidential messages it wasn't granted access to
+2026-09-30 | OpenAI and Meta Want AI to Do More Than Answer Questions
+2026-09-30 | OpenAI takes on Meta Muse with always-on Dots agents, less than a day after delaying GPT-6.1 Astra over safety concerns
+2026-09-30 | OpenAI follows Meta into the red-hot market for personal agents. But will users pay?
+2026-09-30 | Truist Assesses Potential Impact of Meta Muse AI Agent on Online Travel Agencies
+### Reco raises agent security after:2026-03-01
+2026-09-30 | Two Google alumni raise $11.3M to back AI startups that enterprises will actually pay for
+2026-09-30 | Reco Raises $55 Million as AI Agents Spread Across Enterprise Systems
+2026-09-30 | Reco Raises $55 Million to Expand AI Agent Security Platform
+2026-09-29 | Reco raises $55m to secure the agentic enterprise
+2026-09-29 | Reco raises $50M to secure enterprise AI agents, with AT&T backing
+### Baselayer agent identity after:2026-03-01
+2026-09-28 | Instinct Raises $1 Billion to Expand Personal AI Agent
+2026-09-28 | Outmarket AI Raises $34.5M to Expand Insurance AI Platform
+2026-09-28 | Baselayer raises $35M Series A to build identity infrastructure for AI agents
+2026-09-28 | Goldman Sachs warns S&P 500 market breadth hits lowest since dot-com bubble
+2026-09-28 | Baselayer Raises $35 Million to Launch AI Agent Identity Platform
+### Ema AI employee raises after:2026-03-01
+2026-09-30 | Ema raises $77Mn to take AI agents into IT services work
+2026-09-29 | SiMa.ai Raises $150 Million To Bring Low-Power AI Chips to Cars and Robotics
+2026-09-28 | Warp raises $85 million as startup bets on AI-powered HR operations - People Matters
+2026-09-25 | Pair of $400m rounds drive this week’s FinTech funding
+2026-09-25 | More agents go rogue — but AI companies aren’t slowing down yet
+### agentic AI enterprise adoption survey production 2026 after:2026-03-01
+2026-09-29 | Agoda Releases AI Developer Report 2026: Agentic AI Adoption Outpaces Enterprise Readiness in Southeast Asia and India
+2026-09-28 | The Rise of AI Agents in Enterprise Workflows — Global Case Studies
+2026-09-27 | Three Months to NIST: The Federal AI Agent Standards Deadline Arrives With No Enforceable Framework
+2026-09-15 | McKinsey Technology Trends Outlook 2026
+2026-09-14 | Agentic AI Foundation Launches MCPA Certification to Validate MCP Expertise
+### Gartner agentic AI projects canceled after:2026-03-01
+2026-09-29 | The agency era in IT infrastructure management and operations.
+2026-09-29 | AI Reliability: Building Trustworthy AI Beyond Model Accuracy
+2026-09-28 | Meta Bets Its Future on an Enterprise Platform That Does Not Exist Yet
+2026-09-27 | Three Months to NIST: The Federal AI Agent Standards Deadline Arrives With No Enforceable Framework
+2026-09-27 | The Supervisor Agent Shift: How Enterprises Actually Staff AI Agent Oversight
+### 智能体 基础设施 融资 after:2026-05-01 after:2026-03-01
+2026-09-24 | Modal Labs 和 Baseten 洽谈融资：估值或分别升至 150 亿和 260 亿美元
+### Agent 沙箱 融资 after:2026-03-01
+### AI Agent 创业 融资 亿元 after:2026-06-01 after:2026-03-01
+### MCP 智能体 支付 支付宝 微信 after:2026-03-01
