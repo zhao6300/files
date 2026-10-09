@@ -130,11 +130,15 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 - Nemotron 3 Embed 8B 和 1B 的公开发布信息还可参考 [NVIDIA 论坛公告](https://forums.developer.nvidia.com/t/nvidia-nemotron-3-embed-is-out-and-the-8b-model-is-1-on-rteb/377089)。
 - 不同检索任务、语言、向量维度和数据域可能导致实际排序变化，生产部署前应使用自己的 query-document 标注集验证。
 
-## 七、Decision：Jev 类开源决策模型 Top 10
+## 七、Decision：Jev 类开源决策模型扩展榜
 
 这里不再使用 GDPval-AA。GDPval 测量的是复杂知识工作和文档生成，不属于 Jev 类判别式决策模型。
 
 本节采用 [Benchmark Heaven JevBench v1.6.1](https://benchmarkheaven.com/jev-models)。JevBench 的输入是状态和有界规则，输出是类型化答案及概率；主榜只排名开源权重模型。榜单的 Capability Score 由 Intelligence 与 Calibration 平均得到。
+
+### 7.1 JevBench 可比排名
+
+以下模型均有 JevBench Capability Score，可以直接放在同一张排名表中。前 10 名沿用原榜单，后续扩展到更多重要候选。
 
 | 排名 | 模型 | 底座 | Capability | Intelligence | Calibration |
 |---:|---|---|---:|---:|---:|
@@ -148,16 +152,49 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 | 8 | decider-12b v2 | Gemma-4-12B | 72.5 | 63.0 | 82.0 |
 | 9 | Xor 26B-A4B | – | 72.4 | 58.7 | 86.1 |
 | 10 | decider-12b v1 | Gemma-4-12B | 72.2 | 60.6 | 83.8 |
-| — | **Laya** | — | **未公开** | — | — |
+| 11 | torchcast-decision-12b | – | 71.7 | 60.5 | 82.9 |
+| 12 | Jev-Omni | – | 71.3 | 55.5 | 87.0 |
+| 13 | Winnow-12B Q8 | – | 71.2 | 59.5 | 83.0 |
+| 14 | Cygnet | – | 70.9 | 54.8 | 87.0 |
+| 15 | decisio v0.8.0 on gemma-4-12B-it | Gemma-4-12B | 70.7 | 52.3 | 89.2 |
+| 16 | decider chat on Gemma-4-31B-it | Gemma-4-31B | 70.6 | 58.5 | 82.6 |
+| 17 | GEV-26B-Decide | – | 70.1 | 49.8 | 90.3 |
+| 18 | decisio v0.9.0 on gemma-4-12B-it | Gemma-4-12B | 70.0 | 52.3 | 87.6 |
+| 19 | Hopper 12B trained | – | 68.1 | 51.7 | 84.6 |
+| 20 | SPX-CD-Omni | – | 68.1 | 48.8 | 87.5 |
+| 21 | Aplomb 14 | – | 67.5 | 45.8 | 89.2 |
+| 22 | Bespoke Nimble 9B v3 | – | 66.8 | 56.5 | 77.0 |
+| 23 | Plumb-4B | – | 65.4 | 43.0 | 87.9 |
+| 24 | decider-4b v2 | – | 64.9 | 40.1 | 89.6 |
+| 25 | JevK5 v0.3 | – | 64.2 | 38.5 | 89.9 |
+| 26 | Clef-Flash | – | 63.8 | 42.2 | 85.5 |
+| 27 | deck-4B v1.0 | – | 63.6 | 38.6 | 88.6 |
+| 28 | janus 4B | – | 62.9 | 37.6 | 88.1 |
+| 29 | JevK5 v0.2.0 | – | 62.8 | 36.3 | 89.4 |
+| 30 | Hopper | – | 62.4 | 34.7 | 90.1 |
+| 31 | Imajev-4B | – | 61.9 | 34.6 | 89.2 |
+| 32 | jqv | – | 61.9 | 33.9 | 89.9 |
+| 33 | metask-jev-4b | – | 61.8 | 39.2 | 84.4 |
 
-> Laya 是重要的 Jev-like 开源决策模型候选，但当前快照没有公开可直接映射到 JevBench Capability Score 的成绩，因此作为未排名候选加入，不参与前十排序。
+### 7.2 重要但暂不能与 JevBench 直接混排的候选
+
+以下模型属于重要的 Jev-like 开源决策模型，但当前没有公开、可直接映射到本表的 JevBench Capability Score，因此单独列为候选，不虚构排名。
+
+| 模型 | 类型 | 当前可用信息 |
+|---|---|---|
+| **Laya** | 开源 System One 决策模型 | 在 `decision-models-under-pressure` 独立评测中报告为 Jev 准确率的 90% |
+| **autotrust/JEV-27B** | Jev 行为开源复现 | 对 TypeSafe Jev 输出分布的 KL 约为 0.017 |
+| **autotrust/JEV-9B** | JEV-27B 轻量版本 | 对 TypeSafe Jev 输出分布的 KL 约为 0.019 |
+| **OpenJev** | Jev 兼容的开源结构化决策实现 | 支持 Choice、Noul、Score 等类型化决策接口 |
+| **Intern-Decision-4B** | 结构化文本/视觉决策模型 | 输入状态和问题 schema，输出各选项概率 |
+
+相关资料：[Laya](https://www.layaaimodel.com/)、[JEV-9B](https://huggingface.co/autotrust/JEV-9B)、[OpenJev](https://github.com/zhangcy122/OpenJev)、[Intern-Decision-4B](https://huggingface.co/internlm/Intern-Decision-4B)。
 
 **补充说明：**
 
 - TypeSafe Jev 1.13.0 是闭源 API，在 JevBench 中只作为参考，不参与开源模型排名。
 - JevBench 还提供考虑成本和延迟的综合排序；如果生产场景更关注低延迟和低成本，应同时查看 Cost 和 Latency。
-- `autotrust/JEV-9B` 与 `autotrust/JEV-27B` 是接近 Jev 行为的开源模型，但在本次榜单快照中还没有进入 JevBench 主榜，因此没有擅自插入排名。
-- Laya 在另一项 `decision-models-under-pressure` 独立评测中报告为 Jev 准确率的 90%；该结果与 JevBench Capability Score 不同，不能直接混排。
+- Laya、JEV-9B 和 JEV-27B 的公开成绩来自不同评测，不能直接替换 JevBench Capability Score。
 
 ## 八、最终结论
 
