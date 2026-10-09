@@ -935,3 +935,180 @@ MILES 相比简单 RLHF 脚本更复杂的地方主要是：
 6. 支持同步、普通 async 和 fully async；
 7. 对 train-inference mismatch、weight version、MoE routing replay 做额外处理；
 8. 通过 object store 在 rollout worker 和 trainer worker 之间传递训练数据。
+
+## 21. 训练框架与可插拔后端
+
+MILES 的训练部分不是 HuggingFace `Trainer`，而是 **Ray + MILES 自己的 RL orchestration + 可插拔 training backend**。
+
+外层由 Ray 负责分布式编排：
+
+```text
+Ray
+ ├── Rollout workers
+ │    └── SGLang inference engines
+ ├── RolloutExecutor
+ ├── Actor trainer workers
+ ├── Critic trainer workers
+ └── Object Store / Mooncake
+```
+
+真正的 RL 主循环仍由 MILES 自己实现：
+
+```text
+rollout
+→ reward
+→ rollout data conversion
+→ Critic training
+→ Actor training
+→ checkpoint
+→ Actor 权重同步回 SGLang
+```
+
+训练 backend 被包装成统一的 `TrainRayActor` 接口。不同 backend 都需要提供以下能力：
+
+```text
+init()
+train()
+update_weights()
+save_model()
+sleep()
+wake_up()
+```
+
+因此 `train.py` 不需要知道底层是 Megatron 还是 FSDP，只调用统一方法：
+
+```python
+await actor_model.train(...)
+await actor_model.update_weights(...)
+await actor_model.save_model(...)
+```
+
+### 支持的训练后端
+
+参数定义在 `miles/utils/arguments.py`，当前支持：
+
+```bash
+--train-backend megatron
+--train-backend fsdp
+--train-backend torchtitan
+```
+
+默认值是：
+
+```bash
+--train-backend megatron
+```
+
+| 后端 | 实现 | Checkpoint | 适用场景 |
+|---|---|---|---|
+| `megatron` | `MegatronTrainRayActor` | Megatron `torch_dist` | 超大模型、MoE、多节点和复杂并行 |
+| `fsdp` | `FSDPTrainRayActor` | PyTorch Distributed Checkpoint | 直接训练 HuggingFace 模型、快速接入新架构 |
+| `torchtitan` | `TorchtitanTrainRayActor` | TorchTitan DCP | 使用 TorchTitan 已支持的模型和并行实现 |
+
+### Megatron backend
+
+Megatron 是默认、也是 MILES 目前最主要的训练后端。它可以支持：
+
+```text
+TP  Tensor Parallel
+PP  Pipeline Parallel
+CP  Context Parallel
+EP  Expert Parallel
+ETP Expert Tensor Parallel
+DP  Data Parallel
+```
+
+模型结构参数通常来自：
+
+```text
+scripts/models/<megatron_model_type>.py
+```
+
+Megatron 更适合：
+
+- 100B 以上的大模型；
+- MoE 模型；
+- 多机多卡；
+- 需要 TP/PP/EP/CP 的模型；
+- 需要 LoRA 的场景；
+- 追求最高训练吞吐的场景。
+
+### FSDP backend
+
+FSDP backend 使用模型自己的 HuggingFace 实现，并通过 PyTorch FSDP2 做参数和梯度分片：
+
+```text
+HF checkpoint
+    ↓
+HuggingFace model
+    ↓
+PyTorch FSDP2
+    ↓
+TorchNativeTrainRayActor
+    ↓
+forward / backward / optimizer.step()
+```
+
+它的优点是：
+
+- 可以直接读取 HuggingFace checkpoint；
+- 不需要先转换成 Megatron `torch_dist`；
+- 适合快速接入新的 HF 架构；
+- 适合验证 HuggingFace 原生 forward 的训练行为。
+
+FSDP 更偏向 data parallel 和 parameter sharding，复杂模型内切分能力不如 Megatron。目前 LoRA 不是 FSDP backend 的通用能力。
+
+### TorchTitan backend
+
+TorchTitan backend 使用 TorchTitan 自己的：
+
+- 模型实现；
+- 并行布局；
+- optimizer；
+- checkpoint manager；
+- training runner。
+
+它可以使用 TP、PP、CP、EP 以及 `dp_replicate` / `dp_shard` 等并行方式，但模型必须是 TorchTitan 已实现和适配的架构。
+
+### RL 算法与训练 backend 的关系
+
+RL 算法和 training backend 是两层不同的抽象：
+
+```text
+GRPO / GSPO / PPO / REINFORCE++
+              │
+              ▼
+      统一 RL objective
+              │
+       ┌──────┼──────┐
+       ▼      ▼      ▼
+   Megatron  FSDP  TorchTitan
+```
+
+RL 通用层负责：
+
+```text
+rollout
+reward
+advantage / return
+KL
+PPO clipping
+entropy
+TIS
+```
+
+training backend 负责：
+
+```text
+模型加载
+模型 forward
+梯度计算
+梯度同步
+optimizer.step()
+checkpoint
+权重导出与同步
+```
+
+所以切换 backend 通常不会改变 rollout、reward、GRPO/PPO 配置和 SGLang 配置，主要变化是模型加载方式、并行策略、checkpoint 格式和底层 forward/backward 实现。
+
+相关官方文档：[Training Backends](https://github.com/radixark/miles/blob/main/docs/user-guide/training-backend.md)。
