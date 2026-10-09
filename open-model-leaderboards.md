@@ -148,12 +148,16 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 | 8 | decider-12b v2 | Gemma-4-12B | 72.5 | 63.0 | 82.0 |
 | 9 | Xor 26B-A4B | – | 72.4 | 58.7 | 86.1 |
 | 10 | decider-12b v1 | Gemma-4-12B | 72.2 | 60.6 | 83.8 |
+| — | **Laya** | — | **未公开** | — | — |
+
+> Laya 是重要的 Jev-like 开源决策模型候选，但当前快照没有公开可直接映射到 JevBench Capability Score 的成绩，因此作为未排名候选加入，不参与前十排序。
 
 **补充说明：**
 
 - TypeSafe Jev 1.13.0 是闭源 API，在 JevBench 中只作为参考，不参与开源模型排名。
 - JevBench 还提供考虑成本和延迟的综合排序；如果生产场景更关注低延迟和低成本，应同时查看 Cost 和 Latency。
 - `autotrust/JEV-9B` 与 `autotrust/JEV-27B` 是接近 Jev 行为的开源模型，但在本次榜单快照中还没有进入 JevBench 主榜，因此没有擅自插入排名。
+- Laya 在另一项 `decision-models-under-pressure` 独立评测中报告为 Jev 准确率的 90%；该结果与 JevBench Capability Score 不同，不能直接混排。
 
 ## 八、最终结论
 
