@@ -2,20 +2,23 @@
 
 > 整理时间：2026-10-09
 >
-> 本文按照 **Text、Image、Video、Audio、Retrieval、Decision** 六类模型整理开源模型榜单。除特别说明外，“开源”采用 Artificial Analysis 的 **Open Weights** 口径：模型权重可以下载，或可以通过供应商提供的推理运行时自行部署。这一口径不一定等同于 OSI 法律意义上的开源许可证。
+> 本文按照 **Text、Image、Video、Audio、ASR、OCR、Omni、Retrieval、Decision** 九类模型整理开源模型榜单。除特别说明外，“开源”采用 Artificial Analysis 的 **Open Weights** 口径：模型权重可以下载，或可以通过供应商提供的推理运行时自行部署。对于 ASR、OCR、Omni 和 Decision 等 Artificial Analysis 没有统一专门榜单的类别，本文使用公开的专门 benchmark、模型卡或社区榜单，并单独标注其评分口径。这一口径不一定等同于 OSI 法律意义上的开源许可证。
 
 ## 一、口径说明
 
-| 类别 | 采用榜单 | 主要指标 |
+| 类别 | 采用榜单/来源 | 主要指标 |
 |---|---|---|
 | Text | Artificial Analysis LLM Leaderboard | Intelligence Index |
 | Image | Artificial Analysis Text-to-Image Open Weights Leaderboard | Arena Elo |
 | Video | Artificial Analysis Text-to-Video / Image-to-Video Open Weights Leaderboard | Arena Elo |
-| Audio | Artificial Analysis Text-to-Speech Open Weights Leaderboard | Arena Elo |
+| Audio | Artificial Analysis Text-to-Speech Open Weights Leaderboard | TTS Arena Elo |
+| ASR | Open ASR Leaderboard | 平均 WER、RTFx |
+| OCR | OmniDocBench v1.6、olmOCR-Bench | 文档 OCR 综合分数 |
+| Omni | Qwen/MiniCPM/Nemotron 等公开技术报告和模型卡 | 多模态覆盖，不做统一数值排名 |
 | Retrieval | MTEB RTEB(beta) 榜单 | 检索任务综合排名 |
 | Decision | Benchmark Heaven JevBench v1.6.1 | Capability Score |
 
-不同榜单的评分不可直接横向比较。例如，Text 的 Intelligence 分数、Image/Video/Audio 的 Elo、Retrieval 的检索分数，以及 Decision 的 Capability Score 都属于不同评价体系。
+不同榜单的评分不可直接横向比较。例如，Text 的 Intelligence、Image/Video/Audio 的 Elo、ASR 的 WER、OCR 的文档分数、Retrieval 的检索分数，以及 Decision 的 Capability Score 都属于不同评价体系。Omni 当前没有统一的公开总榜，因此本文件将其作为能力和模型候选列表，而不是严格的分数排名。
 
 ## 二、Text：开源文本模型 Top 10
 
