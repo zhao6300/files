@@ -104,7 +104,51 @@
 
 **简要观察：** Breeze TTS 2 暂列开源 TTS 榜首；Fish Audio、Step Audio、Voxtral、Kokoro 和 Chatterbox 适合重点关注。若目标是语音识别，应另看 ASR 榜单，不能用 TTS 排名替代。
 
-## 六、Retrieval：开源 Embedding 模型 Top 10
+## 六、ASR：开源语音识别模型 Top 10
+
+ASR（Automatic Speech Recognition）采用 Open ASR Leaderboard 的最新公开英文短音频榜单。指标为平均 WER（Word Error Rate，越低越好），并同时列出 RTFx（越高越快）。榜单数据版本为 2026-10-09；表中保留非 Proprietary 许可证的开源权重模型。
+
+来源：[Open ASR Leaderboard](https://huggingface.co/spaces/hf-audio/open_asr_leaderboard)、[评测代码与方法](https://github.com/huggingface/open_asr_leaderboard)。
+
+| 开源排名 | 模型 | 平均 WER | RTFx | 许可证 |
+|---:|---|---:|---:|---|
+| 1 | microsoft/Phi-4-multimodal-instruct | 5.02 | 162.53 | MIT |
+| 2 | ibm-granite/granite-speech-3.3-8b | 5.26 | 262.79 | Apache-2.0 |
+| 3 | ibm-granite/granite-speech-3.3-2b | 5.36 | 509.35 | Apache-2.0 |
+| 4 | Qwen/Qwen3-ASR-1.7B-hf | 5.75 | 835.62 | Apache-2.0 |
+| 5 | HojoAI/Hojo-ASR-V1 | 6.07 | 73.39 | Apache-2.0 |
+| 6 | TheStageAI/thewhisper-large-v3-turbo | 6.07 | 1183.92 | CC-BY-4.0 |
+| 7 | bosonai/higgs-audio-v3-stt | 6.19 | 109.65 | Apache-2.0 |
+| 8 | CohereLabs/cohere-transcribe-03-2026 | 6.26 | 923.71 | Apache-2.0 |
+| 9 | OpenMOSS-Team/MOSS-Transcribe-Diarize | 6.29 | 387.46 | Apache-2.0 |
+| 10 | Edge0/ARK-ASR-0.6B | 6.29 | 673.02 | Apache-2.0 |
+
+**简要观察：** Granite Speech 和 Qwen3-ASR 在准确率与速度之间较均衡；如果优先追求速度，Parakeet、TheWhisper 和 Qwen3-ASR 是值得单独测试的候选。该榜单主要是英文短音频，不能代表中文、多语种、长音频或强噪声场景的最终效果。
+
+## 七、OCR：开源文档文字识别模型
+
+Artificial Analysis 目前没有专门的 OCR 榜单，因此本节采用公开的 OmniDocBench v1.6 和 olmOCR-Bench 结果。OCR 的任务包括文字、表格、公式、版面和阅读顺序；不同 benchmark 的分数不能直接混排，因此表中保留 benchmark 名称。
+
+来源：[OCR 模型与公开 benchmark 汇总](https://www.docsumo.com/blog/best-ocr-models)、[OCRBench v2 论文](https://arxiv.org/abs/2501.00321)。
+
+| 模型 | 参数规模 | 分数 | Benchmark | 许可证/权重说明 |
+|---|---:|---:|---|---|
+| TeleOCR | 1.2B | 96.91 | OmniDocBench v1.6 | Apache-2.0 |
+| OvisOCR2 | 0.8B | 96.47 | OmniDocBench v1.6 | Apache-2.0 |
+| PaddleOCR-VL-1.6 | 0.9B | 96.34 | OmniDocBench v1.6 | Apache-2.0 |
+| MinerU2.5-Pro | 1.2B | 95.75 | OmniDocBench v1.6 | Apache-2.0 权重，工具链另有条款 |
+| GLM-OCR | 0.9B | 95.22 | OmniDocBench v1.6 | MIT 模型，SDK/组件需另核许可证 |
+| Ovis2.6-30B-A3B | 30B | 93.70 | OmniDocBench v1.6 | 开放权重，需核具体许可证 |
+| DeepSeek-OCR 2 | 3B | 90.25 | OmniDocBench v1.6 | Apache-2.0 |
+| Qwen3-VL-235B | 235B | 89.78 | OmniDocBench v1.6 | Apache-2.0 |
+| dots.mocr | 3B | 83.90 | olmOCR-Bench | MIT |
+| olmOCR 2 | 7B | 82.40 | olmOCR-Bench | Apache-2.0，需遵守模型卡使用规范 |
+
+**简要观察：** TeleOCR、OvisOCR2、PaddleOCR-VL-1.6、MinerU2.5-Pro 和 GLM-OCR 是小参数文档 OCR 的重点候选；DeepSeek-OCR 2 和 Qwen3-VL 更适合需要通用视觉理解的场景。对于简单印刷体和 CPU 部署，PaddleOCR PP-OCRv6 或 Tesseract 仍然是实用方案，但它们不在上述文档 VLM 榜中。
+
+**OCR 选型注意：** OmniDocBench 主要覆盖论文、报告、表格、公式等文档；手机拍照、倾斜扫描、手写、票据和跨页表格可能显著改变排序，生产前应使用自己的文档集评测。
+
+## 八、Retrieval：开源 Embedding 模型 Top 10
 
 Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave、OpenAI Web Search 等搜索服务，并不是可下载部署的 Retrieval 模型。因此本节改用 **MTEB RTEB(beta)**，它更专注于检索质量。
 
@@ -130,7 +174,7 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 - Nemotron 3 Embed 8B 和 1B 的公开发布信息还可参考 [NVIDIA 论坛公告](https://forums.developer.nvidia.com/t/nvidia-nemotron-3-embed-is-out-and-the-8b-model-is-1-on-rteb/377089)。
 - 不同检索任务、语言、向量维度和数据域可能导致实际排序变化，生产部署前应使用自己的 query-document 标注集验证。
 
-## 七、Decision：Jev 类开源决策模型扩展榜
+## 九、Decision：Jev 类开源决策模型扩展榜
 
 这里不再使用 GDPval-AA。GDPval 测量的是复杂知识工作和文档生成，不属于 Jev 类判别式决策模型。
 
@@ -196,7 +240,7 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 - JevBench 还提供考虑成本和延迟的综合排序；如果生产场景更关注低延迟和低成本，应同时查看 Cost 和 Latency。
 - Laya、JEV-9B 和 JEV-27B 的公开成绩来自不同评测，不能直接替换 JevBench Capability Score。
 
-## 八、最终结论
+## 十、最终结论
 
 | 类别 | 当前开源榜首 | 采用指标 |
 |---|---|---|
@@ -204,6 +248,8 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 | Image | Qwen-Image-2.1 | Elo 1035 |
 | Video（文生） | MiniMax H3（768p） | Elo 1137 |
 | Audio（TTS） | Breeze TTS 2 | Elo 1222 |
+| ASR | microsoft/Phi-4-multimodal-instruct | 平均 WER 5.02 |
+| OCR | TeleOCR | OmniDocBench v1.6：96.91 |
 | Retrieval（Embedding） | Nemotron-3-Embed-8B-BF16 | RTEB 开源排名第 1 |
 | Decision（Jev 类） | Quyet-1.0-Large | Capability 81.7 |
 
@@ -213,16 +259,20 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 - **图像生成：** Qwen-Image、FLUX、HunyuanImage 是开源权重阵营的主要选择。
 - **视频生成：** MiniMax H3 和 LTX 系列是当前榜单中的主要开源候选，但显存和推理速度要求较高。
 - **语音生成：** Breeze TTS 2 适合作为榜首候选，Fish Audio、Kokoro 和 Chatterbox 可作为轻量或备选方案。
+- **ASR：** Granite Speech、Qwen3-ASR 和 Phi-4 Multimodal 是当前开源榜单中的主要候选；WER 越低越好，但要按语言、长音频和噪声场景单独验证。
+- **OCR：** TeleOCR、OvisOCR2、PaddleOCR-VL-1.6、MinerU2.5-Pro 和 GLM-OCR 适合文档解析；票据、手写和手机拍照场景必须使用真实样本测试。
 - **检索：** Nemotron 3 Embed 8B 追求质量，Nemotron 1B 和 Octen 0.6B/4B 更适合控制部署成本；Qwen3-Embedding-8B 是 Apache-2.0 生态中的重要选择。
 - **结构化决策：** 不要用通用 LLM 的 Intelligence Index 替代 JevBench；Quyet、decisio、deck、H2O-Lightning 和 decider 系列更符合“状态输入、结构化决策输出”的模型定义。
 
-## 九、数据限制
+## 十一、数据限制
 
 1. 所有排名都是指定榜单和快照时间下的结果，模型发布和榜单更新会改变名次。
-2. Elo、Intelligence、RTEB 和 Capability Score 不可横向比较。
+2. Elo、Intelligence、WER、OCR benchmark、RTEB 和 Capability Score 不可横向比较。
 3. “开源”在不同榜单中主要表示 Open Weights；商业使用前仍需逐个核对许可证。
 4. Video 的开源候选目前不足 10 个，因此本文没有用闭源模型填充。
-5. Retrieval 本文使用 embedding 榜；如果实际系统需要 reranking，应单独评估 reranker。
-6. Decision 本文使用 JevBench；如果目标是安全审核、意图路由或工具选择，应使用与具体业务更匹配的测试集重新评估。
+5. ASR 主要采用英文短音频榜；多语种、中文、长音频、说话人分离和噪声环境需要单独评测。
+6. OCR 的结果来自不同 benchmark；OmniDocBench 与 olmOCR-Bench 分数不能直接混排。
+7. Retrieval 本文使用 embedding 榜；如果实际系统需要 reranking，应单独评估 reranker。
+8. Decision 本文使用 JevBench；如果目标是安全审核、意图路由或工具选择，应使用与具体业务更匹配的测试集重新评估。
 
 本文内容是对各榜单信息的整理和改写，模型名称、排名及分数以原始榜单的最新版本为准。
