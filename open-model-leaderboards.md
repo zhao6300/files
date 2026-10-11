@@ -240,7 +240,26 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 - JevBench 还提供考虑成本和延迟的综合排序；如果生产场景更关注低延迟和低成本，应同时查看 Cost 和 Latency。
 - Laya、JEV-9B 和 JEV-27B 的公开成绩来自不同评测，不能直接替换 JevBench Capability Score。
 
-## 十、最终结论
+## 十、Omni：开源全模态模型候选
+
+Omni 模型通常指在一个统一系统中处理多种输入（文本、图像、音频、视频），并能够以文本或语音等形式响应的模型。Artificial Analysis 目前没有独立、统一的 Omni 榜单，因此本节不伪造一个跨 benchmark 的分数排名，而是按公开能力、开源权重和全模态覆盖整理候选。
+
+| 模型 | 全模态覆盖 | 规模/特点 | 公开依据 |
+|---|---|---|---|
+| Qwen3.5-Omni-Plus | 文本、图像、音频、视频；文本/语音响应 | 新一代 Omni MoE；支持长音频和视频理解 | [Qwen3.5-Omni 技术报告](https://arxiv.org/abs/2604.15804) |
+| Qwen3.5-Omni | 文本、图像、音频、视频 | Qwen3.5 Omni 系列基础候选 | [Qwen3.5-Omni 技术报告](https://arxiv.org/abs/2604.15804) |
+| Qwen3-Omni-30B-A3B | 文本、图像、音频、视频；文本/语音响应 | Thinker-Talker MoE；约 30B 总参数、3B 激活参数 | [Qwen3-Omni 技术报告](https://arxiv.org/abs/2509.17765) |
+| MiniCPM-o 4.5 | 文本、图像、音频、视频；全双工语音交互 | 约 9B；基于 Qwen3-8B、Whisper-medium、CosyVoice2 等组件 | [MiniCPM-o 4.5](https://huggingface.co/openbmb/MiniCPM-o-4_5) |
+| NVIDIA Nemotron 3 Nano Omni 30B A3B | 文本、图像、音频、视频 | MoE；约 30B 总参数、3B 激活参数 | [Artificial Analysis Open Weights LLM Leaderboard](https://artificialanalysis.ai/leaderboards/models?weights=open) |
+| Qwen2.5-Omni-7B | 文本、图像、音频、视频；文本/语音响应 | Qwen Omni 系列上一代开源模型 | [Qwen2.5-Omni 项目](https://github.com/QwenLM/Qwen2.5-Omni) |
+| MiniCPM-o 2.6 | 文本、图像、音频；实时语音交互 | 轻量 Omni 模型，适合边缘和实时应用 | [OpenBMB MiniCPM-o](https://github.com/OpenBMB/MiniCPM-o) |
+| Phi-4-multimodal-instruct | 文本、图像、音频输入；文本输出 | 约 6B；在 Open ASR 榜单也有评测记录 | [Microsoft Phi-4-multimodal](https://huggingface.co/microsoft/Phi-4-multimodal-instruct) |
+| Chameleon | 文本与图像双向生成/理解 | 统一理解与生成的早期 any-to-any 开源路线 | [Chameleon 项目](https://github.com/facebookresearch/chameleon) |
+| Liquid d1-omni-600M | 文本、图像等多模态决策输入 | 小型 Omni Decision 模型，适合边缘结构化决策 | [Liquid AI Open d1](https://huggingface.co/blog/LiquidAI/open-d1) |
+
+**解读：** 前 6 个更接近严格意义上的音视文 Omni；Phi-4-multimodal、Chameleon 和 d1-omni 属于更广义的多模态/Omni 路线，不应与 Qwen3-Omni 的全模态语音交互分数直接比较。Qwen3-Omni 的技术报告称其在 36 个音频和音视 benchmark 中取得多项开源领先结果，但这些是论文自报的分任务结果，不是统一 Omni Elo 榜单。
+
+## 十一、最终结论
 
 | 类别 | 当前开源榜首 | 采用指标 |
 |---|---|---|
@@ -250,6 +269,7 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 | Audio（TTS） | Breeze TTS 2 | Elo 1222 |
 | ASR | microsoft/Phi-4-multimodal-instruct | 平均 WER 5.02 |
 | OCR | TeleOCR | OmniDocBench v1.6：96.91 |
+| Omni | Qwen3.5-Omni-Plus | 多模态/音视文公开 benchmark 结果 |
 | Retrieval（Embedding） | Nemotron-3-Embed-8B-BF16 | RTEB 开源排名第 1 |
 | Decision（Jev 类） | Quyet-1.0-Large | Capability 81.7 |
 
@@ -261,10 +281,11 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 - **语音生成：** Breeze TTS 2 适合作为榜首候选，Fish Audio、Kokoro 和 Chatterbox 可作为轻量或备选方案。
 - **ASR：** Granite Speech、Qwen3-ASR 和 Phi-4 Multimodal 是当前开源榜单中的主要候选；WER 越低越好，但要按语言、长音频和噪声场景单独验证。
 - **OCR：** TeleOCR、OvisOCR2、PaddleOCR-VL-1.6、MinerU2.5-Pro 和 GLM-OCR 适合文档解析；票据、手写和手机拍照场景必须使用真实样本测试。
+- **Omni：** Qwen3.5-Omni、Qwen3-Omni、MiniCPM-o 4.5 和 Nemotron 3 Nano Omni 是重点候选；需要实时语音交互时优先测试 MiniCPM-o 和 Qwen Omni，需要长音频/视频理解时重点测试 Qwen Omni。
 - **检索：** Nemotron 3 Embed 8B 追求质量，Nemotron 1B 和 Octen 0.6B/4B 更适合控制部署成本；Qwen3-Embedding-8B 是 Apache-2.0 生态中的重要选择。
 - **结构化决策：** 不要用通用 LLM 的 Intelligence Index 替代 JevBench；Quyet、decisio、deck、H2O-Lightning 和 decider 系列更符合“状态输入、结构化决策输出”的模型定义。
 
-## 十一、数据限制
+## 十二、数据限制
 
 1. 所有排名都是指定榜单和快照时间下的结果，模型发布和榜单更新会改变名次。
 2. Elo、Intelligence、WER、OCR benchmark、RTEB 和 Capability Score 不可横向比较。
@@ -272,7 +293,8 @@ Artificial Analysis 的 Search API 榜单评估的是 Perplexity、Exa、Brave�
 4. Video 的开源候选目前不足 10 个，因此本文没有用闭源模型填充。
 5. ASR 主要采用英文短音频榜；多语种、中文、长音频、说话人分离和噪声环境需要单独评测。
 6. OCR 的结果来自不同 benchmark；OmniDocBench 与 olmOCR-Bench 分数不能直接混排。
-7. Retrieval 本文使用 embedding 榜；如果实际系统需要 reranking，应单独评估 reranker。
-8. Decision 本文使用 JevBench；如果目标是安全审核、意图路由或工具选择，应使用与具体业务更匹配的测试集重新评估。
+7. Omni 目前没有统一的 Artificial Analysis 榜单，本节是开源全模态候选整理，不构成统一数值排名。
+8. Retrieval 本文使用 embedding 榜；如果实际系统需要 reranking，应单独评估 reranker。
+9. Decision 本文使用 JevBench；如果目标是安全审核、意图路由或工具选择，应使用与具体业务更匹配的测试集重新评估。
 
 本文内容是对各榜单信息的整理和改写，模型名称、排名及分数以原始榜单的最新版本为准。
